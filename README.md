@@ -8,7 +8,7 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 **Required** Lazarus version. Default `"dist"`.
 
-#### Possible values (**NOTE**: needs complete list and what version of FPC is included)
+Possible values: (**NOTE**: needs complete list and what version of FPC is included)
 
 * "dist" - Lazarus package that comes with the ubuntu dist your chose on `runs-on`
 * "2.0.6"
