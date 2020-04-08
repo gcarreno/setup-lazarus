@@ -1,0 +1,31 @@
+{
+  "name": "setup-lazarus",
+  "version": "1.0.0",
+  "description": "Set up your GitHub Actions workflow with a specific version of Lazarus",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gcarreno/setup-lazarus.git"
+  },
+  "keywords": [
+    "actions",
+    "lazarus",
+    "setup"
+  ],
+  "author": "Gustavo Carreno <guscarreno@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gcarreno/setup-lazarus/issues"
+  },
+  "homepage": "https://github.com/gcarreno/setup-lazarus#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "@actions/github": "^2.1.1"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.21.0"
+  }
+}
