@@ -1,10 +1,13 @@
 name: 'Setup Lazarus environment'
+
 description: 'Setup a Lazarus environment adding it to the PATH'
+
 inputs:
   lazarus-version:  # id of input
     description: 'Version of Lazarus'
     required: true
     default: 'dist'
+
 runs:
   using: 'node12'
   main: 'dist/index.js'
