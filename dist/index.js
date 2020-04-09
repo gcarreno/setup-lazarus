@@ -4480,41 +4480,52 @@ function isUnixExecutable(stats) {
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
-const pkgs = {
-    "win32": {
-        "2.0.6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
-        "2.0.4": "lazarus-2.0.4-fpc-3.0.4-win32.exe"
-    },
-    "linux": {
-        "2.0.6": {
-            "laz": "lazarus-project_2.0.6-0_amd64.deb",
-            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
-            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-        },
-        "2.0.4": {
-            "laz": "lazarus-project_2.0.4-0_amd64.deb",
-            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
-            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-        }
-    }
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 function getPackageName(platform, lazarusVersion, pkg) {
-    let result = '';
-    switch (platform) {
-        case "win32":
-            result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
-            result += pkgs[platform + '.' + lazarusVersion];
-            break;
-        case "linux":
-            result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
-            result += pkgs[platform + '.' + lazarusVersion + '.' + pkg];
-            break;
-        default:
-            throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
-            break;
-    }
-    return result;
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = '';
+        const pkgs = {
+            "win32": {
+                "2.0.6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
+                "2.0.4": "lazarus-2.0.4-fpc-3.0.4-win32.exe"
+            },
+            "linux": {
+                "2.0.6": {
+                    "laz": "lazarus-project_2.0.6-0_amd64.deb",
+                    "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+                    "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+                },
+                "2.0.4": {
+                    "laz": "lazarus-project_2.0.4-0_amd64.deb",
+                    "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+                    "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+                }
+            }
+        };
+        switch (platform) {
+            case "win32":
+                result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
+                result += eval(`pkgs.${platform}.${lazarusVersion}`);
+                break;
+            case "linux":
+                result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
+                result += eval(`pkgs.${platform}.${lazarusVersion}.${pkg}`);
+                break;
+            default:
+                throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
+                break;
+        }
+        return result;
+    });
 }
 exports.getPackageName = getPackageName;
 
@@ -4630,7 +4641,7 @@ function downloadLazarus(versionLaz) {
         console.log(`downloadLazarus - Installing on platform: ${platform}`);
         switch (platform) {
             case 'win32':
-                let downloadURL = pkg.getPackageName(platform, versionLaz, 'laz');
+                let downloadURL = yield pkg.getPackageName(platform, versionLaz, 'laz');
                 console.log(`downloadLazarus - Downloading ${downloadURL}`);
                 let downloadPath_WIN;
                 try {
@@ -4651,9 +4662,9 @@ function downloadLazarus(versionLaz) {
                 console.log('downloadLazarus - sudo section');
                 yield exec_1.exec('sudo apt update');
                 yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
-                let downloadLazURL = pkg.getPackageName(platform, versionLaz, 'laz');
-                let downloadFPCURL = pkg.getPackageName(platform, versionLaz, 'fpc');
-                let downloadFPCSRCURL = pkg.getPackageName(platform, versionLaz, 'fpcsrc');
+                let downloadLazURL = yield pkg.getPackageName(platform, versionLaz, 'laz');
+                let downloadFPCURL = yield pkg.getPackageName(platform, versionLaz, 'fpc');
+                let downloadFPCSRCURL = yield pkg.getPackageName(platform, versionLaz, 'fpcsrc');
                 console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
                 let downloadPath_LIN;
                 try {
