@@ -28,11 +28,11 @@ export function getPackageName(
   switch (platform) {
     case "win32":
       result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
-      result += pkgs[platform + '.' + lazarusVersion];
+      result += eval(`pkgs.${platform}.${lazarusVersion}`);
       break;
     case "linux":
       result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
-      result += pkgs[platform + '.' + lazarusVersion + '.' + pkg];
+      result += eval(`pkgs.${platform}.${lazarusVersion}.${pkg}`);
       break;
     default:
       throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
