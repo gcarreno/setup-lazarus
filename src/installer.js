@@ -8,8 +8,8 @@ const platform = os.platform();
 export function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
-  const installDir = tc.find('lazarus');
-  console.log(`getLazarus - Tool Cache install dir: ${installDir}`);
+  //const installDir = tc.find('lazarus', version);
+  //console.log(`getLazarus - Tool Cache install dir: ${installDir}`);
 
   switch (version) {
     case "dist":
