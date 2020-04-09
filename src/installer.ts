@@ -6,7 +6,9 @@ import * as path from 'path';
 import {ok} from 'assert';
 import * as pkg from  './packages';
 
-export async function getLazarus(version): Promise<void> {
+export async function getLazarus(
+  version: string
+): Promise<void> {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
   //let installDir = tc.find('lazarus', version);
@@ -21,7 +23,7 @@ export async function getLazarus(version): Promise<void> {
           await exec('sudo apt install -y lazarus');
           break;
         case 'win32':
-          await downloadLazarus('2.0.6', '3.0.4');
+          await downloadLazarus('2.0.6');
           break;
         default:
           throw new Error('getLazarus - Platform not supported: ${platform}');
@@ -29,10 +31,10 @@ export async function getLazarus(version): Promise<void> {
       }
       break;
     case '2.0.6':
-      await downloadLazarus(version, '3.0.4');
+      await downloadLazarus(version);
       break;
     case '2.0.4':
-      await downloadLazarus(version, '3.0.4');
+      await downloadLazarus(version);
       break;
     default:
       throw new Error(`getLazarus - Version not supported: ${version}`);
@@ -40,29 +42,27 @@ export async function getLazarus(version): Promise<void> {
   }
 }
 
-async function downloadLazarus(versionLaz, versionFPC): Promise<void> {
+async function downloadLazarus(
+  versionLaz: string
+): Promise<void> {
   let platform = os.platform();
   console.log(`downloadLazarus - Installing on platform: ${platform}`);
 
 
   switch (platform) {
     case 'win32':
-      let downloadURL =
-        `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${versionLaz}/lazarus-${versionLaz}-fpc-${versionFPC}-win32.exe`;
+      let downloadURL: string = pkg.getPackageName(platform, versionLaz, 'laz');
       console.log(`downloadLazarus - Downloading ${downloadURL}`);
 
       let downloadPath_WIN: string;
-      let execRes: number;
       try {
         downloadPath_WIN = await tc.downloadTool(downloadURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
         /* TODO : Change the extension to .exe and execute the file */
-        execRes = await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-        console.log(`downloadLazarus - Renaming returned ${execRes}`);
+        await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
         downloadPath_WIN += '.exe';
         let lazarusDir: string = path.join(_getTempDirectory(), 'lazarus');
-        execRes = await exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
-        console.log(`downloadLazarus - Install returned ${execRes}`);
+        await exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
         core.addPath(`${lazarusDir}`);
       } catch(err) {
         throw err;
@@ -74,16 +74,12 @@ async function downloadLazarus(versionLaz, versionFPC): Promise<void> {
       await exec('sudo apt update');
       await exec('sudo apt install -y libgtk2.0-dev');
 
-      let downloadLazURL: string =
-        `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/lazarus-project_${versionLaz}-0_amd64.deb`;
-      let downloadFPCURL: string =
-        `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-laz_${versionFPC}-1_amd64.deb`;
-      let downloadFPCSRCURL: string =
-        `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_${versionFPC}-2_amd64.deb`;
+      let downloadLazURL: string = pkg.getPackageName(platform, versionLaz, 'laz');
+      let downloadFPCURL: string = pkg.getPackageName(platform, versionLaz, 'fpc');
+      let downloadFPCSRCURL: string = pkg.getPackageName(platform, versionLaz, 'fpcsrc');
       console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
 
       let downloadPath_LIN: string;
-      //let dpkgRes: string;
 
       try {
         console.log(`downloadLazarus - Downloading ${downloadFPCSRCURL}`);

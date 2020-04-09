@@ -4475,6 +4475,52 @@ function isUnixExecutable(stats) {
 
 /***/ }),
 
+/***/ 717:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const pkgs = {
+    "win32": {
+        "2.0.6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
+        "2.0.4": "lazarus-2.0.4-fpc-3.0.4-win32.exe"
+    },
+    "linux": {
+        "2.0.6": {
+            "laz": "lazarus-project_2.0.6-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "2.0.4": {
+            "laz": "lazarus-project_2.0.4-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        }
+    }
+};
+function getPackageName(platform, lazarusVersion, pkg) {
+    let result = '';
+    switch (platform) {
+        case "win32":
+            result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
+            result += pkgs.win32[lazarusVersion];
+            break;
+        case "linux":
+            result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
+            result += pkgs.win32[lazarusVersion][pkg];
+            break;
+        default:
+            throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
+            break;
+    }
+    return result;
+}
+exports.getPackageName = getPackageName;
+
+
+/***/ }),
+
 /***/ 722:
 /***/ (function(module) {
 
@@ -4543,6 +4589,7 @@ const exec_1 = __webpack_require__(986);
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 const assert_1 = __webpack_require__(357);
+const pkg = __importStar(__webpack_require__(717));
 function getLazarus(version) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`getLazarus - Installing Lazarus version:  ${version}`);
@@ -4557,7 +4604,7 @@ function getLazarus(version) {
                         yield exec_1.exec('sudo apt install -y lazarus');
                         break;
                     case 'win32':
-                        yield downloadLazarus('2.0.6', '3.0.4');
+                        yield downloadLazarus('2.0.6');
                         break;
                     default:
                         throw new Error('getLazarus - Platform not supported: ${platform}');
@@ -4565,10 +4612,10 @@ function getLazarus(version) {
                 }
                 break;
             case '2.0.6':
-                yield downloadLazarus(version, '3.0.4');
+                yield downloadLazarus(version);
                 break;
             case '2.0.4':
-                yield downloadLazarus(version, '3.0.4');
+                yield downloadLazarus(version);
                 break;
             default:
                 throw new Error(`getLazarus - Version not supported: ${version}`);
@@ -4577,26 +4624,23 @@ function getLazarus(version) {
     });
 }
 exports.getLazarus = getLazarus;
-function downloadLazarus(versionLaz, versionFPC) {
+function downloadLazarus(versionLaz) {
     return __awaiter(this, void 0, void 0, function* () {
         let platform = os.platform();
         console.log(`downloadLazarus - Installing on platform: ${platform}`);
         switch (platform) {
             case 'win32':
-                let downloadURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${versionLaz}/lazarus-${versionLaz}-fpc-${versionFPC}-win32.exe`;
+                let downloadURL = pkg.getPackageName(platform, versionLaz, 'laz');
                 console.log(`downloadLazarus - Downloading ${downloadURL}`);
                 let downloadPath_WIN;
-                let execRes;
                 try {
                     downloadPath_WIN = yield tc.downloadTool(downloadURL);
                     console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
                     /* TODO : Change the extension to .exe and execute the file */
-                    execRes = yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                    console.log(`downloadLazarus - Renaming returned ${execRes}`);
+                    yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
                     downloadPath_WIN += '.exe';
                     let lazarusDir = path.join(_getTempDirectory(), 'lazarus');
-                    execRes = yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
-                    console.log(`downloadLazarus - Install returned ${execRes}`);
+                    yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
                     core.addPath(`${lazarusDir}`);
                 }
                 catch (err) {
@@ -4607,12 +4651,11 @@ function downloadLazarus(versionLaz, versionFPC) {
                 console.log('downloadLazarus - sudo section');
                 yield exec_1.exec('sudo apt update');
                 yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
-                let downloadLazURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/lazarus-project_${versionLaz}-0_amd64.deb`;
-                let downloadFPCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-laz_${versionFPC}-1_amd64.deb`;
-                let downloadFPCSRCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_${versionFPC}-2_amd64.deb`;
+                let downloadLazURL = pkg.getPackageName(platform, versionLaz, 'laz');
+                let downloadFPCURL = pkg.getPackageName(platform, versionLaz, 'fpc');
+                let downloadFPCSRCURL = pkg.getPackageName(platform, versionLaz, 'fpcsrc');
                 console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
                 let downloadPath_LIN;
-                //let dpkgRes: string;
                 try {
                     console.log(`downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                     downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
