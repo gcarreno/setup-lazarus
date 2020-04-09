@@ -5127,7 +5127,7 @@ const os = __webpack_require__(87);
 function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
-  switch (lazarusVersion) {
+  switch (version) {
     case "dist":
       if (platform != 'win32') {
           console.log('getLazarus - Installing Lazarus now');
@@ -5137,7 +5137,7 @@ function getLazarus(version) {
       break;
     case '2.0.6':
     case '2.0.4':
-      downloadLazarus(lazarusVersion);
+      downloadLazarus(version);
       break;
     default:
       console.log(`getLazarus - Version not supported: ${lazarusVersion}`);
@@ -5145,7 +5145,7 @@ function getLazarus(version) {
   }
 }
 
-function downloadLazarus(lazarusVersion) {
+function downloadLazarus(version) {
   const platform = os.platform();
   console.log(`downloadLazarus - Installing on platform: ${platform}`);
 
