@@ -1,6 +1,6 @@
 {
   "name": "setup-lazarus",
-  "version": "1.0.0",
+  "version": "1.0.10",
   "description": "Set up your GitHub Actions workflow with a specific version of Lazarus",
   "main": "lib/setup-lazarus.js",
   "scripts": {
