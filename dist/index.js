@@ -428,14 +428,11 @@ const installer = __webpack_require__(449);
 try {
   // `lazarus-version` input defined in action metadata file
   const lazarusVersion = core.getInput('lazarus-version');
-  console.log(`Lazarus version: ${lazarusVersion}`);
+  //console.log(`Lazarus version: ${lazarusVersion}`);
 
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-
-  const platform = os.platform();
-  console.log(`Installing on platform: ${platform}`);
+  //console.log(`The event payload: ${payload}`);
 
   installer.getLazarus(lazarusVersion);
 
@@ -5133,11 +5130,33 @@ function getLazarus(version) {
   switch (lazarusVersion) {
     case "dist":
       if (platform != 'win32') {
-          console.log('Installing Lazarus now');
+          console.log('getLazarus - Installing Lazarus now');
+      } else {
+        downloadLazarus('2.0.6');
       }
       break;
+    case '2.0.6':
+    case '2.0.4':
+      downloadLazarus(lazarusVersion);
+      break;
     default:
-      console.log(`Version not supported: ${lazarusVersion}`);
+      console.log(`getLazarus - Version not supported: ${lazarusVersion}`);
+      break;
+  }
+}
+
+function downloadLazarus(lazarusVersion) {
+  const platform = os.platform();
+  console.log(`downloadLazarus - Installing on platform: ${platform}`);
+
+  switch (platform) {
+    case 'win32':
+      console.log('');
+      break;
+    case 'linux':
+      break;
+    default:
+      console.log(`downloadLazarus - Platform not implemented yet: ${platform}`);
       break;
   }
 }
