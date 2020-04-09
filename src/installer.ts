@@ -2,16 +2,15 @@ import * as tc from '@actions/tool-cache';
 import * as os from 'os';
 import * as cp from 'child_process';
 
-const platform = os.platform();
-
 export async function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
-  //const installDir = tc.find('lazarus', version);
-  //console.log(`getLazarus - Tool Cache install dir: ${installDir}`);
+  let installDir = tc.find('lazarus', version);
+  console.log(`getLazarus - Tool Cache install dir: ${installDir}`);
 
   switch (version) {
     case "dist":
+      let platform = os.platform();
       if (platform != 'win32') {
           console.log('getLazarus - Installing Lazarus dist');
           //downloadLazarus(version);
@@ -33,7 +32,9 @@ export async function getLazarus(version) {
 }
 
 async function downloadLazarus(versionLaz, versionFPC) {
+  let platform = os.platform();
   console.log(`downloadLazarus - Installing on platform: ${platform}`);
+
 
   switch (platform) {
     case 'win32':

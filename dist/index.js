@@ -1261,6 +1261,15 @@ module.exports = require("assert");
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -1271,17 +1280,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const installer = __importStar(__webpack_require__(749));
-try {
-    // `lazarus-version` input defined in action metadata file
-    let lazarusVersion = core.getInput('lazarus-version');
-    // Get the JSON webhook payload for the event that triggered the workflow
-    //const payload = JSON.stringify(github.context.payload, undefined, 2)
-    //console.log(`The event payload: ${payload}`);
-    installer.getLazarus(lazarusVersion);
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // `lazarus-version` input defined in action metadata file
+            let lazarusVersion = core.getInput('lazarus-version');
+            // Get the JSON webhook payload for the event that triggered the workflow
+            //const payload = JSON.stringify(github.context.payload, undefined, 2)
+            //console.log(`The event payload: ${payload}`);
+            installer.getLazarus(lazarusVersion);
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
 }
-catch (error) {
-    core.setFailed(error.message);
-}
+run();
 
 
 /***/ }),
@@ -4523,14 +4537,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tc = __importStar(__webpack_require__(533));
 const os = __importStar(__webpack_require__(87));
 const cp = __importStar(__webpack_require__(129));
-const platform = os.platform();
 function getLazarus(version) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`getLazarus - Installing Lazarus version:  ${version}`);
-        //const installDir = tc.find('lazarus', version);
-        //console.log(`getLazarus - Tool Cache install dir: ${installDir}`);
+        let installDir = tc.find('lazarus', version);
+        console.log(`getLazarus - Tool Cache install dir: ${installDir}`);
         switch (version) {
             case "dist":
+                let platform = os.platform();
                 if (platform != 'win32') {
                     console.log('getLazarus - Installing Lazarus dist');
                     //downloadLazarus(version);
@@ -4555,6 +4569,7 @@ function getLazarus(version) {
 exports.getLazarus = getLazarus;
 function downloadLazarus(versionLaz, versionFPC) {
     return __awaiter(this, void 0, void 0, function* () {
+        let platform = os.platform();
         console.log(`downloadLazarus - Installing on platform: ${platform}`);
         switch (platform) {
             case 'win32':
