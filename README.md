@@ -8,12 +8,38 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 **Required** Lazarus version. Default `"dist"`.
 
-Possible values: (**NOTE**: needs complete list and what version of FPC is included)
+Possible values:
 
 * "dist" - Lazarus package that comes with the ubuntu dist your chose on `runs-on`
-* "2.0.6"
-* "2.0.4"
-* "2.0.2"
+* LAZ"2.0.6" FPC"3.0.4"
+* LAZ"2.0.4" FPC"3.0.4"
+* LAZ"2.0.2" FPC"3.0.4"
+* LAZ"2.0.0" FPC"3.0.4"
+* LAZ"1.8.4" FPC"3.0.4"
+* LAZ"1.8.2" FPC"3.0.4"
+* LAZ"1.8.0" FPC"3.0.4"
+* LAZ"1.6.4" FPC"3.0.2"
+* LAZ"1.6.2" FPC"3.0.0"
+* LAZ"1.6" FPC"3.0.0"
+* LAZ"1.4.4" FPC"2.6.4"
+* LAZ"1.4.2" FPC"2.6.4"
+* LAZ"1.4" FPC"2.6.4"
+* LAZ"1.2.6" FPC"2.6.4"
+* LAZ"1.2.4" FPC"2.6.4"
+* LAZ"1.2.2" FPC"2.6.4"
+* LAZ"1.2" FPC"2.6.2"
+* LAZ"1.2" FPC"2.6.2"
+* LAZ"1.0.14" FPC"2.6.2"
+* LAZ"1.0.12" FPC"2.6.2"
+
+## Platforms
+
+At the moment this action only supports:
+
+* Windows (win32)
+* Linux (linux)
+
+**Note** If someone wants to help get masOS (darwin) running I'll be more than happy!
 
 ## Example usage
 
@@ -27,7 +53,7 @@ steps:
 - run: YourTestProject
 ```
 
-## More elaborate example usage
+## Matrix example usage
 
 ```yaml
 name: build
@@ -51,7 +77,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v1.0.16
+      uses: gcarreno/setup-lazarus@v1.0.34
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
     - name: Build the test app
