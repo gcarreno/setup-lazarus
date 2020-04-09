@@ -23,6 +23,7 @@ export async function getLazarus(version) {
           throw new Error('getLazarus - Platform not supported: ${platform}');
           break;
       }
+      break;
     case '2.0.6':
       await downloadLazarus(version, '3.0.4');
       break;
