@@ -1,6 +1,8 @@
 //const core = require('@actions/core');
 const os = require('os');
 
+const platform = os.platform();
+
 export function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
@@ -23,7 +25,6 @@ export function getLazarus(version) {
 }
 
 function downloadLazarus(version) {
-  const platform = os.platform();
   console.log(`downloadLazarus - Installing on platform: ${platform}`);
 
   switch (platform) {

@@ -5124,6 +5124,8 @@ __webpack_require__.r(__webpack_exports__);
 //const core = require('@actions/core');
 const os = __webpack_require__(87);
 
+const platform = os.platform();
+
 function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
@@ -5146,7 +5148,6 @@ function getLazarus(version) {
 }
 
 function downloadLazarus(version) {
-  const platform = os.platform();
   console.log(`downloadLazarus - Installing on platform: ${platform}`);
 
   switch (platform) {
