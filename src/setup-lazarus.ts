@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
+//import * as github from '@actions/github';
 import * as installer from './installer';
-import {exec} from '@actions/exec/lib/exec';
+//import {exec} from '@actions/exec/lib/exec';
 
-async function run(){
+async function run(): Promise<void> {
   try {
     // `lazarus-version` input defined in action metadata file
     let lazarusVersion = core.getInput('lazarus-version');

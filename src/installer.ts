@@ -1,8 +1,9 @@
+import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import * as os from 'os';
 import {exec} from '@actions/exec/lib/exec';
 
-export async function getLazarus(version) {
+export async function getLazarus(version): Promise<void> {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
 
   //let installDir = tc.find('lazarus', version);
@@ -36,7 +37,7 @@ export async function getLazarus(version) {
   }
 }
 
-async function downloadLazarus(versionLaz, versionFPC) {
+async function downloadLazarus(versionLaz, versionFPC): Promise<void> {
   let platform = os.platform();
   console.log(`downloadLazarus - Installing on platform: ${platform}`);
 
@@ -52,6 +53,10 @@ async function downloadLazarus(versionLaz, versionFPC) {
         downloadPath_WIN = await tc.downloadTool(downloadURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
         /* TODO : Change the extension to .exe and execute the file */
+        await exec('ren ${downloadPath_WIN} ${downloadPath_WIN}.exe');
+        downloadPath_WIN += '.exe';
+        await exec.exec('"${downloadPath_WIN}"', ['/VERYSILENT', '/DIR="c:\\lazarus"']);
+        core.addPath('C:\lazarus\bin');
       } catch(err) {
         throw err;
       }
