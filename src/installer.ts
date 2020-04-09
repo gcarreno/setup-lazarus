@@ -62,7 +62,7 @@ async function downloadLazarus(versionLaz, versionFPC) {
       let downloadFPCURL: string =
         `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-laz_${versionFPC}-1_amd64.deb`;
       let downloadFPCSRCURL: string =
-        `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_{versionFPC}-2_amd64.deb`;
+        `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_${versionFPC}-2_amd64.deb`;
       console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
 
       let downloadPath_LIN: string;

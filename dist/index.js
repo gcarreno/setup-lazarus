@@ -4592,7 +4592,7 @@ function downloadLazarus(versionLaz, versionFPC) {
                 yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
                 let downloadLazURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/lazarus-project_${versionLaz}-0_amd64.deb`;
                 let downloadFPCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-laz_${versionFPC}-1_amd64.deb`;
-                let downloadFPCSRCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_{versionFPC}-2_amd64.deb`;
+                let downloadFPCSRCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_${versionFPC}-2_amd64.deb`;
                 console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
                 let downloadPath_LIN;
                 //let dpkgRes: string;
