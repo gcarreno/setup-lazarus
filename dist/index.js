@@ -4483,7 +4483,7 @@ function isUnixExecutable(stats) {
 Object.defineProperty(exports, "__esModule", { value: true });
 function getPackageName(platform, lazarusVersion, pkg) {
     let result = '';
-    let pkgs = {
+    let pkgs = ({
         "win32": {
             "2.0.6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
             "2.0.4": "lazarus-2.0.4-fpc-3.0.4-win32.exe"
@@ -4500,15 +4500,15 @@ function getPackageName(platform, lazarusVersion, pkg) {
                 "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
             }
         }
-    };
+    });
     switch (platform) {
         case "win32":
             result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
-            eval(`result += pkgs.${platform}.${lazarusVersion}`);
+            eval(`result += pkgs.${platform}.${lazarusVersion};`);
             break;
         case "linux":
             result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
-            eval(`result += pkgs.${platform}.${lazarusVersion}.${pkg}`);
+            eval(`result += pkgs.${platform}.${lazarusVersion}.${pkg};`);
             break;
         default:
             throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
