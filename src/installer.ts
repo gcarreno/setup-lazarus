@@ -1,6 +1,6 @@
 import * as tc from '@actions/tool-cache';
 import * as os from 'os';
-import * as cp from 'child_process';
+import {exec} from '@actions/exec/lib/exec';
 
 export async function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
@@ -46,6 +46,7 @@ async function downloadLazarus(versionLaz, versionFPC) {
       try {
         downloadPath_WIN = await tc.downloadTool(downloadURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
+        /* TODO : Change the extension to .exe and execute the file */
       } catch(err) {
         throw err;
       }
@@ -61,16 +62,37 @@ async function downloadLazarus(versionLaz, versionFPC) {
       console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
 
       let downloadPath_LIN: string;
+      //let dpkgRes: string;
 
       try {
-        downloadPath_LIN = await tc.downloadTool(downloadLazURL);
+        console.log(`downloadLazarus - Downloading ${downloadFPCSRCURL}`);
+        downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+        /*dpkgRes =*/ await exec(`sudo dpkg -i ${downloadPath_LIN}`);
+        //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
       } catch(err) {
         throw err;
       }
 
-      let dpkgRes = cp.execSync(`sudo dpkg -i ${downloadPath_LIN}`);
-      console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+      try {
+        console.log(`downloadLazarus - Downloading ${downloadFPCURL}`);
+        downloadPath_LIN = await tc.downloadTool(downloadFPCURL);
+        console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+        /*dpkgRes =*/ await exec(`sudo dpkg -i ${downloadPath_LIN}`);
+        //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+      } catch(err) {
+        throw err;
+      }
+
+      try {
+        console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
+        downloadPath_LIN = await tc.downloadTool(downloadLazURL);
+        console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+        /*dpkgRes =*/ await exec(`sudo dpkg -i ${downloadPath_LIN}`);
+        //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+      } catch(err) {
+        throw err;
+      }
 
       break;
     default:
