@@ -1,8 +1,8 @@
-export async function getPackageName(
+export function getPackageName(
   platform: string,
   lazarusVersion: string,
   pkg: string
-): Promise<string>
+): string
 {
   let result: string = '';
 

@@ -51,7 +51,7 @@ async function downloadLazarus(
 
   switch (platform) {
     case 'win32':
-      let downloadURL: string = await pkg.getPackageName(platform, versionLaz, 'laz');
+      let downloadURL: string = pkg.getPackageName(platform, versionLaz, 'laz');
       console.log(`downloadLazarus - Downloading ${downloadURL}`);
 
       let downloadPath_WIN: string;
@@ -74,9 +74,9 @@ async function downloadLazarus(
       await exec('sudo apt update');
       await exec('sudo apt install -y libgtk2.0-dev');
 
-      let downloadLazURL: string = await pkg.getPackageName(platform, versionLaz, 'laz');
-      let downloadFPCURL: string = await pkg.getPackageName(platform, versionLaz, 'fpc');
-      let downloadFPCSRCURL: string = await pkg.getPackageName(platform, versionLaz, 'fpcsrc');
+      let downloadLazURL: string = pkg.getPackageName(platform, versionLaz, 'laz');
+      let downloadFPCURL: string = pkg.getPackageName(platform, versionLaz, 'fpc');
+      let downloadFPCSRCURL: string = pkg.getPackageName(platform, versionLaz, 'fpcsrc');
       console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
 
       let downloadPath_LIN: string;
