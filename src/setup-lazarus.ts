@@ -1,10 +1,10 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const installer = require('./installer');
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import * as installer from './installer';
 
 try {
   // `lazarus-version` input defined in action metadata file
-  const lazarusVersion = core.getInput('lazarus-version');
+  let lazarusVersion = core.getInput('lazarus-version');
 
   // Get the JSON webhook payload for the event that triggered the workflow
   //const payload = JSON.stringify(github.context.payload, undefined, 2)

@@ -2,7 +2,7 @@
   "name": "setup-lazarus",
   "version": "1.0.0",
   "description": "Set up your GitHub Actions workflow with a specific version of Lazarus",
-  "main": "./src/setup-lazarus.js",
+  "main": "lib/setup-lazarus.js",
   "scripts": {
     "build": "tsc && ncc build"
   },
