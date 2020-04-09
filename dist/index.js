@@ -36,6 +36,8 @@ module.exports =
 /******/ 		// Load entry module and return exports
 /******/ 		return __webpack_require__(41);
 /******/ 	};
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
 /******/ 	// run startup
 /******/ 	return startup();
@@ -421,14 +423,32 @@ module.exports = opts => {
 
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
+const installer = __webpack_require__(449);
+const os = __webpack_require__(87);
 
 try {
   // `lazarus-version` input defined in action metadata file
   const lazarusVersion = core.getInput('lazarus-version');
-  console.log(`Lazarus version: ` + lazarusVersion);
+  console.log(`Lazarus version: ${lazarusVersion}`);
+
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
+
+  const platform = os.platform();
+  console.log(`Installing on platform: ${platform}`);
+
+  switch (lazarusVersion) {
+    case "dist":
+      if (platform != 'win64') {
+        installer.getLazarus(lazarusVersion);
+      }
+      break;
+    default:
+      console.log(`Version not supported: ${lazarusVersion}`);
+      break;
+  }
+
 } catch (error) {
   core.setFailed(error.message);
 }
@@ -5105,6 +5125,21 @@ function escapeProperty(s) {
         .replace(/,/g, '%2C');
 }
 //# sourceMappingURL=command.js.map
+
+/***/ }),
+
+/***/ 449:
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLazarus", function() { return getLazarus; });
+const core = __webpack_require__(470);
+
+function getLazarus(version) {
+  console.log(`getLazarus - Installing Lazarus version:  ${version}`);
+}
+
 
 /***/ }),
 
@@ -25320,4 +25355,31 @@ function onceStrict (fn) {
 
 /***/ })
 
-/******/ });
+/******/ },
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getter */
+/******/ 	!function() {
+/******/ 		// define getter function for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = function(exports, name, getter) {
+/******/ 			if(!hasOwnProperty.call(exports, name)) {
+/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ }
+);
