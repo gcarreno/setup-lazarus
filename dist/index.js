@@ -4539,8 +4539,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
-const os = __importStar(__webpack_require__(87));
 const exec_1 = __webpack_require__(986);
+const os = __importStar(__webpack_require__(87));
+const path = __importStar(__webpack_require__(622));
+const assert_1 = __webpack_require__(357);
 function getLazarus(version) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`getLazarus - Installing Lazarus version:  ${version}`);
@@ -4592,9 +4594,10 @@ function downloadLazarus(versionLaz, versionFPC) {
                     execRes = yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
                     console.log(`downloadLazarus - Renaming returned ${execRes}`);
                     downloadPath_WIN += '.exe';
-                    execRes = yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR="D:\a\_temp\lazarus"`);
+                    let lazarusDir = path.join(_getTempDirectory(), 'lazarus');
+                    execRes = yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
                     console.log(`downloadLazarus - Install returned ${execRes}`);
-                    core.addPath('D:\a\_temp\lazarus');
+                    core.addPath(`${lazarusDir}`);
                 }
                 catch (err) {
                     throw err;
@@ -4643,6 +4646,11 @@ function downloadLazarus(versionLaz, versionFPC) {
                 break;
         }
     });
+}
+function _getTempDirectory() {
+    const tempDirectory = process.env['RUNNER_TEMP'] || '';
+    assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+    return tempDirectory;
 }
 
 

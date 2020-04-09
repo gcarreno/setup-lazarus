@@ -1,7 +1,9 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
-import * as os from 'os';
 import {exec} from '@actions/exec/lib/exec';
+import * as os from 'os';
+import * as path from 'path';
+import {ok} from 'assert';
 
 export async function getLazarus(version): Promise<void> {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
@@ -57,9 +59,10 @@ async function downloadLazarus(versionLaz, versionFPC): Promise<void> {
         execRes = await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
         console.log(`downloadLazarus - Renaming returned ${execRes}`);
         downloadPath_WIN += '.exe';
-        execRes = await exec(`${downloadPath_WIN} /VERYSILENT /DIR="D:\a\_temp\lazarus"`);
+        let lazarusDir: string = path.join(_getTempDirectory(), 'lazarus');
+        execRes = await exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
         console.log(`downloadLazarus - Install returned ${execRes}`);
-        core.addPath('D:\a\_temp\lazarus');
+        core.addPath(`${lazarusDir}`);
       } catch(err) {
         throw err;
       }
@@ -113,4 +116,10 @@ async function downloadLazarus(versionLaz, versionFPC): Promise<void> {
       throw new Error(`downloadLazarus - Platform not implemented yet: ${platform}`);
       break;
   }
+}
+
+function _getTempDirectory(): string {
+  const tempDirectory = process.env['RUNNER_TEMP'] || ''
+  ok(tempDirectory, 'Expected RUNNER_TEMP to be defined')
+  return tempDirectory
 }
