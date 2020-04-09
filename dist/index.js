@@ -5442,7 +5442,7 @@ __webpack_require__.r(__webpack_exports__);
 //const core = require('@actions/core');
 const tc = __webpack_require__(533);
 const os = __webpack_require__(87);
-const cp = requite('child_process');
+const cp = __webpack_require__(129);
 
 const platform = os.platform();
 

@@ -1,7 +1,7 @@
 //const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
 const os = require('os');
-const cp = requite('child_process');
+const cp = require('child_process');
 
 const platform = os.platform();
 
