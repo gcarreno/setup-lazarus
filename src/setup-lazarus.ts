@@ -14,11 +14,6 @@ async function run(){
 
     //let execRes: string;
 
-    /*execRes =*/ await exec('sudo apt update');
-    //console.log(`run - Exec result(sudo apt update): ${execRes}`);
-    /*execRes =*/ await exec('sudo apt install -y libgtk2.0-dev');
-    //console.log(`run - Exec result(sudo apt install -y libgtk2.0-dev): ${execRes}`);
-
     await installer.getLazarus(lazarusVersion);
 
   } catch (error) {

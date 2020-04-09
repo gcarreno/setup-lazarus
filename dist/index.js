@@ -1280,7 +1280,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const installer = __importStar(__webpack_require__(749));
-const exec_1 = __webpack_require__(986);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1290,10 +1289,6 @@ function run() {
             //const payload = JSON.stringify(github.context.payload, undefined, 2)
             //console.log(`The event payload: ${payload}`);
             //let execRes: string;
-            /*execRes =*/ yield exec_1.exec('sudo apt update');
-            //console.log(`run - Exec result(sudo apt update): ${execRes}`);
-            /*execRes =*/ yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
-            //console.log(`run - Exec result(sudo apt install -y libgtk2.0-dev): ${execRes}`);
             yield installer.getLazarus(lazarusVersion);
         }
         catch (error) {
@@ -4592,6 +4587,9 @@ function downloadLazarus(versionLaz, versionFPC) {
                 }
                 break;
             case 'linux':
+                console.log('downloadLazarus - sudo section');
+                yield exec_1.exec('sudo apt update');
+                yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
                 let downloadLazURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/lazarus-project_${versionLaz}-0_amd64.deb`;
                 let downloadFPCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-laz_${versionFPC}-1_amd64.deb`;
                 let downloadFPCSRCURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/fpc-src_{versionFPC}-2_amd64.deb`;
@@ -4602,8 +4600,7 @@ function downloadLazarus(versionLaz, versionFPC) {
                     console.log(`downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                     downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
                     console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    /*dpkgRes =*/ yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                    //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
                 }
                 catch (err) {
                     throw err;
@@ -4612,8 +4609,7 @@ function downloadLazarus(versionLaz, versionFPC) {
                     console.log(`downloadLazarus - Downloading ${downloadFPCURL}`);
                     downloadPath_LIN = yield tc.downloadTool(downloadFPCURL);
                     console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    /*dpkgRes =*/ yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                    //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
                 }
                 catch (err) {
                     throw err;
@@ -4622,8 +4618,7 @@ function downloadLazarus(versionLaz, versionFPC) {
                     console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
                     downloadPath_LIN = yield tc.downloadTool(downloadLazURL);
                     console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    /*dpkgRes =*/ yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                    //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
                 }
                 catch (err) {
                     throw err;

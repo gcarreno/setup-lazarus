@@ -53,6 +53,10 @@ async function downloadLazarus(versionLaz, versionFPC) {
 
       break;
     case 'linux':
+      console.log('downloadLazarus - sudo section');
+      await exec('sudo apt update');
+      await exec('sudo apt install -y libgtk2.0-dev');
+
       let downloadLazURL: string =
         `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${versionLaz}/lazarus-project_${versionLaz}-0_amd64.deb`;
       let downloadFPCURL: string =
@@ -68,8 +72,7 @@ async function downloadLazarus(versionLaz, versionFPC) {
         console.log(`downloadLazarus - Downloading ${downloadFPCSRCURL}`);
         downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-        /*dpkgRes =*/ await exec(`sudo dpkg -i ${downloadPath_LIN}`);
-        //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+        await exec(`sudo dpkg -i ${downloadPath_LIN}`);
       } catch(err) {
         throw err;
       }
@@ -78,8 +81,7 @@ async function downloadLazarus(versionLaz, versionFPC) {
         console.log(`downloadLazarus - Downloading ${downloadFPCURL}`);
         downloadPath_LIN = await tc.downloadTool(downloadFPCURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-        /*dpkgRes =*/ await exec(`sudo dpkg -i ${downloadPath_LIN}`);
-        //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+        await exec(`sudo dpkg -i ${downloadPath_LIN}`);
       } catch(err) {
         throw err;
       }
@@ -88,8 +90,7 @@ async function downloadLazarus(versionLaz, versionFPC) {
         console.log(`downloadLazarus - Downloading ${downloadLazURL}`);
         downloadPath_LIN = await tc.downloadTool(downloadLazURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-        /*dpkgRes =*/ await exec(`sudo dpkg -i ${downloadPath_LIN}`);
-        //console.log(`downloadLazarus - Package install result: ${dpkgRes}`);
+        await exec(`sudo dpkg -i ${downloadPath_LIN}`);
       } catch(err) {
         throw err;
       }
