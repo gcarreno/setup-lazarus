@@ -424,7 +424,6 @@ module.exports = opts => {
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const installer = __webpack_require__(449);
-const os = __webpack_require__(87);
 
 try {
   // `lazarus-version` input defined in action metadata file
@@ -438,16 +437,7 @@ try {
   const platform = os.platform();
   console.log(`Installing on platform: ${platform}`);
 
-  switch (lazarusVersion) {
-    case "dist":
-      if (platform != 'win64') {
-        installer.getLazarus(lazarusVersion);
-      }
-      break;
-    default:
-      console.log(`Version not supported: ${lazarusVersion}`);
-      break;
-  }
+  installer.getLazarus(lazarusVersion);
 
 } catch (error) {
   core.setFailed(error.message);
@@ -5134,10 +5124,22 @@ function escapeProperty(s) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLazarus", function() { return getLazarus; });
-const core = __webpack_require__(470);
+//const core = require('@actions/core');
+const os = __webpack_require__(87);
 
 function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
+
+  switch (lazarusVersion) {
+    case "dist":
+      if (platform != 'win32') {
+          console.log('Installing Lazarus now');
+      }
+      break;
+    default:
+      console.log(`Version not supported: ${lazarusVersion}`);
+      break;
+  }
 }
 
 
