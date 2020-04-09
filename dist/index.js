@@ -4589,7 +4589,7 @@ function downloadLazarus(versionLaz, versionFPC) {
                     downloadPath_WIN = yield tc.downloadTool(downloadURL);
                     console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
                     /* TODO : Change the extension to .exe and execute the file */
-                    execRes = yield exec_1.exec('ren ${downloadPath_WIN} ${downloadPath_WIN}.exe');
+                    execRes = yield exec_1.exec('rename', [`${downloadPath_WIN}`, `${downloadPath_WIN}.exe'`]);
                     console.log(`downloadLazarus - Renaming returned ${execRes}`);
                     downloadPath_WIN += '.exe';
                     execRes = yield exec_1.exec(`"${downloadPath_WIN}"`, ['/VERYSILENT', '/DIR="C:\lazarus"']);
