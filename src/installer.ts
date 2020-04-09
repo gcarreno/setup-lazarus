@@ -4,6 +4,7 @@ import {exec} from '@actions/exec/lib/exec';
 import * as os from 'os';
 import * as path from 'path';
 import {ok} from 'assert';
+import * as pkg from  './packages';
 
 export async function getLazarus(version): Promise<void> {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
