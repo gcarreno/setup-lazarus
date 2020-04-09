@@ -54,10 +54,10 @@ async function downloadLazarus(versionLaz, versionFPC): Promise<void> {
         downloadPath_WIN = await tc.downloadTool(downloadURL);
         console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
         /* TODO : Change the extension to .exe and execute the file */
-        execRes = await exec('ren ${downloadPath_WIN} ${downloadPath_WIN}.exe');
-        console.log(`downloadLazarus - Renaming returned ${execRes}`);
-        downloadPath_WIN += '.exe';
-        execRes = await exec.exec(`"${downloadPath_WIN}"`, ['/VERYSILENT', '/DIR="c:\\lazarus"']);
+        //execRes = await exec('ren ${downloadPath_WIN} ${downloadPath_WIN}.exe');
+        //console.log(`downloadLazarus - Renaming returned ${execRes}`);
+        //downloadPath_WIN += '.exe';
+        execRes = await exec.exec(`"${downloadPath_WIN}"`, ['/VERYSILENT', '/DIR="C:\lazarus"']);
         console.log(`downloadLazarus - Install returned ${execRes}`);
         core.addPath('C:\lazarus\bin');
       } catch(err) {
