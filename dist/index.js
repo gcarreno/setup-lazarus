@@ -1279,7 +1279,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
+//import * as github from '@actions/github';
 const installer = __importStar(__webpack_require__(749));
+//import {exec} from '@actions/exec/lib/exec';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -4535,6 +4537,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
 const os = __importStar(__webpack_require__(87));
 const exec_1 = __webpack_require__(986);
@@ -4581,10 +4584,17 @@ function downloadLazarus(versionLaz, versionFPC) {
                 let downloadURL = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${versionLaz}/lazarus-${versionLaz}-fpc-${versionFPC}-win32.exe`;
                 console.log(`downloadLazarus - Downloading ${downloadURL}`);
                 let downloadPath_WIN;
+                let execRes;
                 try {
                     downloadPath_WIN = yield tc.downloadTool(downloadURL);
                     console.log(`downloadLazarus - Downloaded into ${downloadPath_WIN}`);
                     /* TODO : Change the extension to .exe and execute the file */
+                    execRes = yield exec_1.exec('ren ${downloadPath_WIN} ${downloadPath_WIN}.exe');
+                    console.log(`downloadLazarus - Renaming returned ${execRes}`);
+                    downloadPath_WIN += '.exe';
+                    execRes = yield exec_1.exec(`"${downloadPath_WIN}"`, ['/VERYSILENT', '/DIR="C:\lazarus"']);
+                    console.log(`downloadLazarus - Install returned ${execRes}`);
+                    core.addPath('C:\lazarus\bin');
                 }
                 catch (err) {
                     throw err;
