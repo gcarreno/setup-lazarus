@@ -4546,15 +4546,18 @@ function getLazarus(version) {
         switch (version) {
             case "dist":
                 let platform = os.platform();
-                if (platform != 'win32') {
-                    console.log('getLazarus - Installing Lazarus dist');
-                    //downloadLazarus(version);
+                switch (platform) {
+                    case 'linux':
+                        yield exec_1.exec('sudo apt update');
+                        yield exec_1.exec('sudo apt install -y lazarus');
+                        break;
+                    case 'win32':
+                        yield downloadLazarus('2.0.6', '3.0.4');
+                        break;
+                    default:
+                        throw new Error('getLazarus - Platform not supported: ${platform}');
+                        break;
                 }
-                else {
-                    // Use the latest known stable version
-                    yield downloadLazarus('2.0.6', '3.0.4');
-                }
-                break;
             case '2.0.6':
                 yield downloadLazarus(version, '3.0.4');
                 break;

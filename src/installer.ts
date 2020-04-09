@@ -11,14 +11,18 @@ export async function getLazarus(version) {
   switch (version) {
     case "dist":
       let platform = os.platform();
-      if (platform != 'win32') {
-          console.log('getLazarus - Installing Lazarus dist');
-          //downloadLazarus(version);
-      } else {
-        // Use the latest known stable version
-        await downloadLazarus('2.0.6', '3.0.4');
+      switch (platform) {
+        case 'linux':
+          await exec('sudo apt update');
+          await exec('sudo apt install -y lazarus');
+          break;
+        case 'win32':
+          await downloadLazarus('2.0.6', '3.0.4');
+          break;
+        default:
+          throw new Error('getLazarus - Platform not supported: ${platform}');
+          break;
       }
-      break;
     case '2.0.6':
       await downloadLazarus(version, '3.0.4');
       break;
