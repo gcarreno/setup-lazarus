@@ -1,10 +1,14 @@
 //const core = require('@actions/core');
+const tc = require('@actions/tool-cache');
 const os = require('os');
 
 const platform = os.platform();
 
 export function getLazarus(version) {
   console.log(`getLazarus - Installing Lazarus version:  ${version}`);
+
+  const installDir = tc.find('lazarus', version);
+  console.log(`getLazarus - ${installDir}`);
 
   switch (version) {
     case "dist":
@@ -21,7 +25,7 @@ export function getLazarus(version) {
       downloadLazarus(version);
       break;
     default:
-      console.log(`getLazarus - Version not supported: ${lazarusVersion}`);
+      throw new Error(`getLazarus - Version not supported: ${lazarusVersion}`);
       break;
   }
 }
@@ -31,12 +35,13 @@ function downloadLazarus(version) {
 
   switch (platform) {
     case 'win32':
-      console.log('');
+      console.log(`downloadLazarus - Downloading Lazarus-${platform}-${version}.exe`);
       break;
     case 'linux':
+      console.log(`downloadLazarus - Downloading Lazarus-${platform}-${version}`);
       break;
     default:
-      console.log(`downloadLazarus - Platform not implemented yet: ${platform}`);
+      throw new Error(`downloadLazarus - Platform not implemented yet: ${platform}`);
       break;
   }
 }
