@@ -10,7 +10,9 @@ export function getLazarus(version) {
     case "dist":
       if (platform != 'win32') {
           console.log('getLazarus - Installing Lazarus now');
+          downloadLazarus(version);
       } else {
+        // Use the latest known stable version
         downloadLazarus('2.0.6');
       }
       break;
