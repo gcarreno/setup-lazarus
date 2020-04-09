@@ -4592,9 +4592,9 @@ function downloadLazarus(versionLaz, versionFPC) {
                     execRes = yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
                     console.log(`downloadLazarus - Renaming returned ${execRes}`);
                     downloadPath_WIN += '.exe';
-                    execRes = yield exec_1.exec(`${downloadPath_WIN} '/VERYSILENT' '/DIR="C:\lazarus"'`);
+                    execRes = yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR="D:\a\_temp\lazarus"`);
                     console.log(`downloadLazarus - Install returned ${execRes}`);
-                    core.addPath('C:\lazarus\bin');
+                    core.addPath('D:\a\_temp\lazarus');
                 }
                 catch (err) {
                     throw err;

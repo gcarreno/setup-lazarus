@@ -54,10 +54,6 @@ jobs:
       uses: gcarreno/setup-lazarus@v1.0.16
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-    - name: FPC version
-      run: fpc "-iV"
-    - name: Lazarus version
-      run: lazbuild "--version"
     - name: Build the test app
       run: lazbuild "tests/testconsoleapplication.lpi"
     - name: Run the test app
