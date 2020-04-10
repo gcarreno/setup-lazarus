@@ -1,7 +1,5 @@
 import * as core from '@actions/core';
-//import * as github from '@actions/github';
 import * as installer from './installer';
-//import {exec} from '@actions/exec/lib/exec';
 
 async function run(): Promise<void> {
   try {
@@ -12,14 +10,11 @@ async function run(): Promise<void> {
     //const payload = JSON.stringify(github.context.payload, undefined, 2)
     //console.log(`The event payload: ${payload}`);
 
-    //let execRes: string;
-
     await installer.getLazarus(lazarusVersion);
 
   } catch (error) {
     core.setFailed(error.message);
   }
 }
-
 
 run();

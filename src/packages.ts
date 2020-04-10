@@ -1,3 +1,8 @@
+/**
+ * function getPackageName
+ *
+ * returns the full URL of the file to download
+ */
 export function getPackageName(
   platform: string,
   lazarusVersion: string,
@@ -127,6 +132,7 @@ export function getPackageName(
     }
   };
 
+  // Replace periods with undescores due to JSON borking with periods or dashes
   let lazVer = lazarusVersion.replace(/\./gi, '_');
   switch (platform) {
     case "win32":
