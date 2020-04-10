@@ -133,15 +133,17 @@ export function getPackageName(
   };
 
   // Replace periods with undescores due to JSON borking with periods or dashes
-  let lazVer = lazarusVersion.replace(/\./gi, '_');
+  let lazVer = 'v' + lazarusVersion.replace(/\./gi, '_');
   switch (platform) {
     case "win32":
       result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
-      eval(`result += pkgs.${platform}.v${lazVer};`);
+      //eval(`result += pkgs.${platform}.v${lazVer};`);
+      result += pkgs[platform][lazVer];
       break;
     case "linux":
       result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
-      eval(`result += pkgs.${platform}.v${lazVer}.${pkg};`);
+      //eval(`result += pkgs.${platform}.v${lazVer}.${pkg};`);
+      result += pkgs[platform][lazVer][pkg];
       break;
     default:
       throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
