@@ -10,31 +10,31 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 ### lazarus-version
 
-**Required** Lazarus version. Default `"dist"`.
+**Required** Lazarus version. Default `dist`.
 
 Possible values:
 
-* "dist" - Lazarus package that comes with the ubuntu dist your chose on `runs-on`
-* LAZ"2.0.6" FPC"3.0.4"
-* LAZ"2.0.4" FPC"3.0.4"
-* LAZ"2.0.2" FPC"3.0.4"
-* LAZ"2.0.0" FPC"3.0.4"
-* LAZ"1.8.4" FPC"3.0.4"
-* LAZ"1.8.2" FPC"3.0.4"
-* LAZ"1.8.0" FPC"3.0.4"
-* LAZ"1.6.4" FPC"3.0.2"
-* LAZ"1.6.2" FPC"3.0.0"
-* LAZ"1.6" FPC"3.0.0"
-* LAZ"1.4.4" FPC"2.6.4"
-* LAZ"1.4.2" FPC"2.6.4"
-* LAZ"1.4" FPC"2.6.4"
-* LAZ"1.2.6" FPC"2.6.4"
-* LAZ"1.2.4" FPC"2.6.4"
-* LAZ"1.2.2" FPC"2.6.4"
-* LAZ"1.2" FPC"2.6.2"
-* LAZ"1.2" FPC"2.6.2"
-* LAZ"1.0.14" FPC"2.6.2"
-* LAZ"1.0.12" FPC"2.6.2"
+* `dist` - Lazarus package that comes with the ubuntu dist your chose on `runs-on`
+* `2.0.6` - comes with FPC "v3.0.4"
+* `2.0.4` - comes with FPC "v3.0.4"
+* `2.0.2` - comes with FPC "v3.0.4"
+* `2.0.0` - comes with FPC "v3.0.4"
+* `1.8.4` - comes with FPC "v3.0.4"
+* `1.8.2` - comes with FPC "v3.0.4"
+* `1.8.0` - comes with FPC "v3.0.4"
+* `1.6.4` - comes with FPC "v3.0.2"
+* `1.6.2` - comes with FPC "v3.0.0"
+* `1.6` - comes with FPC "v3.0.0"
+* `1.4.4` - comes with FPC "v2.6.4"
+* `1.4.2` - comes with FPC "v2.6.4"
+* `1.4` - comes with FPC "v2.6.4"
+* `1.2.6` - comes with FPC "v2.6.4"
+* `1.2.4` - comes with FPC "v2.6.4"
+* `1.2.2` - comes with FPC "v2.6.4"
+* `1.2` - comes with FPC "v2.6.2"
+* `1.2` - comes with FPC "v2.6.2"
+* `1.0.14` - comes with FPC "v2.6.2"
+* `1.0.12` - comes with FPC "v2.6.2"
 
 ## Platforms
 
