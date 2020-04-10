@@ -27,7 +27,9 @@ export async function getLazarus(
       let platform = os.platform();
       switch (platform) {
         case 'linux':
+          // Perform a repository update
           await exec('sudo apt update');
+          // Install Lazarus from the Ubuntu repository
           await exec('sudo apt install -y lazarus');
           break;
         case 'win32':
@@ -147,7 +149,7 @@ async function _downloadLazarus(
       break;
     case 'linux':
       console.log('_downloadLazarus - sudo section');
-      // Perform an repository update
+      // Perform a repository update
       await exec('sudo apt update');
       // Install the pre-requesite needed for Lazarus
       // TODO : investigate when this should be GTK 5

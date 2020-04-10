@@ -4610,12 +4610,10 @@ function getPackageName(platform, lazarusVersion, pkg) {
     switch (platform) {
         case "win32":
             result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
-            //eval(`result += pkgs.${platform}.v${lazVer};`);
             result += pkgs[platform][lazVer];
             break;
         case "linux":
             result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
-            //eval(`result += pkgs.${platform}.v${lazVer}.${pkg};`);
             result += pkgs[platform][lazVer][pkg];
             break;
         default:
@@ -4716,7 +4714,9 @@ function getLazarus(version) {
                 let platform = os.platform();
                 switch (platform) {
                     case 'linux':
+                        // Perform a repository update
                         yield exec_1.exec('sudo apt update');
+                        // Install Lazarus from the Ubuntu repository
                         yield exec_1.exec('sudo apt install -y lazarus');
                         break;
                     case 'win32':
@@ -4831,7 +4831,7 @@ function _downloadLazarus(versionLaz) {
                 break;
             case 'linux':
                 console.log('_downloadLazarus - sudo section');
-                // Perform an repository update
+                // Perform a repository update
                 yield exec_1.exec('sudo apt update');
                 // Install the pre-requesite needed for Lazarus
                 // TODO : investigate when this should be GTK 5

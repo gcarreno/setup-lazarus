@@ -51,7 +51,7 @@ At the moment this action only supports:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v1
+- uses: gcarreno/setup-lazarus@v2.1
   with:
     lazarus-version: 'dist'
 - run: lazbuild YourTestProject.lpi
@@ -80,9 +80,9 @@ jobs:
         operating-system: [ubuntu-18.04,ubuntu-latest]
         lazarus-versions: [dist, 2.0.6]
     steps:
-    - uses: actions/checkout@v2.0.3
+    - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v1.0.34
+      uses: gcarreno/setup-lazarus@v2.1
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
     - name: Build the test app
