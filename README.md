@@ -1,5 +1,9 @@
 # setup-lazarus
 
+![setup-lazarus logo](images/setup-lazarus-logo.png)
+
+[![Actions Status](https://github.com/gcarreno/setup-lazarus/workflows/build/badge.svg)](https://github.com/gcarreno/setup-lazarus/actions)
+
 Set up your GitHub Actions workflow with a specific version of Lazarus
 
 ## Inputs
