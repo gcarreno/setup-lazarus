@@ -2,6 +2,10 @@ name: 'Setup Lazarus environment'
 
 description: 'Setup a Lazarus environment adding it to the PATH'
 
+branding:
+  icon: 'chevrons-right'
+  color: 'blue'
+
 inputs:
   lazarus-version:  # id of input
     description: 'Version of Lazarus'
