@@ -4720,6 +4720,57 @@ function getLazarus(version) {
             case '2.0.4':
                 yield downloadLazarus(version);
                 break;
+            case '2.0.2':
+                yield downloadLazarus(version);
+                break;
+            case '2.0.0':
+                yield downloadLazarus(version);
+                break;
+            case '1.8.4':
+                yield downloadLazarus(version);
+                break;
+            case '1.8.2':
+                yield downloadLazarus(version);
+                break;
+            case '1.8.0':
+                yield downloadLazarus(version);
+                break;
+            case '1.6.4':
+                yield downloadLazarus(version);
+                break;
+            case '1.6.2':
+                yield downloadLazarus(version);
+                break;
+            case '1.6':
+                yield downloadLazarus(version);
+                break;
+            case '1.4.4':
+                yield downloadLazarus(version);
+                break;
+            case '1.4.2':
+                yield downloadLazarus(version);
+                break;
+            case '1.4':
+                yield downloadLazarus(version);
+                break;
+            case '1.2.6':
+                yield downloadLazarus(version);
+                break;
+            case '1.2.4':
+                yield downloadLazarus(version);
+                break;
+            case '1.2.2':
+                yield downloadLazarus(version);
+                break;
+            case '1.2':
+                yield downloadLazarus(version);
+                break;
+            case '1.0.14':
+                yield downloadLazarus(version);
+                break;
+            case '1.0.12':
+                yield downloadLazarus(version);
+                break;
             default:
                 throw new Error(`getLazarus - Version not supported: ${version}`);
                 break;

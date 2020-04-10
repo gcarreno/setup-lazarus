@@ -36,6 +36,57 @@ export async function getLazarus(
     case '2.0.4':
       await downloadLazarus(version);
       break;
+    case '2.0.2':
+      await downloadLazarus(version);
+      break;
+    case '2.0.0':
+      await downloadLazarus(version);
+      break;
+    case '1.8.4':
+      await downloadLazarus(version);
+      break;
+    case '1.8.2':
+      await downloadLazarus(version);
+      break;
+    case '1.8.0':
+      await downloadLazarus(version);
+      break;
+    case '1.6.4':
+      await downloadLazarus(version);
+      break;
+    case '1.6.2':
+      await downloadLazarus(version);
+      break;
+    case '1.6':
+      await downloadLazarus(version);
+      break;
+    case '1.4.4':
+      await downloadLazarus(version);
+      break;
+    case '1.4.2':
+      await downloadLazarus(version);
+      break;
+    case '1.4':
+      await downloadLazarus(version);
+      break;
+    case '1.2.6':
+      await downloadLazarus(version);
+      break;
+    case '1.2.4':
+      await downloadLazarus(version);
+      break;
+    case '1.2.2':
+      await downloadLazarus(version);
+      break;
+    case '1.2':
+      await downloadLazarus(version);
+      break;
+    case '1.0.14':
+      await downloadLazarus(version);
+      break;
+    case '1.0.12':
+      await downloadLazarus(version);
+      break;
     default:
       throw new Error(`getLazarus - Version not supported: ${version}`);
       break;
