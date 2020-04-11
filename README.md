@@ -85,8 +85,10 @@ jobs:
       uses: gcarreno/setup-lazarus@v2.1
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-    - name: Build the test app
+    - name: Build the Main Application
+      run: lazbuild "src/lazaruswithgithubactions.lpi"
+    - name: Build the Unit Tests Application
       run: lazbuild "tests/testconsoleapplication.lpi"
-    - name: Run the test app
+    - name: Run the Unit Tests Application
       run: bin/testconsoleapplication "--all" "--format=plain"
 ```
