@@ -4,7 +4,7 @@ import {exec} from '@actions/exec/lib/exec';
 import * as os from 'os';
 import * as path from 'path';
 import {ok} from 'assert';
-import * as pkg from  './packages';
+import * as laz from  './lazarus';
 
 /**
  * function getLazarus
@@ -122,7 +122,7 @@ async function _downloadLazarus(
   switch (platform) {
     case 'win32':
       // Get the URL of the file to download
-      let downloadURL: string = pkg.getPackageName(platform, versionLaz, 'laz');
+      let downloadURL: string = laz.getPackageName(platform, versionLaz, 'laz');
       console.log(`_downloadLazarus - Downloading ${downloadURL}`);
 
       let downloadPath_WIN: string;
@@ -158,7 +158,7 @@ async function _downloadLazarus(
       let downloadPath_LIN: string;
 
       // Get the URL of the file to download
-      let downloadFPCSRCURL: string = pkg.getPackageName(platform, versionLaz, 'fpcsrc');
+      let downloadFPCSRCURL: string = laz.getPackageName(platform, versionLaz, 'fpcsrc');
       console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
       try {
         console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
@@ -172,7 +172,7 @@ async function _downloadLazarus(
       }
 
       // Get the URL of the file to download
-      let downloadFPCURL: string = pkg.getPackageName(platform, versionLaz, 'fpc');
+      let downloadFPCURL: string = laz.getPackageName(platform, versionLaz, 'fpc');
       console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
       try {
         console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
@@ -186,7 +186,7 @@ async function _downloadLazarus(
       }
 
       // Get the URL of the file to download
-      let downloadLazURL: string = pkg.getPackageName(platform, versionLaz, 'laz');
+      let downloadLazURL: string = laz.getPackageName(platform, versionLaz, 'laz');
       console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
       try {
         console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);

@@ -4472,7 +4472,330 @@ function isUnixExecutable(stats) {
 
 /***/ }),
 
-/***/ 717:
+/***/ 722:
+/***/ (function(module) {
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return ([
+    bth[buf[i++]], bth[buf[i++]],
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]],
+    bth[buf[i++]], bth[buf[i++]],
+    bth[buf[i++]], bth[buf[i++]]
+  ]).join('');
+}
+
+module.exports = bytesToUuid;
+
+
+/***/ }),
+
+/***/ 747:
+/***/ (function(module) {
+
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ 749:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const tc = __importStar(__webpack_require__(533));
+const exec_1 = __webpack_require__(986);
+const os = __importStar(__webpack_require__(87));
+const path = __importStar(__webpack_require__(622));
+const assert_1 = __webpack_require__(357);
+const laz = __importStar(__webpack_require__(896));
+/**
+ * function getLazarus
+ *
+ * This function checks for the available known versions.
+ * Then calls the function that deals with platform specific handling.
+ */
+function getLazarus(version) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(`getLazarus - Installing Lazarus version:  ${version}`);
+        // Latest known stable version
+        const stableVersion = '2.0.6';
+        switch (version) {
+            // Special case named version that installs the repository pakages on Ubuntu
+            // but installs stable version under Windows
+            case "dist":
+                let platform = os.platform();
+                switch (platform) {
+                    case 'linux':
+                        // Perform a repository update
+                        yield exec_1.exec('sudo apt update');
+                        // Install Lazarus from the Ubuntu repository
+                        yield exec_1.exec('sudo apt install -y lazarus');
+                        break;
+                    case 'win32':
+                        yield _downloadLazarus(stableVersion);
+                        break;
+                    default:
+                        throw new Error(`getLazarus - Platform not supported: ${platform}`);
+                        break;
+                }
+                break;
+            // Special case named version that installs the latest stable version
+            case 'stable':
+                yield _downloadLazarus(stableVersion);
+                break;
+            case '2.0.6':
+                yield _downloadLazarus(version);
+                break;
+            case '2.0.4':
+                yield _downloadLazarus(version);
+                break;
+            case '2.0.2':
+                yield _downloadLazarus(version);
+                break;
+            case '2.0.0':
+                yield _downloadLazarus(version);
+                break;
+            case '1.8.4':
+                yield _downloadLazarus(version);
+                break;
+            case '1.8.2':
+                yield _downloadLazarus(version);
+                break;
+            case '1.8.0':
+                yield _downloadLazarus(version);
+                break;
+            case '1.6.4':
+                yield _downloadLazarus(version);
+                break;
+            case '1.6.2':
+                yield _downloadLazarus(version);
+                break;
+            case '1.6':
+                yield _downloadLazarus(version);
+                break;
+            case '1.4.4':
+                yield _downloadLazarus(version);
+                break;
+            case '1.4.2':
+                yield _downloadLazarus(version);
+                break;
+            case '1.4':
+                yield _downloadLazarus(version);
+                break;
+            case '1.2.6':
+                yield _downloadLazarus(version);
+                break;
+            case '1.2.4':
+                yield _downloadLazarus(version);
+                break;
+            case '1.2.2':
+                yield _downloadLazarus(version);
+                break;
+            case '1.2':
+                yield _downloadLazarus(version);
+                break;
+            case '1.0.14':
+                yield _downloadLazarus(version);
+                break;
+            case '1.0.12':
+                yield _downloadLazarus(version);
+                break;
+            default:
+                throw new Error(`getLazarus - Version not available: ${version}`);
+                break;
+        }
+    });
+}
+exports.getLazarus = getLazarus;
+/**
+ * function _downloadLazarus
+ *
+ * Internal function that deals with the platform's specific steps to
+ * install the packages
+ */
+function _downloadLazarus(versionLaz) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let platform = os.platform();
+        console.log(`_downloadLazarus - Installing on platform: ${platform}`);
+        switch (platform) {
+            case 'win32':
+                // Get the URL of the file to download
+                let downloadURL = laz.getPackageName(platform, versionLaz, 'laz');
+                console.log(`_downloadLazarus - Downloading ${downloadURL}`);
+                let downloadPath_WIN;
+                try {
+                    // Perform the download
+                    downloadPath_WIN = yield tc.downloadTool(downloadURL);
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
+                    // tc.downloadTool returns a GUID string for a filename,
+                    // so it needs to be appended wit the extension .exe to execute
+                    yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
+                    downloadPath_WIN += '.exe';
+                    // Run the installer
+                    let lazarusDir = path.join(_getTempDirectory(), 'lazarus');
+                    yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
+                    // Add this path to the runner's global path
+                    core.addPath(`${lazarusDir}`);
+                }
+                catch (err) {
+                    throw err;
+                }
+                break;
+            case 'linux':
+                console.log('_downloadLazarus - sudo section');
+                // Perform a repository update
+                yield exec_1.exec('sudo apt update');
+                // Install the pre-requesite needed for Lazarus
+                // TODO : investigate when this should be GTK 5
+                yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
+                let downloadPath_LIN;
+                // Get the URL of the file to download
+                let downloadFPCSRCURL = laz.getPackageName(platform, versionLaz, 'fpcsrc');
+                console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
+                try {
+                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
+                    // Perform the download
+                    downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    // Install the package
+                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                }
+                catch (err) {
+                    throw err;
+                }
+                // Get the URL of the file to download
+                let downloadFPCURL = laz.getPackageName(platform, versionLaz, 'fpc');
+                console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
+                try {
+                    console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
+                    // Perform the download
+                    downloadPath_LIN = yield tc.downloadTool(downloadFPCURL);
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    // Install the package
+                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                }
+                catch (err) {
+                    throw err;
+                }
+                // Get the URL of the file to download
+                let downloadLazURL = laz.getPackageName(platform, versionLaz, 'laz');
+                console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
+                try {
+                    console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
+                    // Perform the download
+                    downloadPath_LIN = yield tc.downloadTool(downloadLazURL);
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    // Install the package
+                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                }
+                catch (err) {
+                    throw err;
+                }
+                break;
+            default:
+                throw new Error(`_downloadLazarus - Platform not implemented: ${platform}`);
+                break;
+        }
+    });
+}
+/**
+ * function _getTempDirectory
+ *
+ * Internal tool to get the platform's temporary folder
+ */
+function _getTempDirectory() {
+    const tempDirectory = process.env['RUNNER_TEMP'] || '';
+    assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+    return tempDirectory;
+}
+
+
+/***/ }),
+
+/***/ 794:
+/***/ (function(module) {
+
+module.exports = require("stream");
+
+/***/ }),
+
+/***/ 826:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+var rng = __webpack_require__(139);
+var bytesToUuid = __webpack_require__(722);
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof(options) == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+  options = options || {};
+
+  var rnds = options.random || (options.rng || rng)();
+
+  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+  rnds[6] = (rnds[6] & 0x0f) | 0x40;
+  rnds[8] = (rnds[8] & 0x3f) | 0x80;
+
+  // Copy bytes to buffer, if provided
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || bytesToUuid(rnds);
+}
+
+module.exports = v4;
+
+
+/***/ }),
+
+/***/ 835:
+/***/ (function(module) {
+
+module.exports = require("url");
+
+/***/ }),
+
+/***/ 896:
 /***/ (function(__unusedmodule, exports) {
 
 "use strict";
@@ -4624,329 +4947,6 @@ function getPackageName(platform, lazarusVersion, pkg) {
 }
 exports.getPackageName = getPackageName;
 
-
-/***/ }),
-
-/***/ 722:
-/***/ (function(module) {
-
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex[i] = (i + 0x100).toString(16).substr(1);
-}
-
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex;
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return ([
-    bth[buf[i++]], bth[buf[i++]],
-    bth[buf[i++]], bth[buf[i++]], '-',
-    bth[buf[i++]], bth[buf[i++]], '-',
-    bth[buf[i++]], bth[buf[i++]], '-',
-    bth[buf[i++]], bth[buf[i++]], '-',
-    bth[buf[i++]], bth[buf[i++]],
-    bth[buf[i++]], bth[buf[i++]],
-    bth[buf[i++]], bth[buf[i++]]
-  ]).join('');
-}
-
-module.exports = bytesToUuid;
-
-
-/***/ }),
-
-/***/ 747:
-/***/ (function(module) {
-
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ 749:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const core = __importStar(__webpack_require__(470));
-const tc = __importStar(__webpack_require__(533));
-const exec_1 = __webpack_require__(986);
-const os = __importStar(__webpack_require__(87));
-const path = __importStar(__webpack_require__(622));
-const assert_1 = __webpack_require__(357);
-const pkg = __importStar(__webpack_require__(717));
-/**
- * function getLazarus
- *
- * This function checks for the available known versions.
- * Then calls the function that deals with platform specific handling.
- */
-function getLazarus(version) {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log(`getLazarus - Installing Lazarus version:  ${version}`);
-        // Latest known stable version
-        const stableVersion = '2.0.6';
-        switch (version) {
-            // Special case named version that installs the repository pakages on Ubuntu
-            // but installs stable version under Windows
-            case "dist":
-                let platform = os.platform();
-                switch (platform) {
-                    case 'linux':
-                        // Perform a repository update
-                        yield exec_1.exec('sudo apt update');
-                        // Install Lazarus from the Ubuntu repository
-                        yield exec_1.exec('sudo apt install -y lazarus');
-                        break;
-                    case 'win32':
-                        yield _downloadLazarus(stableVersion);
-                        break;
-                    default:
-                        throw new Error(`getLazarus - Platform not supported: ${platform}`);
-                        break;
-                }
-                break;
-            // Special case named version that installs the latest stable version
-            case 'stable':
-                yield _downloadLazarus(stableVersion);
-                break;
-            case '2.0.6':
-                yield _downloadLazarus(version);
-                break;
-            case '2.0.4':
-                yield _downloadLazarus(version);
-                break;
-            case '2.0.2':
-                yield _downloadLazarus(version);
-                break;
-            case '2.0.0':
-                yield _downloadLazarus(version);
-                break;
-            case '1.8.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.8.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.8.0':
-                yield _downloadLazarus(version);
-                break;
-            case '1.6.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.6.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.6':
-                yield _downloadLazarus(version);
-                break;
-            case '1.4.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.4.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2.6':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.0.14':
-                yield _downloadLazarus(version);
-                break;
-            case '1.0.12':
-                yield _downloadLazarus(version);
-                break;
-            default:
-                throw new Error(`getLazarus - Version not available: ${version}`);
-                break;
-        }
-    });
-}
-exports.getLazarus = getLazarus;
-/**
- * function _downloadLazarus
- *
- * Internal function that deals with the platform's specific steps to
- * install the packages
- */
-function _downloadLazarus(versionLaz) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let platform = os.platform();
-        console.log(`_downloadLazarus - Installing on platform: ${platform}`);
-        switch (platform) {
-            case 'win32':
-                // Get the URL of the file to download
-                let downloadURL = pkg.getPackageName(platform, versionLaz, 'laz');
-                console.log(`_downloadLazarus - Downloading ${downloadURL}`);
-                let downloadPath_WIN;
-                try {
-                    // Perform the download
-                    downloadPath_WIN = yield tc.downloadTool(downloadURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
-                    // tc.downloadTool returns a GUID string for a filename,
-                    // so it needs to be appended wit the extension .exe to execute
-                    yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                    downloadPath_WIN += '.exe';
-                    // Run the installer
-                    let lazarusDir = path.join(_getTempDirectory(), 'lazarus');
-                    yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
-                    // Add this path to the runner's global path
-                    core.addPath(`${lazarusDir}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                break;
-            case 'linux':
-                console.log('_downloadLazarus - sudo section');
-                // Perform a repository update
-                yield exec_1.exec('sudo apt update');
-                // Install the pre-requesite needed for Lazarus
-                // TODO : investigate when this should be GTK 5
-                yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
-                let downloadPath_LIN;
-                // Get the URL of the file to download
-                let downloadFPCSRCURL = pkg.getPackageName(platform, versionLaz, 'fpcsrc');
-                console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
-                try {
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
-                    // Perform the download
-                    downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    // Install the package
-                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                // Get the URL of the file to download
-                let downloadFPCURL = pkg.getPackageName(platform, versionLaz, 'fpc');
-                console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
-                try {
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
-                    // Perform the download
-                    downloadPath_LIN = yield tc.downloadTool(downloadFPCURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    // Install the package
-                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                // Get the URL of the file to download
-                let downloadLazURL = pkg.getPackageName(platform, versionLaz, 'laz');
-                console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
-                try {
-                    console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
-                    // Perform the download
-                    downloadPath_LIN = yield tc.downloadTool(downloadLazURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    // Install the package
-                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                break;
-            default:
-                throw new Error(`_downloadLazarus - Platform not implemented: ${platform}`);
-                break;
-        }
-    });
-}
-/**
- * function _getTempDirectory
- *
- * Internal tool to get the platform's temporary folder
- */
-function _getTempDirectory() {
-    const tempDirectory = process.env['RUNNER_TEMP'] || '';
-    assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
-    return tempDirectory;
-}
-
-
-/***/ }),
-
-/***/ 794:
-/***/ (function(module) {
-
-module.exports = require("stream");
-
-/***/ }),
-
-/***/ 826:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var rng = __webpack_require__(139);
-var bytesToUuid = __webpack_require__(722);
-
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
-
-  if (typeof(options) == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
-  options = options || {};
-
-  var rnds = options.random || (options.rng || rng)();
-
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = (rnds[6] & 0x0f) | 0x40;
-  rnds[8] = (rnds[8] & 0x3f) | 0x80;
-
-  // Copy bytes to buffer, if provided
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || bytesToUuid(rnds);
-}
-
-module.exports = v4;
-
-
-/***/ }),
-
-/***/ 835:
-/***/ (function(module) {
-
-module.exports = require("url");
 
 /***/ }),
 
