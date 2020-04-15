@@ -1,7 +1,10 @@
 /**
- * function getPackageName
- *
- * returns the full URL of the file to download
+ * Returns the full URL of the file to download
+ * 
+ * @param platform
+ * @param lazarusVersion
+ * @param pkg
+ * @returns string
  */
 export function getPackageName(
   platform: string,

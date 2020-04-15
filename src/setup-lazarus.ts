@@ -10,7 +10,17 @@ async function run(): Promise<void> {
     //const payload = JSON.stringify(github.context.payload, undefined, 2)
     //console.log(`The event payload: ${payload}`);
 
+    // Call the installation of Lazarus
     await installer.getLazarus(lazarusVersion);
+
+    // `include-packages` input defined in action metadata file
+    let includePackages = core.getInput('include-packages');
+
+    // Transform string into array of strings
+    let packages: string[] = includePackages.split(',');
+
+    // Call the instalation of packages
+    await installer.getPackages(lazarusVersion, packages);
 
   } catch (error) {
     core.setFailed(error.message);

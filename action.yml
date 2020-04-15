@@ -11,6 +11,9 @@ inputs:
     description: 'Version of Lazarus'
     required: true
     default: 'dist'
+  include-packages:
+    description: 'Include packages that the project needs'
+    required: false
 
 runs:
   using: 'node12'

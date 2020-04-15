@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
+import * as http from '@actions/http-client';
 import {exec} from '@actions/exec/lib/exec';
 import * as os from 'os';
 import * as path from 'path';
@@ -7,10 +8,9 @@ import {ok} from 'assert';
 import * as laz from  './lazarus';
 
 /**
- * function getLazarus
- *
- * This function checks for the available known versions.
- * Then calls the function that deals with platform specific handling.
+ * Downloads and install the requested Lazarus version
+ * 
+ * @param version Lazarus version to install
  */
 export async function getLazarus(
   version: string
@@ -106,14 +106,43 @@ export async function getLazarus(
       break;
   }
 }
+
 /**
- * function _downloadLazarus
- *
- * Internal function that deals with the platform's specific steps to
- * install the packages
+ * Downloads and install the requested packages
+ * 
+ * @param lazVersion Lazarus version installed
+ * @param packages The packages to install
+ */
+export async function getPackages(
+  lazVersion: string,
+  packages: string[]
+): Promise<void> {
+  let httpClient: http.HttpClient = new http.HttpClient();
+  let packageList: object = 
+    await httpClient.getJson('https://packages.lazarus-ide.org/packagelist.json');
+
+  let packageCount: number = Object.keys(packageList).length / 2;
+  
+  for (let rIndex = 0; rIndex < packageCount; rIndex++) {
+    let packageData: object = packageList[`PackageData${rIndex}`];
+    let packageFiles: object = packageList[`PackageFiles${rIndex}`];
+
+    for (let pIndex = 0; pIndex < packages.length; pIndex++) {
+      if (packageData['Name'] == packages[pIndex]) {
+        // Install the bugger!!
+      }
+    }
+  }
+  
+}
+
+/**
+ * Internal function that deals with the platform's specific steps to install the packages
+ * 
+ * @param lazVersion Lazarus version
  */
 async function _downloadLazarus(
-  versionLaz: string
+  lazVersion: string
 ): Promise<void> {
   let platform = os.platform();
   console.log(`_downloadLazarus - Installing on platform: ${platform}`);
@@ -122,7 +151,7 @@ async function _downloadLazarus(
   switch (platform) {
     case 'win32':
       // Get the URL of the file to download
-      let downloadURL: string = laz.getPackageName(platform, versionLaz, 'laz');
+      let downloadURL: string = laz.getPackageName(platform, lazVersion, 'laz');
       console.log(`_downloadLazarus - Downloading ${downloadURL}`);
 
       let downloadPath_WIN: string;
@@ -158,7 +187,7 @@ async function _downloadLazarus(
       let downloadPath_LIN: string;
 
       // Get the URL of the file to download
-      let downloadFPCSRCURL: string = laz.getPackageName(platform, versionLaz, 'fpcsrc');
+      let downloadFPCSRCURL: string = laz.getPackageName(platform, lazVersion, 'fpcsrc');
       console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
       try {
         console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
@@ -172,7 +201,7 @@ async function _downloadLazarus(
       }
 
       // Get the URL of the file to download
-      let downloadFPCURL: string = laz.getPackageName(platform, versionLaz, 'fpc');
+      let downloadFPCURL: string = laz.getPackageName(platform, lazVersion, 'fpc');
       console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
       try {
         console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
@@ -186,7 +215,7 @@ async function _downloadLazarus(
       }
 
       // Get the URL of the file to download
-      let downloadLazURL: string = laz.getPackageName(platform, versionLaz, 'laz');
+      let downloadLazURL: string = laz.getPackageName(platform, lazVersion, 'laz');
       console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
       try {
         console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);

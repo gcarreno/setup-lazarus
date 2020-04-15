@@ -1288,7 +1288,14 @@ function run() {
             // Get the JSON webhook payload for the event that triggered the workflow
             //const payload = JSON.stringify(github.context.payload, undefined, 2)
             //console.log(`The event payload: ${payload}`);
+            // Call the installation of Lazarus
             yield installer.getLazarus(lazarusVersion);
+            // `include-packages` input defined in action metadata file
+            let includePackages = core.getInput('include-packages');
+            // Transform string into array of strings
+            let packages = includePackages.split(',');
+            // Call the instalation of packages
+            yield installer.getPackages(lazarusVersion, packages);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -4536,16 +4543,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
+const http = __importStar(__webpack_require__(539));
 const exec_1 = __webpack_require__(986);
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 const assert_1 = __webpack_require__(357);
 const laz = __importStar(__webpack_require__(896));
 /**
- * function getLazarus
+ * Downloads and install the requested Lazarus version
  *
- * This function checks for the available known versions.
- * Then calls the function that deals with platform specific handling.
+ * @param version Lazarus version to install
  */
 function getLazarus(version) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -4641,19 +4648,41 @@ function getLazarus(version) {
 }
 exports.getLazarus = getLazarus;
 /**
- * function _downloadLazarus
+ * Downloads and install the requested packages
  *
- * Internal function that deals with the platform's specific steps to
- * install the packages
+ * @param lazVersion Lazarus version installed
+ * @param packages The packages to install
  */
-function _downloadLazarus(versionLaz) {
+function getPackages(lazVersion, packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let httpClient = new http.HttpClient();
+        let packageList = yield httpClient.getJson('https://packages.lazarus-ide.org/packagelist.json');
+        let packageCount = Object.keys(packageList).length / 2;
+        for (let rIndex = 0; rIndex < packageCount; rIndex++) {
+            let packageData = packageList[`PackageData${rIndex}`];
+            let packageFiles = packageList[`PackageFiles${rIndex}`];
+            for (let pIndex = 0; pIndex < packages.length; pIndex++) {
+                if (packageData['Name'] == packages[pIndex]) {
+                    // Install the bugger!!
+                }
+            }
+        }
+    });
+}
+exports.getPackages = getPackages;
+/**
+ * Internal function that deals with the platform's specific steps to install the packages
+ *
+ * @param lazVersion Lazarus version
+ */
+function _downloadLazarus(lazVersion) {
     return __awaiter(this, void 0, void 0, function* () {
         let platform = os.platform();
         console.log(`_downloadLazarus - Installing on platform: ${platform}`);
         switch (platform) {
             case 'win32':
                 // Get the URL of the file to download
-                let downloadURL = laz.getPackageName(platform, versionLaz, 'laz');
+                let downloadURL = laz.getPackageName(platform, lazVersion, 'laz');
                 console.log(`_downloadLazarus - Downloading ${downloadURL}`);
                 let downloadPath_WIN;
                 try {
@@ -4683,7 +4712,7 @@ function _downloadLazarus(versionLaz) {
                 yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
                 let downloadPath_LIN;
                 // Get the URL of the file to download
-                let downloadFPCSRCURL = laz.getPackageName(platform, versionLaz, 'fpcsrc');
+                let downloadFPCSRCURL = laz.getPackageName(platform, lazVersion, 'fpcsrc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                 try {
                     console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
@@ -4697,7 +4726,7 @@ function _downloadLazarus(versionLaz) {
                     throw err;
                 }
                 // Get the URL of the file to download
-                let downloadFPCURL = laz.getPackageName(platform, versionLaz, 'fpc');
+                let downloadFPCURL = laz.getPackageName(platform, lazVersion, 'fpc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                 try {
                     console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
@@ -4711,7 +4740,7 @@ function _downloadLazarus(versionLaz) {
                     throw err;
                 }
                 // Get the URL of the file to download
-                let downloadLazURL = laz.getPackageName(platform, versionLaz, 'laz');
+                let downloadLazURL = laz.getPackageName(platform, lazVersion, 'laz');
                 console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                 try {
                     console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
@@ -4802,9 +4831,12 @@ module.exports = require("url");
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * function getPackageName
+ * Returns the full URL of the file to download
  *
- * returns the full URL of the file to download
+ * @param platform
+ * @param lazarusVersion
+ * @param pkg
+ * @returns string
  */
 function getPackageName(platform, lazarusVersion, pkg) {
     let result = '';
