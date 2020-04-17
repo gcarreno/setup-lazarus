@@ -38,6 +38,19 @@ Possible values:
 * `1.0.14` - comes with FPC "v2.6.2"
 * `1.0.12` - comes with FPC "v2.6.2"
 
+### include-packages
+
+**OPTIONAL** List of packages to install.
+
+You can ask the action to fetch packages and install them after Lazarus is installed.
+
+Format is a string with the packages separated by comma: "Package 1, Package 2, Package 3".
+
+The list of packages can be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
+
+**IMPORTANT** There is no dependency checks implemented YET.
+**IMPORTANT** You must order your package list in order to satisfy the dendencies yourself.
+
 ## Platforms
 
 At the moment this action only supports:
@@ -54,7 +67,7 @@ steps:
 - uses: actions/checkout@v2
 - uses: gcarreno/setup-lazarus@v2.1
   with:
-    lazarus-version: 'dist'
+    lazarus-version: "dist"
     include-packages: "Synapse 40.1"
 - run: lazbuild YourTestProject.lpi
 - run: YourTestProject
