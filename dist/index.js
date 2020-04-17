@@ -1641,9 +1641,11 @@ class Installer {
             core.startGroup('Installing Lazarus');
             yield this._Lazarus.installLazarus();
             core.endGroup();
-            core.startGroup('Installing Packages');
-            yield this._Packages.installPackages(this._IncludePackages);
-            core.endGroup();
+            if (this._IncludePackages.length > 0) {
+                core.startGroup('Installing Packages');
+                yield this._Packages.installPackages(this._IncludePackages);
+                core.endGroup();
+            }
         });
     }
 }

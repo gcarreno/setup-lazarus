@@ -21,8 +21,10 @@ export class Installer {
         await this._Lazarus.installLazarus();
         core.endGroup();
 
-        core.startGroup('Installing Packages');
-        await this._Packages.installPackages(this._IncludePackages);
-        core.endGroup();
+        if (this._IncludePackages.length > 0) {
+            core.startGroup('Installing Packages');
+            await this._Packages.installPackages(this._IncludePackages);
+            core.endGroup();
+        }
     }
 }
