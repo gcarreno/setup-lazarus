@@ -1105,7 +1105,7 @@ class Lazarus {
     }
     installLazarus() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`installLazarus -- Installing Lazarus v${this._LazarusVersion} on "${this._Platform}"`);
+            console.log(`installLazarus -- Installing Lazarus ${this._LazarusVersion} on "${this._Platform}"`);
             switch (this._LazarusVersion) {
                 // Special case named version that installs the repository pakages on Ubuntu
                 // but installs stable version under Windows
@@ -1118,7 +1118,8 @@ class Lazarus {
                             yield exec_1.exec('sudo apt install -y lazarus');
                             break;
                         case 'win32':
-                            yield this._downloadLazarus(StableVersion);
+                            this._LazarusVersion = StableVersion;
+                            yield this._downloadLazarus();
                             break;
                         default:
                             throw new Error(`getLazarus - Platform not supported: ${this._Platform}`);
@@ -1126,71 +1127,72 @@ class Lazarus {
                     break;
                 // Special case named version that installs the latest stable version
                 case 'stable':
-                    yield this._downloadLazarus(StableVersion);
+                    this._LazarusVersion = StableVersion;
+                    yield this._downloadLazarus();
                     break;
                 case '2.0.6':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '2.0.4':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '2.0.2':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '2.0.0':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.8.4':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.8.2':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.8.0':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.6.4':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.6.2':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.6':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.4.4':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.4.2':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.4':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.2.6':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.2.4':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.2.2':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.2':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.0.14':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 case '1.0.12':
-                    yield this._downloadLazarus(this._LazarusVersion);
+                    yield this._downloadLazarus();
                     break;
                 default:
                     throw new Error(`getLazarus - Version not available: ${this._LazarusVersion}`);
             }
         });
     }
-    _downloadLazarus(lazVersion) {
+    _downloadLazarus() {
         return __awaiter(this, void 0, void 0, function* () {
             switch (this._Platform) {
                 case 'win32':
@@ -2157,8 +2159,7 @@ class Packages {
         });
     }
     _getTempDirectory() {
-        // WARNING : Need to remove that '/tmp/             \|/
-        const tempDirectory = process.env['RUNNER_TEMP'] || '/tmp';
+        const tempDirectory = process.env['RUNNER_TEMP'] || '';
         assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
         return tempDirectory;
     }

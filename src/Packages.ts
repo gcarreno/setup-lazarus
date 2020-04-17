@@ -153,8 +153,7 @@ export class Packages {
         return result;
     }
     private _getTempDirectory(): string {
-        // WARNING : Need to remove that '/tmp/             \|/
-        const tempDirectory = process.env['RUNNER_TEMP'] || '/tmp'
+        const tempDirectory = process.env['RUNNER_TEMP'] || ''
         ok(tempDirectory, 'Expected RUNNER_TEMP to be defined')
         return tempDirectory
      }    

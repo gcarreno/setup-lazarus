@@ -137,7 +137,7 @@ export class Lazarus{
     }
     
     async installLazarus(): Promise<void> {
-        console.log(`installLazarus -- Installing Lazarus v${this._LazarusVersion} on "${this._Platform}"`);
+        console.log(`installLazarus -- Installing Lazarus ${this._LazarusVersion} on "${this._Platform}"`);
         switch (this._LazarusVersion) {
             // Special case named version that installs the repository pakages on Ubuntu
             // but installs stable version under Windows
@@ -150,7 +150,8 @@ export class Lazarus{
                         await exec('sudo apt install -y lazarus');
                     break;
                     case 'win32':
-                        await this._downloadLazarus(StableVersion);
+                        this._LazarusVersion = StableVersion;
+                        await this._downloadLazarus();
                         break;
                     default:
                         throw new Error(`getLazarus - Platform not supported: ${this._Platform}`);
@@ -158,73 +159,72 @@ export class Lazarus{
                 break;
             // Special case named version that installs the latest stable version
             case 'stable':
-                await this._downloadLazarus(StableVersion);
+                this._LazarusVersion = StableVersion;
+                await this._downloadLazarus();
                 break;
             case '2.0.6':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '2.0.4':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '2.0.2':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '2.0.0':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.8.4':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.8.2':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.8.0':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.6.4':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.6.2':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.6':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.4.4':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.4.2':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.4':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.2.6':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.2.4':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.2.2':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.2':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.0.14':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             case '1.0.12':
-                await this._downloadLazarus(this._LazarusVersion);
+                await this._downloadLazarus();
                 break;
             default:
                 throw new Error(`getLazarus - Version not available: ${this._LazarusVersion}`);
         }
     }
 
-    private async _downloadLazarus(
-        lazVersion: string
-    ): Promise<void> {
+    private async _downloadLazarus(): Promise<void> {
         switch (this._Platform) {
             case 'win32':
                 // Get the URL of the file to download
