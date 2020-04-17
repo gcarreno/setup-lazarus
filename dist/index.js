@@ -948,6 +948,359 @@ module.exports = require("os");
 
 /***/ }),
 
+/***/ 112:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const tc = __importStar(__webpack_require__(533));
+const exec_1 = __webpack_require__(986);
+const os = __importStar(__webpack_require__(87));
+const path = __importStar(__webpack_require__(622));
+const assert_1 = __webpack_require__(357);
+const StableVersion = '2.0.8';
+const pkgs = {
+    "win32": {
+        "v2_0_6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
+        "v2_0_4": "lazarus-2.0.4-fpc-3.0.4-win32.exe",
+        "v2_0_2": "lazarus-2.0.2-fpc-3.0.4-win32.exe",
+        "v2_0_0": "lazarus-2.0.0-fpc-3.0.4-win32.exe",
+        "v1_8_4": "lazarus-1.8.4-fpc-3.0.4-win32.exe",
+        "v1_8_2": "lazarus-1.8.2-fpc-3.0.4-win32.exe",
+        "v1_8_0": "lazarus-1.8.0-fpc-3.0.4-win32.exe",
+        "v1_6_4": "lazarus-1.6.4-fpc-3.0.2-win32.exe",
+        "v1_6_2": "lazarus-1.6.2-fpc-3.0.0-win32.exe",
+        "v1_6": "lazarus-1.6.0-fpc-3.0.0-win32.exe",
+        "v1_4_4": "lazarus-1.4.4-fpc-2.6.4-win32.exe",
+        "v1_4_2": "lazarus-1.4.2-fpc-2.6.4-win32.exe",
+        "v1_4": "lazarus-1.4.0-fpc-2.6.4-win32.exe",
+        "v1_2_6": "lazarus-1.2.6-fpc-2.6.4-win32.exe",
+        "v1_2_4": "lazarus-1.2.4-fpc-2.6.4-win32.exe",
+        "v1_2_2": "lazarus-1.2.2-fpc-2.6.4-win32.exe",
+        "v1_2": "lazarus-1.2.0-fpc-2.6.2-win32.exe",
+        "v1_0_14": "lazarus-1.0.14-fpc-2.6.2-win32.exe",
+        "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win32.exe"
+    },
+    "linux": {
+        "v2_0_6": {
+            "laz": "lazarus-project_2.0.6-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v2_0_4": {
+            "laz": "lazarus-project_2.0.4-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v2_0_2": {
+            "laz": "lazarus-project_2.0.2-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v2_0_0": {
+            "laz": "lazarus-project_2.0.0-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v1_8_4": {
+            "laz": "lazarus-project_1.8.4-0_amd64.deb",
+            "fpc": "fpc_3.0.4-3_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v1_8_2": {
+            "laz": "lazarus-project_1.8.2-0_amd64.deb",
+            "fpc": "fpc_3.0.4-2_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v1_8_0": {
+            "laz": "lazarus-project_1.8.0-1_amd64.deb",
+            "fpc": "fpc_3.0.4-2_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
+        "v1_6_4": {
+            "laz": "lazarus-project_1.6.4-0_amd64.deb",
+            "fpc": "fpc_3.0.2-170225_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.2-170225_amd64.deb"
+        },
+        "v1_6_2": {
+            "laz": "lazarus-project_1.6.2-1_amd64.deb",
+            "fpc": "fpc_3.0.0-151205_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.0-151205_amd64.deb"
+        },
+        "v1_6": {
+            "laz": "lazarus_1.6-0_amd64.deb",
+            "fpc": "fpc_3.0.0-151205_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.0-151205_amd64.deb"
+        },
+        "v1_4_4": {
+            "laz": "lazarus_1.4.4-0_amd64.deb",
+            "fpc": "fpc_2.6.4-150228_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.4-150228_amd64.deb"
+        },
+        "v1_4_2": {
+            "laz": "lazarus_1.4.2-0_amd64.deb",
+            "fpc": "fpc_2.6.4-150228_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.4-150228_amd64.deb"
+        },
+        "v1_4": {
+            "laz": "lazarus_1.4.0-0_amd64.deb",
+            "fpc": "fpc_2.6.4-150228_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.4-150228_amd64.deb"
+        },
+        "v1_2_6": {
+            "laz": "lazarus_1.2.6-0_amd64.deb",
+            "fpc": "fpc_2.6.4-140420_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.4-140420_amd64.deb"
+        },
+        "v1_2_4": {
+            "laz": "lazarus_1.2.4-0_amd64.deb",
+            "fpc": "fpc_2.6.4-140420_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.4-140420_amd64.deb"
+        },
+        "v1_2_2": {
+            "laz": "lazarus_1.2.2-0_amd64.deb",
+            "fpc": "fpc_2.6.4-140420_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.4-140420_amd64.deb"
+        },
+        "v1_2": {
+            "laz": "lazarus_1.2.0-0_amd64.deb",
+            "fpc": "fpc_2.6.2-0_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
+        },
+        "v1_0_14": {
+            "laz": "lazarus_1.0.14-0_amd64.deb",
+            "fpc": "fpc_2.6.2-0_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
+        },
+        "v1_0_12": {
+            "laz": "lazarus_1.0.12-0_amd64.deb",
+            "fpc": "fpc_2.6.2-0_amd64.deb",
+            "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
+        }
+    }
+};
+class Lazarus {
+    constructor(LazarusVersion) {
+        this._Platform = os.platform();
+        this._LazarusVersion = '';
+        this._LazarusVersion = LazarusVersion;
+    }
+    installLazarus() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`installLazarus -- Installing Lazarus v${this._LazarusVersion} on "${this._Platform}"`);
+            switch (this._LazarusVersion) {
+                // Special case named version that installs the repository pakages on Ubuntu
+                // but installs stable version under Windows
+                case "dist":
+                    switch (this._Platform) {
+                        case 'linux':
+                            // Perform a repository update
+                            yield exec_1.exec('sudo apt update');
+                            // Install Lazarus from the Ubuntu repository
+                            yield exec_1.exec('sudo apt install -y lazarus');
+                            break;
+                        case 'win32':
+                            yield this._downloadLazarus(StableVersion);
+                            break;
+                        default:
+                            throw new Error(`getLazarus - Platform not supported: ${this._Platform}`);
+                    }
+                    break;
+                // Special case named version that installs the latest stable version
+                case 'stable':
+                    yield this._downloadLazarus(StableVersion);
+                    break;
+                case '2.0.6':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '2.0.4':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '2.0.2':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '2.0.0':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.8.4':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.8.2':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.8.0':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.6.4':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.6.2':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.6':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.4.4':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.4.2':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.4':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.2.6':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.2.4':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.2.2':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.2':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.0.14':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                case '1.0.12':
+                    yield this._downloadLazarus(this._LazarusVersion);
+                    break;
+                default:
+                    throw new Error(`getLazarus - Version not available: ${this._LazarusVersion}`);
+            }
+        });
+    }
+    _downloadLazarus(lazVersion) {
+        return __awaiter(this, void 0, void 0, function* () {
+            switch (this._Platform) {
+                case 'win32':
+                    // Get the URL of the file to download
+                    let downloadURL = this._getPackageName('laz');
+                    console.log(`_downloadLazarus - Downloading ${downloadURL}`);
+                    let downloadPath_WIN;
+                    try {
+                        // Perform the download
+                        downloadPath_WIN = yield tc.downloadTool(downloadURL);
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
+                        // tc.downloadTool returns a GUID string for a filename,
+                        // so it needs to be appended wit the extension .exe to execute
+                        yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
+                        downloadPath_WIN += '.exe';
+                        // Run the installer
+                        let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
+                        yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
+                        // Add this path to the runner's global path
+                        core.addPath(`${lazarusDir}`);
+                    }
+                    catch (err) {
+                        throw err;
+                    }
+                    break;
+                case 'linux':
+                    console.log('_downloadLazarus - sudo section');
+                    // Perform a repository update
+                    yield exec_1.exec('sudo apt update');
+                    // Install the pre-requesite needed for Lazarus
+                    // TODO : investigate when this should be GTK 5
+                    yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
+                    let downloadPath_LIN;
+                    // Get the URL of the file to download
+                    let downloadFPCSRCURL = this._getPackageName('fpcsrc');
+                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
+                    try {
+                        console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
+                        // Perform the download
+                        downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                        // Install the package
+                        yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                    }
+                    catch (err) {
+                        throw err;
+                    }
+                    // Get the URL of the file to download
+                    let downloadFPCURL = this._getPackageName('fpc');
+                    console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
+                    try {
+                        console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
+                        // Perform the download
+                        downloadPath_LIN = yield tc.downloadTool(downloadFPCURL);
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                        // Install the package
+                        yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                    }
+                    catch (err) {
+                        throw err;
+                    }
+                    // Get the URL of the file to download
+                    let downloadLazURL = this._getPackageName('laz');
+                    console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
+                    try {
+                        console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
+                        // Perform the download
+                        downloadPath_LIN = yield tc.downloadTool(downloadLazURL);
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                        // Install the package
+                        yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                    }
+                    catch (err) {
+                        throw err;
+                    }
+                    break;
+                default:
+                    throw new Error(`_downloadLazarus - Platform not implemented: ${this._Platform}`);
+            }
+        });
+    }
+    _getPackageName(pkg) {
+        let result = '';
+        // Replace periods with undescores due to JSON borking with periods or dashes
+        let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
+        switch (this._Platform) {
+            case "win32":
+                result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${this._LazarusVersion}/`;
+                result += pkgs[this._Platform][lazVer];
+                break;
+            case "linux":
+                result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${this._LazarusVersion}/`;
+                result += pkgs[this._Platform][lazVer][pkg];
+                break;
+            default:
+                throw new Error(`getPackageName - Platform not implemented yet ${this._Platform}`);
+        }
+        return result;
+    }
+    _getTempDirectory() {
+        const tempDirectory = process.env['RUNNER_TEMP'] || '';
+        assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+        return tempDirectory;
+    }
+}
+exports.Lazarus = Lazarus;
+
+
+/***/ }),
+
 /***/ 129:
 /***/ (function(module) {
 
@@ -1242,6 +1595,55 @@ exports.debug = debug; // for test
 
 /***/ }),
 
+/***/ 170:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const laz = __importStar(__webpack_require__(112));
+const pkgs = __importStar(__webpack_require__(493));
+const RepoBaseURL = 'https://packages.lazarus-ide.org';
+const ParamJSON = 'packagelist.json';
+class Installer {
+    constructor(LazarusVerzion, PackageList) {
+        this._Lazarus = new laz.Lazarus(LazarusVerzion);
+        this._IncludePackages = PackageList;
+        this._Packages = new pkgs.Packages(LazarusVerzion, RepoBaseURL, ParamJSON);
+    }
+    install() {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.startGroup('Installing Lazarus');
+            yield this._Lazarus.installLazarus();
+            core.endGroup();
+            core.startGroup('Installing Packages');
+            yield this._Packages.installPackages(this._IncludePackages);
+            core.endGroup();
+        });
+    }
+}
+exports.Installer = Installer;
+
+
+/***/ }),
+
 /***/ 211:
 /***/ (function(module) {
 
@@ -1279,23 +1681,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
-const installer = __importStar(__webpack_require__(749));
+const inst = __importStar(__webpack_require__(170));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // `lazarus-version` input defined in action metadata file
             let lazarusVersion = core.getInput('lazarus-version');
+            // `include-packages` input defined in action metadata file
+            let includePackages = core.getInput('include-packages');
             // Get the JSON webhook payload for the event that triggered the workflow
             //const payload = JSON.stringify(github.context.payload, undefined, 2)
             //console.log(`The event payload: ${payload}`);
-            // Call the installation of Lazarus
-            yield installer.getLazarus(lazarusVersion);
-            // `include-packages` input defined in action metadata file
-            let includePackages = core.getInput('include-packages');
-            // Transform string into array of strings
-            let packages = includePackages.split(',');
-            // Call the instalation of packages
-            yield installer.getPackages(lazarusVersion, packages);
+            let Installer = new inst.Installer(lazarusVersion, includePackages.split(','));
+            yield Installer.install();
         }
         catch (error) {
             core.setFailed(error.message);
@@ -1620,6 +2018,184 @@ function getState(name) {
 }
 exports.getState = getState;
 //# sourceMappingURL=core.js.map
+
+/***/ }),
+
+/***/ 493:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const http = __importStar(__webpack_require__(539));
+const tc = __importStar(__webpack_require__(533));
+const exec_1 = __webpack_require__(986);
+const path = __importStar(__webpack_require__(622));
+const assert_1 = __webpack_require__(357);
+class Packages {
+    constructor(LazarusVersion, BaseURL, ParamJSON) {
+        this._Items = new Array();
+        this._LazarusVersion = LazarusVersion;
+        this._BaseURL = BaseURL;
+        this._ParamJSON = ParamJSON;
+    }
+    installPackages(includePackages) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`Installing Lazarus packages:`);
+            console.log(includePackages);
+            this._Items = yield this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
+            console.log(`installPackages -- Got ${this._Items.length} package items`);
+            try {
+                for (let index = 0; index < includePackages.length; index++) {
+                    let ipkg = includePackages[index];
+                    for (let _iIndex = 0; _iIndex < this._Items.length; _iIndex++) {
+                        let pkg = this._Items[_iIndex];
+                        if (ipkg.trim() == pkg.Name) {
+                            /*
+                             *   At this point I need to implement dependency test and installation
+                             * recursively to have this thing complete.
+                             *   For the moment I'll to mention that in a proeminent place.
+                             */
+                            let pkgFile = yield this._download(pkg.RepositoryFileName);
+                            let pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
+                            console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                            yield exec_1.exec(`rm ${pkgFile}`);
+                            let lazDir = path.join('/usr/share/lazarus/', this._LazarusVersion);
+                            for (let fIndex = 0; fIndex < pkg.Packages.length; fIndex++) {
+                                let fpkg = pkg.Packages[fIndex];
+                                let pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath, fpkg.PackageFile);
+                                switch (fpkg.PackageType) {
+                                    case 0:
+                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package ${pkgLPKFile}`);
+                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
+                                        break;
+                                    case 2:
+                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package-link ${pkgLPKFile}`);
+                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
+                                        break;
+                                    default:
+                                        throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    _extract(file, dest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield tc.extractZip(file, dest);
+            return result;
+        });
+    }
+    _download(filename) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tempDir = this._getTempDirectory();
+            console.log(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
+            let pkgFilename = yield tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
+            return pkgFilename;
+        });
+    }
+    _getPackageList(repoURL) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = new Array();
+            let httpClient = new http.HttpClient();
+            let httpResponse;
+            let packageList;
+            try {
+                httpResponse = yield httpClient.get(repoURL);
+                packageList = JSON.parse(yield httpResponse.readBody());
+            }
+            catch (error) {
+                throw new Error(`getPackageList -- ${error.message}`);
+            }
+            let pkgCount = Object.keys(packageList).length / 2;
+            console.log(`getPackageList -- We have ${pkgCount} packages from repo`);
+            for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
+                let _pkgData = packageList[`PackageData${dIndex}`];
+                let pkgData = new PackageData();
+                pkgData.Name = _pkgData['Name'];
+                pkgData.RepositoryFileName = _pkgData['RepositoryFileName'];
+                pkgData.RepositoryFileHash = _pkgData['RepositoryFileHash'];
+                pkgData.PackageBaseDir = _pkgData['PackageBaseDir'];
+                let _pkgFiles = packageList[`PackageFiles${dIndex}`];
+                for (let fIndex = 0; fIndex < _pkgFiles.length; fIndex++) {
+                    let _pkgFile = _pkgFiles[fIndex];
+                    let pkgFile = new PackageFile();
+                    pkgFile.PackageFile = _pkgFile['Name'];
+                    pkgFile.RelativeFilePath = _pkgFile['RelativeFilePath'];
+                    pkgFile.LazCompatibility = _pkgFile['LazCompatibility'];
+                    pkgFile.FPCCompatability = _pkgFile['FPCCompatability'];
+                    pkgFile.DependenciesAsString = _pkgFile['DependenciesAsString'];
+                    pkgFile.PackageType = _pkgFile['PackageType'];
+                    pkgData.Packages.push(pkgFile);
+                }
+                result.push(pkgData);
+            }
+            return result;
+        });
+    }
+    _getTempDirectory() {
+        // WARNING : Need to remove that '/tmp/             \|/
+        const tempDirectory = process.env['RUNNER_TEMP'] || '/tmp';
+        assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+        return tempDirectory;
+    }
+}
+exports.Packages = Packages;
+class PackageData {
+    constructor() {
+        this.Name = '';
+        this.RepositoryFileName = '';
+        this.RepositoryFileHash = '';
+        this._PackageBaseDir = '';
+        this.Packages = new Array();
+    }
+    get PackageBaseDir() {
+        return this._PackageBaseDir;
+    }
+    set PackageBaseDir(value) {
+        this._PackageBaseDir = value.replace(/\\/gi, '');
+    }
+}
+class PackageFile {
+    constructor() {
+        this.PackageFile = '';
+        this._RelativeFilePath = '';
+        this.LazCompatibility = new Array();
+        this.FPCCompatability = new Array();
+        this.DependenciesAsString = '';
+        this.PackageType = -1;
+    }
+    get RelativeFilePath() {
+        return this._RelativeFilePath;
+    }
+    set RelativeFilePath(value) {
+        this._RelativeFilePath = value.replace(/\\/gi, '');
+    }
+}
+
 
 /***/ }),
 
@@ -4519,261 +5095,6 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 749:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const core = __importStar(__webpack_require__(470));
-const tc = __importStar(__webpack_require__(533));
-const http = __importStar(__webpack_require__(539));
-const exec_1 = __webpack_require__(986);
-const os = __importStar(__webpack_require__(87));
-const path = __importStar(__webpack_require__(622));
-const assert_1 = __webpack_require__(357);
-const laz = __importStar(__webpack_require__(896));
-/**
- * Downloads and install the requested Lazarus version
- *
- * @param version Lazarus version to install
- */
-function getLazarus(version) {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log(`getLazarus - Installing Lazarus version:  ${version}`);
-        // Latest known stable version
-        const stableVersion = '2.0.6';
-        switch (version) {
-            // Special case named version that installs the repository pakages on Ubuntu
-            // but installs stable version under Windows
-            case "dist":
-                let platform = os.platform();
-                switch (platform) {
-                    case 'linux':
-                        // Perform a repository update
-                        yield exec_1.exec('sudo apt update');
-                        // Install Lazarus from the Ubuntu repository
-                        yield exec_1.exec('sudo apt install -y lazarus');
-                        break;
-                    case 'win32':
-                        yield _downloadLazarus(stableVersion);
-                        break;
-                    default:
-                        throw new Error(`getLazarus - Platform not supported: ${platform}`);
-                        break;
-                }
-                break;
-            // Special case named version that installs the latest stable version
-            case 'stable':
-                yield _downloadLazarus(stableVersion);
-                break;
-            case '2.0.6':
-                yield _downloadLazarus(version);
-                break;
-            case '2.0.4':
-                yield _downloadLazarus(version);
-                break;
-            case '2.0.2':
-                yield _downloadLazarus(version);
-                break;
-            case '2.0.0':
-                yield _downloadLazarus(version);
-                break;
-            case '1.8.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.8.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.8.0':
-                yield _downloadLazarus(version);
-                break;
-            case '1.6.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.6.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.6':
-                yield _downloadLazarus(version);
-                break;
-            case '1.4.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.4.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2.6':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2.4':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.2':
-                yield _downloadLazarus(version);
-                break;
-            case '1.0.14':
-                yield _downloadLazarus(version);
-                break;
-            case '1.0.12':
-                yield _downloadLazarus(version);
-                break;
-            default:
-                throw new Error(`getLazarus - Version not available: ${version}`);
-                break;
-        }
-    });
-}
-exports.getLazarus = getLazarus;
-/**
- * Downloads and install the requested packages
- *
- * @param lazVersion Lazarus version installed
- * @param packages The packages to install
- */
-function getPackages(lazVersion, packages) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let httpClient = new http.HttpClient();
-        let packageList = yield httpClient.getJson('https://packages.lazarus-ide.org/packagelist.json');
-        let packageCount = Object.keys(packageList).length / 2;
-        for (let rIndex = 0; rIndex < packageCount; rIndex++) {
-            let packageData = packageList[`PackageData${rIndex}`];
-            let packageFiles = packageList[`PackageFiles${rIndex}`];
-            for (let pIndex = 0; pIndex < packages.length; pIndex++) {
-                if (packageData['Name'] == packages[pIndex]) {
-                    // Install the bugger!!
-                }
-            }
-        }
-    });
-}
-exports.getPackages = getPackages;
-/**
- * Internal function that deals with the platform's specific steps to install the packages
- *
- * @param lazVersion Lazarus version
- */
-function _downloadLazarus(lazVersion) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let platform = os.platform();
-        console.log(`_downloadLazarus - Installing on platform: ${platform}`);
-        switch (platform) {
-            case 'win32':
-                // Get the URL of the file to download
-                let downloadURL = laz.getPackageName(platform, lazVersion, 'laz');
-                console.log(`_downloadLazarus - Downloading ${downloadURL}`);
-                let downloadPath_WIN;
-                try {
-                    // Perform the download
-                    downloadPath_WIN = yield tc.downloadTool(downloadURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
-                    // tc.downloadTool returns a GUID string for a filename,
-                    // so it needs to be appended wit the extension .exe to execute
-                    yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                    downloadPath_WIN += '.exe';
-                    // Run the installer
-                    let lazarusDir = path.join(_getTempDirectory(), 'lazarus');
-                    yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
-                    // Add this path to the runner's global path
-                    core.addPath(`${lazarusDir}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                break;
-            case 'linux':
-                console.log('_downloadLazarus - sudo section');
-                // Perform a repository update
-                yield exec_1.exec('sudo apt update');
-                // Install the pre-requesite needed for Lazarus
-                // TODO : investigate when this should be GTK 5
-                yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
-                let downloadPath_LIN;
-                // Get the URL of the file to download
-                let downloadFPCSRCURL = laz.getPackageName(platform, lazVersion, 'fpcsrc');
-                console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
-                try {
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
-                    // Perform the download
-                    downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    // Install the package
-                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                // Get the URL of the file to download
-                let downloadFPCURL = laz.getPackageName(platform, lazVersion, 'fpc');
-                console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
-                try {
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
-                    // Perform the download
-                    downloadPath_LIN = yield tc.downloadTool(downloadFPCURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    // Install the package
-                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                // Get the URL of the file to download
-                let downloadLazURL = laz.getPackageName(platform, lazVersion, 'laz');
-                console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
-                try {
-                    console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
-                    // Perform the download
-                    downloadPath_LIN = yield tc.downloadTool(downloadLazURL);
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
-                    // Install the package
-                    yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
-                }
-                catch (err) {
-                    throw err;
-                }
-                break;
-            default:
-                throw new Error(`_downloadLazarus - Platform not implemented: ${platform}`);
-                break;
-        }
-    });
-}
-/**
- * function _getTempDirectory
- *
- * Internal tool to get the platform's temporary folder
- */
-function _getTempDirectory() {
-    const tempDirectory = process.env['RUNNER_TEMP'] || '';
-    assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
-    return tempDirectory;
-}
-
-
-/***/ }),
-
 /***/ 794:
 /***/ (function(module) {
 
@@ -4821,164 +5142,6 @@ module.exports = v4;
 /***/ (function(module) {
 
 module.exports = require("url");
-
-/***/ }),
-
-/***/ 896:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Returns the full URL of the file to download
- *
- * @param platform
- * @param lazarusVersion
- * @param pkg
- * @returns string
- */
-function getPackageName(platform, lazarusVersion, pkg) {
-    let result = '';
-    let pkgs = {
-        "win32": {
-            "v2_0_6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
-            "v2_0_4": "lazarus-2.0.4-fpc-3.0.4-win32.exe",
-            "v2_0_2": "lazarus-2.0.2-fpc-3.0.4-win32.exe",
-            "v2_0_0": "lazarus-2.0.0-fpc-3.0.4-win32.exe",
-            "v1_8_4": "lazarus-1.8.4-fpc-3.0.4-win32.exe",
-            "v1_8_2": "lazarus-1.8.2-fpc-3.0.4-win32.exe",
-            "v1_8_0": "lazarus-1.8.0-fpc-3.0.4-win32.exe",
-            "v1_6_4": "lazarus-1.6.4-fpc-3.0.2-win32.exe",
-            "v1_6_2": "lazarus-1.6.2-fpc-3.0.0-win32.exe",
-            "v1_6": "lazarus-1.6.0-fpc-3.0.0-win32.exe",
-            "v1_4_4": "lazarus-1.4.4-fpc-2.6.4-win32.exe",
-            "v1_4_2": "lazarus-1.4.2-fpc-2.6.4-win32.exe",
-            "v1_4": "lazarus-1.4.0-fpc-2.6.4-win32.exe",
-            "v1_2_6": "lazarus-1.2.6-fpc-2.6.4-win32.exe",
-            "v1_2_4": "lazarus-1.2.4-fpc-2.6.4-win32.exe",
-            "v1_2_2": "lazarus-1.2.2-fpc-2.6.4-win32.exe",
-            "v1_2": "lazarus-1.2.0-fpc-2.6.2-win32.exe",
-            "v1_0_14": "lazarus-1.0.14-fpc-2.6.2-win32.exe",
-            "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win32.exe"
-        },
-        "linux": {
-            "v2_0_6": {
-                "laz": "lazarus-project_2.0.6-0_amd64.deb",
-                "fpc": "fpc-laz_3.0.4-1_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v2_0_4": {
-                "laz": "lazarus-project_2.0.4-0_amd64.deb",
-                "fpc": "fpc-laz_3.0.4-1_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v2_0_2": {
-                "laz": "lazarus-project_2.0.2-0_amd64.deb",
-                "fpc": "fpc-laz_3.0.4-1_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v2_0_0": {
-                "laz": "lazarus-project_2.0.0-0_amd64.deb",
-                "fpc": "fpc-laz_3.0.4-1_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v1_8_4": {
-                "laz": "lazarus-project_1.8.4-0_amd64.deb",
-                "fpc": "fpc_3.0.4-3_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v1_8_2": {
-                "laz": "lazarus-project_1.8.2-0_amd64.deb",
-                "fpc": "fpc_3.0.4-2_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v1_8_0": {
-                "laz": "lazarus-project_1.8.0-1_amd64.deb",
-                "fpc": "fpc_3.0.4-2_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
-            },
-            "v1_6_4": {
-                "laz": "lazarus-project_1.6.4-0_amd64.deb",
-                "fpc": "fpc_3.0.2-170225_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.2-170225_amd64.deb"
-            },
-            "v1_6_2": {
-                "laz": "lazarus-project_1.6.2-1_amd64.deb",
-                "fpc": "fpc_3.0.0-151205_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.0-151205_amd64.deb"
-            },
-            "v1_6": {
-                "laz": "lazarus_1.6-0_amd64.deb",
-                "fpc": "fpc_3.0.0-151205_amd64.deb",
-                "fpcsrc": "fpc-src_3.0.0-151205_amd64.deb"
-            },
-            "v1_4_4": {
-                "laz": "lazarus_1.4.4-0_amd64.deb",
-                "fpc": "fpc_2.6.4-150228_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.4-150228_amd64.deb"
-            },
-            "v1_4_2": {
-                "laz": "lazarus_1.4.2-0_amd64.deb",
-                "fpc": "fpc_2.6.4-150228_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.4-150228_amd64.deb"
-            },
-            "v1_4": {
-                "laz": "lazarus_1.4.0-0_amd64.deb",
-                "fpc": "fpc_2.6.4-150228_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.4-150228_amd64.deb"
-            },
-            "v1_2_6": {
-                "laz": "lazarus_1.2.6-0_amd64.deb",
-                "fpc": "fpc_2.6.4-140420_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.4-140420_amd64.deb"
-            },
-            "v1_2_4": {
-                "laz": "lazarus_1.2.4-0_amd64.deb",
-                "fpc": "fpc_2.6.4-140420_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.4-140420_amd64.deb"
-            },
-            "v1_2_2": {
-                "laz": "lazarus_1.2.2-0_amd64.deb",
-                "fpc": "fpc_2.6.4-140420_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.4-140420_amd64.deb"
-            },
-            "v1_2": {
-                "laz": "lazarus_1.2.0-0_amd64.deb",
-                "fpc": "fpc_2.6.2-0_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
-            },
-            "v1_0_14": {
-                "laz": "lazarus_1.0.14-0_amd64.deb",
-                "fpc": "fpc_2.6.2-0_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
-            },
-            "v1_0_12": {
-                "laz": "lazarus_1.0.12-0_amd64.deb",
-                "fpc": "fpc_2.6.2-0_amd64.deb",
-                "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
-            }
-        }
-    };
-    // Replace periods with undescores due to JSON borking with periods or dashes
-    let lazVer = 'v' + lazarusVersion.replace(/\./gi, '_');
-    switch (platform) {
-        case "win32":
-            result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${lazarusVersion}/`;
-            result += pkgs[platform][lazVer];
-            break;
-        case "linux":
-            result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${lazarusVersion}/`;
-            result += pkgs[platform][lazVer][pkg];
-            break;
-        default:
-            throw new Error(`getPackageName - Platform not implemented yet ${platform}`);
-            break;
-    }
-    return result;
-}
-exports.getPackageName = getPackageName;
-
 
 /***/ }),
 
