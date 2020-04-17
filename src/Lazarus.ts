@@ -9,6 +9,7 @@ const StableVersion = '2.0.8';
 
 const pkgs: object = {
     "win32": {
+        "v2_0_8" : "lazarus-2.0.8-fpc-3.0.4-win32.exe",
         "v2_0_6" : "lazarus-2.0.6-fpc-3.0.4-win32.exe",
         "v2_0_4" : "lazarus-2.0.4-fpc-3.0.4-win32.exe",
         "v2_0_2" : "lazarus-2.0.2-fpc-3.0.4-win32.exe",
@@ -30,6 +31,11 @@ const pkgs: object = {
         "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win32.exe"
     },
     "linux": {
+        "v2_0_8": {
+            "laz": "lazarus-project_2.0.8-0_amd64.deb",
+            "fpc": "fpc-laz_3.0.4-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.0.4-2_amd64.deb"
+        },
         "v2_0_6": {
             "laz": "lazarus-project_2.0.6-0_amd64.deb",
             "fpc": "fpc-laz_3.0.4-1_amd64.deb",
