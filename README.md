@@ -48,8 +48,10 @@ Format is a string with the packages separated by comma: "Package 1, Package 2, 
 
 The list of packages can be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
 
-**IMPORTANT** There is no dependency checks implemented YET.
-**IMPORTANT** You must order your package list in order to satisfy the dendencies yourself.
+**IMPORTANT** 
+
+> There is no dependency checks implemented YET.
+> You must order your package list in order to satisfy the dendencies yourself.
 
 ## Platforms
 
