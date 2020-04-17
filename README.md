@@ -2,7 +2,7 @@
 
 ![setup-lazarus logo](images/setup-lazarus-logo.png)
 
-[![Actions Status](https://github.com/gcarreno/setup-lazarus/workflows/Main%20workflow/badge.svg)](https://github.com/gcarreno/setup-lazarus/actions)
+[![Actions Status](https://github.com/gcarreno/setup-lazarus/workflows/build/badge.svg)](https://github.com/gcarreno/setup-lazarus/actions)
 
 Set up your GitHub Actions workflow with a specific version of Lazarus
 
