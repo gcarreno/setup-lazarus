@@ -3,6 +3,8 @@ name: Main workflow
 on:
   pull_request:
   push:
+    paths-ignore:
+    - "README.md"
     branches:
       - master
       - releases/*
