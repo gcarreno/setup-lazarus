@@ -15,7 +15,8 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 Possible values:
 
 * `dist` - Lazarus package that comes with the Ubuntu dist your chose on `runs-on` and latest stable for Windows
-* `satble` - Installs the latest stable version
+* `satble` - Installs the latest stable version: 2.0.8
+* `2.0.8` - comes with FPC "v3.0.4"
 * `2.0.6` - comes with FPC "v3.0.4"
 * `2.0.4` - comes with FPC "v3.0.4"
 * `2.0.2` - comes with FPC "v3.0.4"
@@ -54,6 +55,7 @@ steps:
 - uses: gcarreno/setup-lazarus@v2.1
   with:
     lazarus-version: 'dist'
+    include-packages: "Synapse 40.1"
 - run: lazbuild YourTestProject.lpi
 - run: YourTestProject
 ```
@@ -85,6 +87,7 @@ jobs:
       uses: gcarreno/setup-lazarus@v2.1
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
+        include-packages: "Synapse 40.1"
     - name: Build the Main Application
       run: lazbuild "src/lazaruswithgithubactions.lpi"
     - name: Build the Unit Tests Application
