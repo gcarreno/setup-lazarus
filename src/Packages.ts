@@ -65,20 +65,16 @@ export class Packages {
                             switch (fpkg.PackageType) {
                                 case 0:
                                     console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package ${pkgLPKFile}`);
-                                    //await exec(`lazbuild --lazarusdir=${lazDir} --add-package ${pkgLPKFile}`);
                                     await exec(`lazbuild --add-package ${pkgLPKFile}`);
 
                                     console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
-                                    //await exec(`lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
                                     await exec(`lazbuild ${pkgLPKFile}`);
                                     break;
                                 case 2:
                                     console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package-link ${pkgLPKFile}`);
-                                    //await exec(`lazbuild --lazarusdir=${lazDir} --add-package-link ${pkgLPKFile}`);
                                     await exec(`lazbuild --add-package-link ${pkgLPKFile}`);
 
                                     console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
-                                    //await exec(`lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
                                     await exec(`lazbuild ${pkgLPKFile}`);
                                     break;
                                 default:
