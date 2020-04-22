@@ -1207,13 +1207,12 @@ class Lazarus {
                     console.log(`_downloadLazarus - Downloading ${downloadURL}`);
                     let downloadPath_WIN;
                     try {
-                        // Perform the download
-                        downloadPath_WIN = yield tc.downloadTool(downloadURL);
+                        downloadPath_WIN = yield tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
                         // tc.downloadTool returns a GUID string for a filename,
                         // so it needs to be appended wit the extension .exe to execute
-                        yield exec_1.exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                        downloadPath_WIN += '.exe';
+                        //await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
+                        //downloadPath_WIN += '.exe';
                         // Run the installer
                         let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
                         yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
@@ -1230,7 +1229,7 @@ class Lazarus {
                     yield exec_1.exec('sudo apt update');
                     // Install the pre-requesite needed for Lazarus
                     // TODO : investigate when this should be GTK 5
-                    yield exec_1.exec('sudo apt install -y libgtk2.0-dev');
+                    //await exec('sudo apt install -y libgtk2.0-dev');
                     let downloadPath_LIN;
                     // Get the URL of the file to download
                     let downloadFPCSRCURL = this._getPackageName('fpcsrc');
@@ -1238,10 +1237,10 @@ class Lazarus {
                     try {
                         console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                         // Perform the download
-                        downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL);
+                        downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                         // Install the package
-                        yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                        yield exec_1.exec(`sudo apt install -y ${downloadPath_LIN}`);
                     }
                     catch (err) {
                         throw err;
@@ -1252,10 +1251,10 @@ class Lazarus {
                     try {
                         console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                         // Perform the download
-                        downloadPath_LIN = yield tc.downloadTool(downloadFPCURL);
+                        downloadPath_LIN = yield tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                         // Install the package
-                        yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                        yield exec_1.exec(`sudo apt install -y ${downloadPath_LIN}`);
                     }
                     catch (err) {
                         throw err;
@@ -1266,10 +1265,10 @@ class Lazarus {
                     try {
                         console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                         // Perform the download
-                        downloadPath_LIN = yield tc.downloadTool(downloadLazURL);
+                        downloadPath_LIN = yield tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                         // Install the package
-                        yield exec_1.exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                        yield exec_1.exec(`sudo apt install -y ${downloadPath_LIN}`);
                     }
                     catch (err) {
                         throw err;
@@ -2145,7 +2144,7 @@ class Packages {
                 throw new Error(`getPackageList -- ${error.message}`);
             }
             let pkgCount = Object.keys(packageList).length / 2;
-            console.log(`getPackageList -- We have ${pkgCount} packages from repo`);
+            //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
             for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
                 let _pkgData = packageList[`PackageData${dIndex}`];
                 let pkgData = new PackageData();

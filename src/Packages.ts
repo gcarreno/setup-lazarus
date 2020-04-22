@@ -127,7 +127,7 @@ export class Packages {
         }
     
         let pkgCount = Object.keys(packageList).length / 2;
-        console.log(`getPackageList -- We have ${pkgCount} packages from repo`);
+        //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
     
         for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
             let _pkgData = packageList[`PackageData${dIndex}`];

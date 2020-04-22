@@ -239,14 +239,13 @@ export class Lazarus{
     
                 let downloadPath_WIN: string;
                 try {
-                    // Perform the download
-                    downloadPath_WIN = await tc.downloadTool(downloadURL);
+                    downloadPath_WIN = await tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
         
                     // tc.downloadTool returns a GUID string for a filename,
                     // so it needs to be appended wit the extension .exe to execute
-                    await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                    downloadPath_WIN += '.exe';
+                    //await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
+                    //downloadPath_WIN += '.exe';
         
                     // Run the installer
                     let lazarusDir: string = path.join(this._getTempDirectory(), 'lazarus');
@@ -264,7 +263,7 @@ export class Lazarus{
                 await exec('sudo apt update');
                 // Install the pre-requesite needed for Lazarus
                 // TODO : investigate when this should be GTK 5
-                await exec('sudo apt install -y libgtk2.0-dev');
+                //await exec('sudo apt install -y libgtk2.0-dev');
         
                 let downloadPath_LIN: string;
         
@@ -274,10 +273,10 @@ export class Lazarus{
                 try {
                     console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                     // Perform the download
-                    downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL);
+                    downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                     // Install the package
-                    await exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                    await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
                     throw err;
                 }
@@ -288,10 +287,10 @@ export class Lazarus{
                 try {
                     console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                     // Perform the download
-                    downloadPath_LIN = await tc.downloadTool(downloadFPCURL);
+                    downloadPath_LIN = await tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                     // Install the package
-                await exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
                     throw err;
                 }
@@ -302,10 +301,10 @@ export class Lazarus{
                 try {
                     console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                     // Perform the download
-                    downloadPath_LIN = await tc.downloadTool(downloadLazURL);
+                    downloadPath_LIN = await tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                     // Install the package
-                    await exec(`sudo dpkg -i ${downloadPath_LIN}`);
+                    await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
                     throw err;
                 }
