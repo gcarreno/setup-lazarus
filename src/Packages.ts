@@ -41,16 +41,17 @@ export class Packages {
                          *   For the moment I'll to mention that in a proeminent place.
                          */
                         
+                         // Download the package
                         let pkgFile = await this._download(pkg.RepositoryFileName);
                         
+                        // Unzip the package
                         let pkgFolder = await this._extract(
                             pkgFile, 
                             path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
                         
                         console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                        // Clean up, no need for the file to lay around any more
                         await exec(`rm ${pkgFile}`);
-
-                        let lazDir = path.join('/usr/share/lazarus/', this._LazarusVersion);
 
                         for (let fIndex: number = 0; fIndex < pkg.Packages.length; fIndex++) {
                             let fpkg: PackageFile = pkg.Packages[fIndex];
@@ -64,17 +65,21 @@ export class Packages {
 
                             switch (fpkg.PackageType) {
                                 case 0:
-                                    console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package ${pkgLPKFile}`);
+                                    // Making Lazarus aware of the package
+                                    console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
                                     await exec(`lazbuild --add-package ${pkgLPKFile}`);
 
-                                    console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
+                                    // Compiling the package
+                                    console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                     await exec(`lazbuild ${pkgLPKFile}`);
                                     break;
                                 case 2:
-                                    console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package-link ${pkgLPKFile}`);
+                                    // Making Lazarus aware of the package
+                                    console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
                                     await exec(`lazbuild --add-package-link ${pkgLPKFile}`);
 
-                                    console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
+                                    // Compiling the package
+                                    console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                     await exec(`lazbuild ${pkgLPKFile}`);
                                     break;
                                 default:

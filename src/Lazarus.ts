@@ -234,18 +234,13 @@ export class Lazarus{
         switch (this._Platform) {
             case 'win32':
                 // Get the URL of the file to download
-                let downloadURL: string = this._getPackageName('laz');
+                let downloadURL: string = this._getPackageURL('laz');
                 console.log(`_downloadLazarus - Downloading ${downloadURL}`);
     
                 let downloadPath_WIN: string;
                 try {
                     downloadPath_WIN = await tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
-        
-                    // tc.downloadTool returns a GUID string for a filename,
-                    // so it needs to be appended wit the extension .exe to execute
-                    //await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                    //downloadPath_WIN += '.exe';
         
                     // Run the installer
                     let lazarusDir: string = path.join(this._getTempDirectory(), 'lazarus');
@@ -258,20 +253,15 @@ export class Lazarus{
                 }
                 break;
             case 'linux':
-                console.log('_downloadLazarus - sudo section');
                 // Perform a repository update
                 await exec('sudo apt update');
-                // Install the pre-requesite needed for Lazarus
-                // TODO : investigate when this should be GTK 5
-                //await exec('sudo apt install -y libgtk2.0-dev');
         
                 let downloadPath_LIN: string;
         
-                // Get the URL of the file to download
-                let downloadFPCSRCURL: string = this._getPackageName('fpcsrc');
+                // Get the URL for Free Pascal Source
+                let downloadFPCSRCURL: string = this._getPackageURL('fpcsrc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                 try {
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                     // Perform the download
                     downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
@@ -281,25 +271,23 @@ export class Lazarus{
                     throw err;
                 }
         
-                // Get the URL of the file to download
-                let downloadFPCURL: string = this._getPackageName('fpc');
+                // Get the URL for Free Pascal's compiler
+                let downloadFPCURL: string = this._getPackageURL('fpc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                 try {
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                     // Perform the download
                     downloadPath_LIN = await tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                     // Install the package
-                await exec(`sudo apt install -y ${downloadPath_LIN}`);
+                    await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
                     throw err;
                 }
         
-                // Get the URL of the file to download
-                let downloadLazURL: string = this._getPackageName('laz');
+                // Get the URL for the Lazarus IDE
+                let downloadLazURL: string = this._getPackageURL('laz');
                 console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                 try {
-                    console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                     // Perform the download
                     downloadPath_LIN = await tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
@@ -315,7 +303,7 @@ export class Lazarus{
         }
     }
 
-    private _getPackageName(
+    private _getPackageURL(
         pkg: string
     ): string {
         let result: string = '';

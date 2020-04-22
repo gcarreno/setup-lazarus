@@ -1203,16 +1203,12 @@ class Lazarus {
             switch (this._Platform) {
                 case 'win32':
                     // Get the URL of the file to download
-                    let downloadURL = this._getPackageName('laz');
+                    let downloadURL = this._getPackageURL('laz');
                     console.log(`_downloadLazarus - Downloading ${downloadURL}`);
                     let downloadPath_WIN;
                     try {
                         downloadPath_WIN = yield tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
-                        // tc.downloadTool returns a GUID string for a filename,
-                        // so it needs to be appended wit the extension .exe to execute
-                        //await exec(`mv ${downloadPath_WIN} ${downloadPath_WIN}.exe'`);
-                        //downloadPath_WIN += '.exe';
                         // Run the installer
                         let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
                         yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
@@ -1224,18 +1220,13 @@ class Lazarus {
                     }
                     break;
                 case 'linux':
-                    console.log('_downloadLazarus - sudo section');
                     // Perform a repository update
                     yield exec_1.exec('sudo apt update');
-                    // Install the pre-requesite needed for Lazarus
-                    // TODO : investigate when this should be GTK 5
-                    //await exec('sudo apt install -y libgtk2.0-dev');
                     let downloadPath_LIN;
-                    // Get the URL of the file to download
-                    let downloadFPCSRCURL = this._getPackageName('fpcsrc');
+                    // Get the URL for Free Pascal Source
+                    let downloadFPCSRCURL = this._getPackageURL('fpcsrc');
                     console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                     try {
-                        console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                         // Perform the download
                         downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
@@ -1245,11 +1236,10 @@ class Lazarus {
                     catch (err) {
                         throw err;
                     }
-                    // Get the URL of the file to download
-                    let downloadFPCURL = this._getPackageName('fpc');
+                    // Get the URL for Free Pascal's compiler
+                    let downloadFPCURL = this._getPackageURL('fpc');
                     console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                     try {
-                        console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                         // Perform the download
                         downloadPath_LIN = yield tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
@@ -1259,11 +1249,10 @@ class Lazarus {
                     catch (err) {
                         throw err;
                     }
-                    // Get the URL of the file to download
-                    let downloadLazURL = this._getPackageName('laz');
+                    // Get the URL for the Lazarus IDE
+                    let downloadLazURL = this._getPackageURL('laz');
                     console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                     try {
-                        console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                         // Perform the download
                         downloadPath_LIN = yield tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
@@ -1279,7 +1268,7 @@ class Lazarus {
             }
         });
     }
-    _getPackageName(pkg) {
+    _getPackageURL(pkg) {
         let result = '';
         // Replace periods with undescores due to JSON borking with periods or dashes
         let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
@@ -2081,25 +2070,31 @@ class Packages {
                              * recursively to have this thing complete.
                              *   For the moment I'll to mention that in a proeminent place.
                              */
+                            // Download the package
                             let pkgFile = yield this._download(pkg.RepositoryFileName);
+                            // Unzip the package
                             let pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
                             console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                            // Clean up, no need for the file to lay around any more
                             yield exec_1.exec(`rm ${pkgFile}`);
-                            let lazDir = path.join('/usr/share/lazarus/', this._LazarusVersion);
                             for (let fIndex = 0; fIndex < pkg.Packages.length; fIndex++) {
                                 let fpkg = pkg.Packages[fIndex];
                                 let pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath, fpkg.PackageFile);
                                 switch (fpkg.PackageType) {
                                     case 0:
-                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package ${pkgLPKFile}`);
+                                        // Making Lazarus aware of the package
+                                        console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
                                         yield exec_1.exec(`lazbuild --add-package ${pkgLPKFile}`);
-                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
+                                        // Compiling the package
+                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                         yield exec_1.exec(`lazbuild ${pkgLPKFile}`);
                                         break;
                                     case 2:
-                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} --add-package-link ${pkgLPKFile}`);
+                                        // Making Lazarus aware of the package
+                                        console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
                                         yield exec_1.exec(`lazbuild --add-package-link ${pkgLPKFile}`);
-                                        console.log(`installPackages -- executing lazbuild --lazarusdir=${lazDir} ${pkgLPKFile}`);
+                                        // Compiling the package
+                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                         yield exec_1.exec(`lazbuild ${pkgLPKFile}`);
                                         break;
                                     default:
