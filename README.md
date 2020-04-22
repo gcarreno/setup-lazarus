@@ -67,7 +67,7 @@ At the moment this action only supports:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v2.2
+- uses: gcarreno/setup-lazarus@v2.2.0
   with:
     lazarus-version: "dist"
     include-packages: "Synapse 40.1"
