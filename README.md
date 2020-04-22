@@ -67,7 +67,7 @@ At the moment this action only supports:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v2.1
+- uses: gcarreno/setup-lazarus@v2.2
   with:
     lazarus-version: "dist"
     include-packages: "Synapse 40.1"
@@ -99,7 +99,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v2.1
+      uses: gcarreno/setup-lazarus@v2.2
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
