@@ -47,7 +47,7 @@ export class Packages {
                         // Unzip the package
                         let pkgFolder = await this._extract(
                             pkgFile, 
-                            path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
+                            path.join(this._getTempDirectory(), "lazarus", "Packages")) ;
                         
                         console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
                         // Clean up, no need for the file to lay around any more
@@ -66,21 +66,21 @@ export class Packages {
                             switch (fpkg.PackageType) {
                                 case 0:
                                     // Making Lazarus aware of the package
-                                    console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile} --skip-dependencies`);
-                                    await exec(`lazbuild --add-package ${pkgLPKFile} --skip-dependencies`);
+                                    console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies`);
+                                    await exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies`);
 
                                     // Compiling the package
-                                    console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                    //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                     //await exec(`lazbuild ${pkgLPKFile}`);
                                     break;
                                 case 2:
                                 case 3:
                                     // Making Lazarus aware of the package
-                                    console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile} --skip-dependencies`);
-                                    await exec(`lazbuild --add-package-link ${pkgLPKFile} --skip-dependencies`);
+                                    console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies`);
+                                    await exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies`);
 
                                     // Compiling the package
-                                    console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                    //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                     //await exec(`lazbuild ${pkgLPKFile}`);
                                     break;
                                 default:
@@ -94,9 +94,6 @@ export class Packages {
 
                 }
             }
-            
-            console.log(`installPackages -- executing lazbuild --build-all`);
-            await exec(`lazbuild --build-all`);
         } catch (error) {
             throw error;
         }
