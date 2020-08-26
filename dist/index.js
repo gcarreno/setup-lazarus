@@ -5243,6 +5243,7 @@ class Packages {
                             let pkgFile = yield this._download(pkg.RepositoryFileName);
                             // Unzip the package
                             let pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), "lazarus", "Packages"));
+                            let pkgPath = path.join(this._getTempDirectory(), "lazarus", "config");
                             console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
                             // Clean up, no need for the file to lay around any more
                             yield exec_1.exec(`rm ${pkgFile}`);
@@ -5252,8 +5253,8 @@ class Packages {
                                 switch (fpkg.PackageType) {
                                     case 0:
                                         // Making Lazarus aware of the package
-                                        console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies`);
-                                        yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies`);
+                                        console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                        yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
                                         // Compiling the package
                                         //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                         //await exec(`lazbuild ${pkgLPKFile}`);
@@ -5261,8 +5262,8 @@ class Packages {
                                     case 2:
                                     case 3:
                                         // Making Lazarus aware of the package
-                                        console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies`);
-                                        yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies`);
+                                        console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                        yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
                                         // Compiling the package
                                         //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                         //await exec(`lazbuild ${pkgLPKFile}`);

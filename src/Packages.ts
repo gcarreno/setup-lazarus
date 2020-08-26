@@ -48,6 +48,8 @@ export class Packages {
                         let pkgFolder = await this._extract(
                             pkgFile, 
                             path.join(this._getTempDirectory(), "lazarus", "Packages")) ;
+
+                        let pkgPath = path.join(this._getTempDirectory(), "lazarus", "config");
                         
                         console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
                         // Clean up, no need for the file to lay around any more
@@ -66,8 +68,8 @@ export class Packages {
                             switch (fpkg.PackageType) {
                                 case 0:
                                     // Making Lazarus aware of the package
-                                    console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies`);
-                                    await exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies`);
+                                    console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                    await exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
 
                                     // Compiling the package
                                     //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
@@ -76,8 +78,8 @@ export class Packages {
                                 case 2:
                                 case 3:
                                     // Making Lazarus aware of the package
-                                    console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies`);
-                                    await exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies`);
+                                    console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                    await exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
 
                                     // Compiling the package
                                     //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
