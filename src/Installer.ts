@@ -24,7 +24,6 @@ export class Installer {
     async install(): Promise<void> {
         core.startGroup('Installing Lazarus');
         await this._Lazarus.installLazarus();
-        console.log(this._strPackagesLocal);
         core.endGroup();
 
         if (this._strPackagesLocal.length > 0) {

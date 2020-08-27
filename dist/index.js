@@ -3537,27 +3537,90 @@ const assert_1 = __webpack_require__(357);
 const StableVersion = '2.0.10';
 const pkgs = {
     "win32": {
-        "v2_0_10": "lazarus-2.0.10-fpc-3.2.0-win32.exe",
-        "v2_0_8": "lazarus-2.0.8-fpc-3.0.4-win32.exe",
-        "v2_0_6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
-        "v2_0_4": "lazarus-2.0.4-fpc-3.0.4-win32.exe",
-        "v2_0_2": "lazarus-2.0.2-fpc-3.0.4-win32.exe",
-        "v2_0_0": "lazarus-2.0.0-fpc-3.0.4-win32.exe",
-        "v1_8_4": "lazarus-1.8.4-fpc-3.0.4-win32.exe",
-        "v1_8_2": "lazarus-1.8.2-fpc-3.0.4-win32.exe",
-        "v1_8_0": "lazarus-1.8.0-fpc-3.0.4-win32.exe",
-        "v1_6_4": "lazarus-1.6.4-fpc-3.0.2-win32.exe",
-        "v1_6_2": "lazarus-1.6.2-fpc-3.0.0-win32.exe",
-        "v1_6": "lazarus-1.6.0-fpc-3.0.0-win32.exe",
-        "v1_4_4": "lazarus-1.4.4-fpc-2.6.4-win32.exe",
-        "v1_4_2": "lazarus-1.4.2-fpc-2.6.4-win32.exe",
-        "v1_4": "lazarus-1.4.0-fpc-2.6.4-win32.exe",
-        "v1_2_6": "lazarus-1.2.6-fpc-2.6.4-win32.exe",
-        "v1_2_4": "lazarus-1.2.4-fpc-2.6.4-win32.exe",
-        "v1_2_2": "lazarus-1.2.2-fpc-2.6.4-win32.exe",
-        "v1_2": "lazarus-1.2.0-fpc-2.6.2-win32.exe",
-        "v1_0_14": "lazarus-1.0.14-fpc-2.6.2-win32.exe",
-        "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win32.exe"
+        "v2_0_10": {
+            "setup": "lazarus-2.0.10-fpc-3.2.0-win32.exe",
+            "cross": "lazarus-2.0.10-fpc-3.2.0-cross-x86_64-win64-win32.exe"
+        },
+        "v2_0_8": {
+            "setup": "lazarus-2.0.8-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-2.0.8-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v2_0_6": {
+            "setup": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-2.0.6-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v2_0_4": {
+            "setup": "lazarus-2.0.4-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-2.0.4-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v2_0_2": {
+            "setup": "lazarus-2.0.2-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-2.0.2-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v2_0_0": {
+            "setup": "lazarus-2.0.0-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-2.0.0-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_8_4": {
+            "setup": "lazarus-1.8.4-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-1.8.4-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_8_2": {
+            "setup": "lazarus-1.8.2-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-1.8.2-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_8_0": {
+            "setup": "lazarus-1.8.0-fpc-3.0.4-win32.exe",
+            "cross": "lazarus-1.8.0-fpc-3.0.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_6_4": {
+            "setup": "lazarus-1.6.4-fpc-3.0.2-win32.exe",
+            "cross": "lazarus-1.6.4-fpc-3.0.2-cross-x86_64-win64-win32.exe"
+        },
+        "v1_6_2": {
+            "setup": "lazarus-1.6.2-fpc-3.0.0-win32.exe",
+            "cross": "lazarus-1.6.2-fpc-3.0.2-cross-x86_64-win64-win32.exe"
+        },
+        "v1_6": {
+            "setup": "lazarus-1.6.0-fpc-3.0.0-win32.exe",
+            "cross": "lazarus-1.6.0-fpc-3.0.2-cross-x86_64-win64-win32.exe"
+        },
+        "v1_4_4": {
+            "setup": "lazarus-1.4.4-fpc-2.6.4-win32.exe",
+            "cross": "lazarus-1.4.4-fpc-2.6.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_4_2": {
+            "setup": "lazarus-1.4.2-fpc-2.6.4-win32.exe",
+            "cross": "lazarus-1.4.2-fpc-2.6.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_4": {
+            "setup": "lazarus-1.4.0-fpc-2.6.4-win32.exe",
+            "cross": "lazarus-1.4.0-fpc-2.6.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_2_6": {
+            "setup": "lazarus-1.2.6-fpc-2.6.4-win32.exe",
+            "cross": "lazarus-1.2.6-fpc-2.6.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_2_4": {
+            "setup": "lazarus-1.2.4-fpc-2.6.4-win32.exe",
+            "cross": "lazarus-1.2.4-fpc-2.6.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_2_2": {
+            "setup": "lazarus-1.2.2-fpc-2.6.4-win32.exe",
+            "cross": "lazarus-1.2.2-fpc-2.6.4-cross-x86_64-win64-win32.exe"
+        },
+        "v1_2": {
+            "setup": "lazarus-1.2.0-fpc-2.6.2-win32.exe",
+            "cross": "lazarus-1.2.0-fpc-2.6.2-cross-x86_64-win64-win32.exe"
+        },
+        "v1_0_14": {
+            "setup": "lazarus-1.0.14-fpc-2.6.2-win32.exe",
+            "cross": "lazarus-1.0.14-fpc-2.6.2-cross-x86_64-win64-win32.exe"
+        },
+        "v1_0_12": {
+            "setup": "lazarus-1.0.12-fpc-2.6.2-win32.exe",
+            "cross": "lazarus-1.0.12-fpc-2.6.2-cross-x86_64-win64-win32.exe"
+        },
     },
     "linux": {
         "v2_0_10": {
@@ -3773,7 +3836,7 @@ class Lazarus {
             switch (this._Platform) {
                 case 'win32':
                     // Get the URL of the file to download
-                    let downloadURL = this._getPackageURL('laz');
+                    let downloadURL = this._getPackageURL('setup');
                     console.log(`_downloadLazarus - Downloading ${downloadURL}`);
                     let downloadPath_WIN;
                     try {
@@ -3784,6 +3847,18 @@ class Lazarus {
                         yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
                         // Add this path to the runner's global path
                         core.addPath(`${lazarusDir}`);
+                    }
+                    catch (err) {
+                        throw err;
+                    }
+                    let downloadURL_Cross = this._getPackageURL('cross');
+                    let downloadPath_Cross;
+                    try {
+                        downloadPath_Cross = yield tc.downloadTool(downloadURL_Cross, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}-cross.exe`));
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_Cross}`);
+                        // Run the installer
+                        let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
+                        yield exec_1.exec(`${downloadPath_Cross} /VERYSILENT /DIR=${lazarusDir}`);
                     }
                     catch (err) {
                         throw err;
@@ -3845,7 +3920,7 @@ class Lazarus {
         switch (this._Platform) {
             case "win32":
                 result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${this._LazarusVersion}/`;
-                result += pkgs[this._Platform][lazVer];
+                result += pkgs[this._Platform][lazVer][pkg];
                 break;
             case "linux":
                 result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${this._LazarusVersion}/`;
@@ -5503,7 +5578,6 @@ class Installer {
         return __awaiter(this, void 0, void 0, function* () {
             core.startGroup('Installing Lazarus');
             yield this._Lazarus.installLazarus();
-            console.log(this._strPackagesLocal);
             core.endGroup();
             if (this._strPackagesLocal.length > 0) {
                 core.startGroup('Installing Packages from OPM');

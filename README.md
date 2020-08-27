@@ -65,6 +65,7 @@ Format is a string with the packages (full or relative paths) separated by comma
 
 At the moment this action only supports:
 
+* Windows (win64)
 * Windows (win32)
 * Linux (linux)
 
