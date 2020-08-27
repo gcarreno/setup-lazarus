@@ -11,8 +11,11 @@ inputs:
     description: 'Version of Lazarus'
     required: true
     default: 'dist'
-  include-packages:
-    description: 'Include packages that the project needs'
+  include-packages-opm:
+    description: 'Include OPM packages that the project needs'
+    required: false
+  include-packages-local:
+    description: 'Include local packages that the project needs'
     required: false
 
 runs:

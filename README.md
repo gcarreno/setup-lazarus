@@ -38,9 +38,9 @@ Possible values:
 * `1.0.14` - comes with FPC "v2.6.2"
 * `1.0.12` - comes with FPC "v2.6.2"
 
-### include-packages
+### include-packages-opm
 
-**OPTIONAL** List of packages to install.
+**OPTIONAL** List of packages from Online Package Manager to install.
 
 You can ask the action to fetch packages and install them after Lazarus is installed.
 
@@ -48,10 +48,18 @@ Format is a string with the packages separated by comma: "Package 1, Package 2, 
 
 The list of packages can be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
 
+### include-packages-local
+
+**OPTIONAL** List of packages to install.
+
+You can ask the action to add local packages in Lazarus. 
+
+Format is a string with the packages (full or relative paths) separated by comma: "Package 1, Package 2, Package 3".
+
 **IMPORTANT** 
 
 > There is no dependency checks implemented YET.
-> You must order your package list in order to satisfy the dendencies yourself.
+> The packages will add in Lazarus with param --skip-dependencies.
 
 ## Platforms
 
@@ -70,7 +78,8 @@ steps:
 - uses: gcarreno/setup-lazarus@v2.2.1
   with:
     lazarus-version: "dist"
-    include-packages: "Synapse 40.1"
+    include-packages-opm: "Synapse 40.1"
+    include-packages-local: "${{ github.workspace}}\comp\laz_comp.lpk"
 - run: lazbuild YourTestProject.lpi
 - run: YourTestProject
 ```
@@ -102,7 +111,8 @@ jobs:
       uses: gcarreno/setup-lazarus@v2.2.1
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-        include-packages: "Synapse 40.1"
+        include-packages-opm: "Synapse 40.1"
+        include-packages-local: "${{ github.workspace}}\comp\laz_comp.lpk"
     - name: Build the Main Application
       run: lazbuild "src/lazaruswithgithubactions.lpi"
     - name: Build the Unit Tests Application

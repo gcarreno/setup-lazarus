@@ -4,7 +4,7 @@ import {exec} from '@actions/exec/lib/exec';
 import * as path from 'path';
 import {ok} from 'assert';
 
-export class Packages {
+export class PackagesOPM {
     private _LazarusVersion: string;
     private _BaseURL: string;
     private _ParamJSON: string;
@@ -16,17 +16,17 @@ export class Packages {
         this._ParamJSON = ParamJSON;
     }
 
-    async installPackages(includePackages:string[]) {
-        console.log(`Installing Lazarus packages:`);
-        console.log(includePackages);
+    async installPackages(packages:string[]) {
+        console.log(`Installing Lazarus OPM packages:`);
+        console.log(packages);
 
         this._Items = await this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
         console.log(`installPackages -- Got ${this._Items.length} package items`);
         
         try {
-            for (let index: number = 0; index < includePackages.length; index++) {
+            for (let index: number = 0; index < packages.length; index++) {
                     
-                let ipkg: string = includePackages[index];
+                let ipkg: string = packages[index];
 
                 for (let _iIndex: number = 0; _iIndex < this._Items.length; _iIndex++) {
                         

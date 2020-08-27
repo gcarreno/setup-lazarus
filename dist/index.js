@@ -98,12 +98,14 @@ function run() {
         try {
             // `lazarus-version` input defined in action metadata file
             let lazarusVersion = core.getInput('lazarus-version');
+            // `include-packages-opm` input defined in action metadata file
+            let includePackagesopm = core.getInput('include-packages-opm');
             // `include-packages` input defined in action metadata file
-            let includePackages = core.getInput('include-packages');
+            let includePackageslocal = core.getInput('include-packages-local');
             // Get the JSON webhook payload for the event that triggered the workflow
             //const payload = JSON.stringify(github.context.payload, undefined, 2)
             //console.log(`The event payload: ${payload}`);
-            let Installer = new inst.Installer(lazarusVersion, includePackages.split(','));
+            let Installer = new inst.Installer(lazarusVersion, includePackagesopm.split(','), includePackageslocal.split(','));
             yield Installer.install();
         }
         catch (error) {
@@ -1814,6 +1816,77 @@ function exec(commandLine, args, options) {
 }
 exports.exec = exec;
 //# sourceMappingURL=exec.js.map
+
+/***/ }),
+
+/***/ 523:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PackagesLocal = void 0;
+const exec_1 = __webpack_require__(514);
+const path = __importStar(__webpack_require__(622));
+const assert_1 = __webpack_require__(357);
+class PackagesLocal {
+    constructor(LazarusVersion) {
+        this._LazarusVersion = LazarusVersion;
+    }
+    installPackages(packages) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`Installing Lazarus local packages:`);
+            console.log(packages);
+            console.log(`installPackages -- Got ${packages.length} local package items to install`);
+            try {
+                let pkgPath = path.join(this._getTempDirectory(), "lazarus", "config");
+                for (let index = 0; index < packages.length; index++) {
+                    let ipkg = packages[index];
+                    console.log(`installPackages -- executing lazbuild --add-package "${ipkg}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                    yield exec_1.exec(`lazbuild --add-package "${ipkg}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    _getTempDirectory() {
+        const tempDirectory = process.env['RUNNER_TEMP'] || '';
+        assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+        return tempDirectory;
+    }
+}
+exports.PackagesLocal = PackagesLocal;
+
 
 /***/ }),
 
@@ -3822,6 +3895,208 @@ module.exports = require("net");
 
 /***/ }),
 
+/***/ 652:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PackagesOPM = void 0;
+const http = __importStar(__webpack_require__(925));
+const tc = __importStar(__webpack_require__(784));
+const exec_1 = __webpack_require__(514);
+const path = __importStar(__webpack_require__(622));
+const assert_1 = __webpack_require__(357);
+class PackagesOPM {
+    constructor(LazarusVersion, BaseURL, ParamJSON) {
+        this._Items = new Array();
+        this._LazarusVersion = LazarusVersion;
+        this._BaseURL = BaseURL;
+        this._ParamJSON = ParamJSON;
+    }
+    installPackages(packages) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`Installing Lazarus OPM packages:`);
+            console.log(packages);
+            this._Items = yield this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
+            console.log(`installPackages -- Got ${this._Items.length} package items`);
+            try {
+                for (let index = 0; index < packages.length; index++) {
+                    let ipkg = packages[index];
+                    for (let _iIndex = 0; _iIndex < this._Items.length; _iIndex++) {
+                        let pkg = this._Items[_iIndex];
+                        if (ipkg.trim() == pkg.Name) {
+                            /*
+                             *   At this point I need to implement dependency test and installation
+                             * recursively to have this thing complete.
+                             *   For the moment I'll to mention that in a proeminent place.
+                             */
+                            // Download the package
+                            let pkgFile = yield this._download(pkg.RepositoryFileName);
+                            // Unzip the package
+                            let pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), "lazarus", "Packages"));
+                            let pkgPath = path.join(this._getTempDirectory(), "lazarus", "config");
+                            console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                            // Clean up, no need for the file to lay around any more
+                            yield exec_1.exec(`rm ${pkgFile}`);
+                            for (let fIndex = 0; fIndex < pkg.Packages.length; fIndex++) {
+                                let fpkg = pkg.Packages[fIndex];
+                                let pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath, fpkg.PackageFile);
+                                switch (fpkg.PackageType) {
+                                    case 0:
+                                        // Making Lazarus aware of the package
+                                        console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                        yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                        // Compiling the package
+                                        //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                        //await exec(`lazbuild ${pkgLPKFile}`);
+                                        break;
+                                    case 2:
+                                    case 3:
+                                        // Making Lazarus aware of the package
+                                        console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                        yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
+                                        // Compiling the package
+                                        //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                        //await exec(`lazbuild ${pkgLPKFile}`);
+                                        break;
+                                    default:
+                                        throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    _extract(file, dest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield tc.extractZip(file, dest);
+            return result;
+        });
+    }
+    _download(filename) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tempDir = this._getTempDirectory();
+            console.log(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
+            let pkgFilename = yield tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
+            return pkgFilename;
+        });
+    }
+    _getPackageList(repoURL) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = new Array();
+            let httpClient = new http.HttpClient();
+            let httpResponse;
+            let packageList;
+            try {
+                httpResponse = yield httpClient.get(repoURL);
+                packageList = JSON.parse(yield httpResponse.readBody());
+            }
+            catch (error) {
+                throw new Error(`getPackageList -- ${error.message}`);
+            }
+            let pkgCount = Object.keys(packageList).length / 2;
+            //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
+            for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
+                let _pkgData = packageList[`PackageData${dIndex}`];
+                let pkgData = new PackageData();
+                pkgData.Name = _pkgData['Name'];
+                pkgData.RepositoryFileName = _pkgData['RepositoryFileName'];
+                pkgData.RepositoryFileHash = _pkgData['RepositoryFileHash'];
+                pkgData.PackageBaseDir = _pkgData['PackageBaseDir'];
+                let _pkgFiles = packageList[`PackageFiles${dIndex}`];
+                for (let fIndex = 0; fIndex < _pkgFiles.length; fIndex++) {
+                    let _pkgFile = _pkgFiles[fIndex];
+                    let pkgFile = new PackageFile();
+                    pkgFile.PackageFile = _pkgFile['Name'];
+                    pkgFile.RelativeFilePath = _pkgFile['RelativeFilePath'];
+                    pkgFile.LazCompatibility = _pkgFile['LazCompatibility'];
+                    pkgFile.FPCCompatability = _pkgFile['FPCCompatability'];
+                    pkgFile.DependenciesAsString = _pkgFile['DependenciesAsString'];
+                    pkgFile.PackageType = _pkgFile['PackageType'];
+                    pkgData.Packages.push(pkgFile);
+                }
+                result.push(pkgData);
+            }
+            return result;
+        });
+    }
+    _getTempDirectory() {
+        const tempDirectory = process.env['RUNNER_TEMP'] || '';
+        assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+        return tempDirectory;
+    }
+}
+exports.PackagesOPM = PackagesOPM;
+class PackageData {
+    constructor() {
+        this.Name = '';
+        this.RepositoryFileName = '';
+        this.RepositoryFileHash = '';
+        this._PackageBaseDir = '';
+        this.Packages = new Array();
+    }
+    get PackageBaseDir() {
+        return this._PackageBaseDir;
+    }
+    set PackageBaseDir(value) {
+        this._PackageBaseDir = value.replace(/\\/gi, '');
+    }
+}
+class PackageFile {
+    constructor() {
+        this.PackageFile = '';
+        this._RelativeFilePath = '';
+        this.LazCompatibility = new Array();
+        this.FPCCompatability = new Array();
+        this.DependenciesAsString = '';
+        this.PackageType = -1;
+    }
+    get RelativeFilePath() {
+        return this._RelativeFilePath;
+    }
+    set RelativeFilePath(value) {
+        this._RelativeFilePath = value.replace(/\\/gi, '');
+    }
+}
+
+
+/***/ }),
+
 /***/ 669:
 /***/ (function(module) {
 
@@ -5175,208 +5450,6 @@ function isUnixExecutable(stats) {
 
 /***/ }),
 
-/***/ 980:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Packages = void 0;
-const http = __importStar(__webpack_require__(925));
-const tc = __importStar(__webpack_require__(784));
-const exec_1 = __webpack_require__(514);
-const path = __importStar(__webpack_require__(622));
-const assert_1 = __webpack_require__(357);
-class Packages {
-    constructor(LazarusVersion, BaseURL, ParamJSON) {
-        this._Items = new Array();
-        this._LazarusVersion = LazarusVersion;
-        this._BaseURL = BaseURL;
-        this._ParamJSON = ParamJSON;
-    }
-    installPackages(includePackages) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Installing Lazarus packages:`);
-            console.log(includePackages);
-            this._Items = yield this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
-            console.log(`installPackages -- Got ${this._Items.length} package items`);
-            try {
-                for (let index = 0; index < includePackages.length; index++) {
-                    let ipkg = includePackages[index];
-                    for (let _iIndex = 0; _iIndex < this._Items.length; _iIndex++) {
-                        let pkg = this._Items[_iIndex];
-                        if (ipkg.trim() == pkg.Name) {
-                            /*
-                             *   At this point I need to implement dependency test and installation
-                             * recursively to have this thing complete.
-                             *   For the moment I'll to mention that in a proeminent place.
-                             */
-                            // Download the package
-                            let pkgFile = yield this._download(pkg.RepositoryFileName);
-                            // Unzip the package
-                            let pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), "lazarus", "Packages"));
-                            let pkgPath = path.join(this._getTempDirectory(), "lazarus", "config");
-                            console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
-                            // Clean up, no need for the file to lay around any more
-                            yield exec_1.exec(`rm ${pkgFile}`);
-                            for (let fIndex = 0; fIndex < pkg.Packages.length; fIndex++) {
-                                let fpkg = pkg.Packages[fIndex];
-                                let pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath, fpkg.PackageFile);
-                                switch (fpkg.PackageType) {
-                                    case 0:
-                                        // Making Lazarus aware of the package
-                                        console.log(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
-                                        yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
-                                        // Compiling the package
-                                        //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                        //await exec(`lazbuild ${pkgLPKFile}`);
-                                        break;
-                                    case 2:
-                                    case 3:
-                                        // Making Lazarus aware of the package
-                                        console.log(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
-                                        yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}" --skip-dependencies --primary-config-path=${pkgPath}`);
-                                        // Compiling the package
-                                        //console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                        //await exec(`lazbuild ${pkgLPKFile}`);
-                                        break;
-                                    default:
-                                        throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (error) {
-                throw error;
-            }
-        });
-    }
-    _extract(file, dest) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let result = yield tc.extractZip(file, dest);
-            return result;
-        });
-    }
-    _download(filename) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let tempDir = this._getTempDirectory();
-            console.log(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
-            let pkgFilename = yield tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
-            return pkgFilename;
-        });
-    }
-    _getPackageList(repoURL) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let result = new Array();
-            let httpClient = new http.HttpClient();
-            let httpResponse;
-            let packageList;
-            try {
-                httpResponse = yield httpClient.get(repoURL);
-                packageList = JSON.parse(yield httpResponse.readBody());
-            }
-            catch (error) {
-                throw new Error(`getPackageList -- ${error.message}`);
-            }
-            let pkgCount = Object.keys(packageList).length / 2;
-            //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
-            for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
-                let _pkgData = packageList[`PackageData${dIndex}`];
-                let pkgData = new PackageData();
-                pkgData.Name = _pkgData['Name'];
-                pkgData.RepositoryFileName = _pkgData['RepositoryFileName'];
-                pkgData.RepositoryFileHash = _pkgData['RepositoryFileHash'];
-                pkgData.PackageBaseDir = _pkgData['PackageBaseDir'];
-                let _pkgFiles = packageList[`PackageFiles${dIndex}`];
-                for (let fIndex = 0; fIndex < _pkgFiles.length; fIndex++) {
-                    let _pkgFile = _pkgFiles[fIndex];
-                    let pkgFile = new PackageFile();
-                    pkgFile.PackageFile = _pkgFile['Name'];
-                    pkgFile.RelativeFilePath = _pkgFile['RelativeFilePath'];
-                    pkgFile.LazCompatibility = _pkgFile['LazCompatibility'];
-                    pkgFile.FPCCompatability = _pkgFile['FPCCompatability'];
-                    pkgFile.DependenciesAsString = _pkgFile['DependenciesAsString'];
-                    pkgFile.PackageType = _pkgFile['PackageType'];
-                    pkgData.Packages.push(pkgFile);
-                }
-                result.push(pkgData);
-            }
-            return result;
-        });
-    }
-    _getTempDirectory() {
-        const tempDirectory = process.env['RUNNER_TEMP'] || '';
-        assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
-        return tempDirectory;
-    }
-}
-exports.Packages = Packages;
-class PackageData {
-    constructor() {
-        this.Name = '';
-        this.RepositoryFileName = '';
-        this.RepositoryFileHash = '';
-        this._PackageBaseDir = '';
-        this.Packages = new Array();
-    }
-    get PackageBaseDir() {
-        return this._PackageBaseDir;
-    }
-    set PackageBaseDir(value) {
-        this._PackageBaseDir = value.replace(/\\/gi, '');
-    }
-}
-class PackageFile {
-    constructor() {
-        this.PackageFile = '';
-        this._RelativeFilePath = '';
-        this.LazCompatibility = new Array();
-        this.FPCCompatability = new Array();
-        this.DependenciesAsString = '';
-        this.PackageType = -1;
-    }
-    get RelativeFilePath() {
-        return this._RelativeFilePath;
-    }
-    set RelativeFilePath(value) {
-        this._RelativeFilePath = value.replace(/\\/gi, '');
-    }
-}
-
-
-/***/ }),
-
 /***/ 981:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -5414,23 +5487,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Installer = void 0;
 const core = __importStar(__webpack_require__(186));
 const laz = __importStar(__webpack_require__(572));
-const pkgs = __importStar(__webpack_require__(980));
+const pkgsOPM = __importStar(__webpack_require__(652));
+const pkgsLocal = __importStar(__webpack_require__(523));
 const RepoBaseURL = 'https://packages.lazarus-ide.org';
 const ParamJSON = 'packagelist.json';
 class Installer {
-    constructor(LazarusVerzion, PackageList) {
-        this._Lazarus = new laz.Lazarus(LazarusVerzion);
-        this._IncludePackages = PackageList;
-        this._Packages = new pkgs.Packages(LazarusVerzion, RepoBaseURL, ParamJSON);
+    constructor(LazarusVersion, PackageOpmList, PackageLocalList) {
+        this._Lazarus = new laz.Lazarus(LazarusVersion);
+        this._strPackagesOPM = PackageOpmList;
+        this._strPackagesLocal = PackageLocalList;
+        this._PackagesOPM = new pkgsOPM.PackagesOPM(LazarusVersion, RepoBaseURL, ParamJSON);
+        this._PackagesLocal = new pkgsLocal.PackagesLocal(LazarusVersion);
     }
     install() {
         return __awaiter(this, void 0, void 0, function* () {
             core.startGroup('Installing Lazarus');
             yield this._Lazarus.installLazarus();
             core.endGroup();
-            if (this._IncludePackages.length > 0) {
-                core.startGroup('Installing Packages');
-                yield this._Packages.installPackages(this._IncludePackages);
+            if (this._strPackagesOPM.length > 0) {
+                core.startGroup('Installing Packages from OPM');
+                yield this._PackagesOPM.installPackages(this._strPackagesOPM);
+                core.endGroup();
+            }
+            if (!this._strPackagesLocal) {
+                core.startGroup('Installing local Packages');
+                yield this._PackagesLocal.installPackages(this._strPackagesLocal);
                 core.endGroup();
             }
         });
