@@ -5503,13 +5503,14 @@ class Installer {
         return __awaiter(this, void 0, void 0, function* () {
             core.startGroup('Installing Lazarus');
             yield this._Lazarus.installLazarus();
+            console.log(this._strPackagesLocal);
             core.endGroup();
-            if (this._strPackagesOPM.length > 0) {
+            if (this._strPackagesLocal.length > 0) {
                 core.startGroup('Installing Packages from OPM');
                 yield this._PackagesOPM.installPackages(this._strPackagesOPM);
                 core.endGroup();
             }
-            if (!this._strPackagesLocal) {
+            if (this._strPackagesLocal.length > 0) {
                 core.startGroup('Installing local Packages');
                 yield this._PackagesLocal.installPackages(this._strPackagesLocal);
                 core.endGroup();
