@@ -273,6 +273,9 @@ class Lazarus {
                     this._LazarusVersion = StableVersion;
                     yield this._downloadLazarus();
                     break;
+                case '2.0.10':
+                    yield this._downloadLazarus();
+                    break;
                 case '2.0.6':
                     yield this._downloadLazarus();
                     break;
