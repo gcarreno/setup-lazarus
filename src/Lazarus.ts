@@ -5,32 +5,38 @@ import * as os from 'os';
 import * as path from 'path';
 import {ok} from 'assert';
 
-const StableVersion = '2.0.8';
+const StableVersion = '2.0.10';
 
 const pkgs: object = {
     "win32": {
-        "v2_0_8" : "lazarus-2.0.8-fpc-3.0.4-win32.exe",
-        "v2_0_6" : "lazarus-2.0.6-fpc-3.0.4-win32.exe",
-        "v2_0_4" : "lazarus-2.0.4-fpc-3.0.4-win32.exe",
-        "v2_0_2" : "lazarus-2.0.2-fpc-3.0.4-win32.exe",
-        "v2_0_0" : "lazarus-2.0.0-fpc-3.0.4-win32.exe",
-        "v1_8_4" : "lazarus-1.8.4-fpc-3.0.4-win32.exe",
-        "v1_8_2" : "lazarus-1.8.2-fpc-3.0.4-win32.exe",
-        "v1_8_0" : "lazarus-1.8.0-fpc-3.0.4-win32.exe",
-        "v1_6_4" : "lazarus-1.6.4-fpc-3.0.2-win32.exe",
-        "v1_6_2" : "lazarus-1.6.2-fpc-3.0.0-win32.exe",
-        "v1_6"   : "lazarus-1.6.0-fpc-3.0.0-win32.exe",
-        "v1_4_4" : "lazarus-1.4.4-fpc-2.6.4-win32.exe",
-        "v1_4_2" : "lazarus-1.4.2-fpc-2.6.4-win32.exe",
-        "v1_4"   : "lazarus-1.4.0-fpc-2.6.4-win32.exe",
-        "v1_2_6" : "lazarus-1.2.6-fpc-2.6.4-win32.exe",
-        "v1_2_4" : "lazarus-1.2.4-fpc-2.6.4-win32.exe",
-        "v1_2_2" : "lazarus-1.2.2-fpc-2.6.4-win32.exe",
-        "v1_2"   : "lazarus-1.2.0-fpc-2.6.2-win32.exe",
-        "v1_0_14": "lazarus-1.0.14-fpc-2.6.2-win32.exe",
-        "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win32.exe"
+        "v2_0_10" : "lazarus-2.0.10-fpc-3.2.0-win32.exe",
+        "v2_0_8"  : "lazarus-2.0.8-fpc-3.0.4-win32.exe",
+        "v2_0_6"  : "lazarus-2.0.6-fpc-3.0.4-win32.exe",
+        "v2_0_4"  : "lazarus-2.0.4-fpc-3.0.4-win32.exe",
+        "v2_0_2"  : "lazarus-2.0.2-fpc-3.0.4-win32.exe",
+        "v2_0_0"  : "lazarus-2.0.0-fpc-3.0.4-win32.exe",
+        "v1_8_4"  : "lazarus-1.8.4-fpc-3.0.4-win32.exe",
+        "v1_8_2"  : "lazarus-1.8.2-fpc-3.0.4-win32.exe",
+        "v1_8_0"  : "lazarus-1.8.0-fpc-3.0.4-win32.exe",
+        "v1_6_4"  : "lazarus-1.6.4-fpc-3.0.2-win32.exe",
+        "v1_6_2"  : "lazarus-1.6.2-fpc-3.0.0-win32.exe",
+        "v1_6"    : "lazarus-1.6.0-fpc-3.0.0-win32.exe",
+        "v1_4_4"  : "lazarus-1.4.4-fpc-2.6.4-win32.exe",
+        "v1_4_2"  : "lazarus-1.4.2-fpc-2.6.4-win32.exe",
+        "v1_4"    : "lazarus-1.4.0-fpc-2.6.4-win32.exe",
+        "v1_2_6"  : "lazarus-1.2.6-fpc-2.6.4-win32.exe",
+        "v1_2_4"  : "lazarus-1.2.4-fpc-2.6.4-win32.exe",
+        "v1_2_2"  : "lazarus-1.2.2-fpc-2.6.4-win32.exe",
+        "v1_2"    : "lazarus-1.2.0-fpc-2.6.2-win32.exe",
+        "v1_0_14" : "lazarus-1.0.14-fpc-2.6.2-win32.exe",
+        "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win32.exe"
     },
     "linux": {
+        "v2_0_10":{
+            "laz": "lazarus-project_2.0.10-0_amd64.deb",
+            "fpc": "fpc-laz_3.2.0-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.2.0-1_amd64.deb"
+        },
         "v2_0_8": {
             "laz": "lazarus-project_2.0.8-0_amd64.deb",
             "fpc": "fpc-laz_3.0.4-1_amd64.deb",
