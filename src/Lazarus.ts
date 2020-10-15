@@ -177,10 +177,13 @@ export class Lazarus{
             case '2.0.10':
                 await this._downloadLazarus();
                 break;
+            case '2.0.8':
+                await this._downloadLazarus();
+                break;
             case '2.0.6':
                 await this._downloadLazarus();
                 break;
-                case '2.0.4':
+            case '2.0.4':
                 await this._downloadLazarus();
                 break;
             case '2.0.2':
