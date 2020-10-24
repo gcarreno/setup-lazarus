@@ -38,7 +38,7 @@ export class Packages {
                         /*
                          *   At this point I need to implement dependency test and installation
                          * recursively to have this thing complete.
-                         *   For the moment I'll to mention that in a proeminent place.
+                         *   For the moment I'll have to mention that in a proeminent place.
                          */
                         
                          // Download the package
@@ -67,20 +67,20 @@ export class Packages {
                                 case 0:
                                     // Making Lazarus aware of the package
                                     console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
-                                    await exec(`lazbuild --add-package ${pkgLPKFile}`);
+                                    await exec(`lazbuild --add-package "${pkgLPKFile}"`);
 
                                     // Compiling the package
                                     console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                    await exec(`lazbuild ${pkgLPKFile}`);
+                                    await exec(`lazbuild "${pkgLPKFile}"`);
                                     break;
                                 case 2:
                                     // Making Lazarus aware of the package
                                     console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
-                                    await exec(`lazbuild --add-package-link ${pkgLPKFile}`);
+                                    await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
 
                                     // Compiling the package
                                     console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                    await exec(`lazbuild ${pkgLPKFile}`);
+                                    await exec(`lazbuild "${pkgLPKFile}"`);
                                     break;
                                 default:
                                     throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
