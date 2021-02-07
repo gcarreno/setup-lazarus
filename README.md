@@ -15,7 +15,7 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 Possible values:
 
 * `dist` - Lazarus package that comes with the Ubuntu dist your chose on `runs-on` and latest stable for Windows
-* `satble` - Installs the latest stable version: 2.0.10
+* `stable` - Installs the latest stable version: 2.0.10
 * `2.0.10` - comes with FPC "v3.2.0"
 * `2.0.8` - comes with FPC "v3.0.4"
 * `2.0.6` - comes with FPC "v3.0.4"
@@ -68,7 +68,7 @@ At the moment this action only supports:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v2.2.6
+- uses: gcarreno/setup-lazarus@v2.2.7
   with:
     lazarus-version: "dist"
     include-packages: "Synapse 40.1"
@@ -100,7 +100,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v2.2.6
+      uses: gcarreno/setup-lazarus@v2.2.7
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"

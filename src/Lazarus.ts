@@ -31,6 +31,29 @@ const pkgs: object = {
         "v1_0_14" : "lazarus-1.0.14-fpc-2.6.2-win32.exe",
         "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win32.exe"
     },
+    "win64": {
+        "v2_0_10" : "lazarus-2.0.10-fpc-3.2.0-win64.exe",
+        "v2_0_8"  : "lazarus-2.0.8-fpc-3.0.4-win64.exe",
+        "v2_0_6"  : "lazarus-2.0.6-fpc-3.0.4-win64.exe",
+        "v2_0_4"  : "lazarus-2.0.4-fpc-3.0.4-win64.exe",
+        "v2_0_2"  : "lazarus-2.0.2-fpc-3.0.4-win64.exe",
+        "v2_0_0"  : "lazarus-2.0.0-fpc-3.0.4-win64.exe",
+        "v1_8_4"  : "lazarus-1.8.4-fpc-3.0.4-win64.exe",
+        "v1_8_2"  : "lazarus-1.8.2-fpc-3.0.4-win64.exe",
+        "v1_8_0"  : "lazarus-1.8.0-fpc-3.0.4-win64.exe",
+        "v1_6_4"  : "lazarus-1.6.4-fpc-3.0.2-win64.exe",
+        "v1_6_2"  : "lazarus-1.6.2-fpc-3.0.0-win64.exe",
+        "v1_6"    : "lazarus-1.6.0-fpc-3.0.0-win64.exe",
+        "v1_4_4"  : "lazarus-1.4.4-fpc-2.6.4-win64.exe",
+        "v1_4_2"  : "lazarus-1.4.2-fpc-2.6.4-win64.exe",
+        "v1_4"    : "lazarus-1.4.0-fpc-2.6.4-win64.exe",
+        "v1_2_6"  : "lazarus-1.2.6-fpc-2.6.4-win64.exe",
+        "v1_2_4"  : "lazarus-1.2.4-fpc-2.6.4-win64.exe",
+        "v1_2_2"  : "lazarus-1.2.2-fpc-2.6.4-win64.exe",
+        "v1_2"    : "lazarus-1.2.0-fpc-2.6.2-win64.exe",
+        "v1_0_14" : "lazarus-1.0.14-fpc-2.6.2-win64.exe",
+        "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win64.exe"
+    },
     "linux": {
         "v2_0_10":{
             "laz": "lazarus-project_2.0.10-0_amd64.deb",
@@ -142,6 +165,7 @@ const pkgs: object = {
 
 export class Lazarus{
     private _Platform: string = os.platform();
+    private _Arch: string = os.arch();
     private _LazarusVersion: string = '';
 
     constructor(LazarusVersion: string) {
@@ -149,7 +173,7 @@ export class Lazarus{
     }
     
     async installLazarus(): Promise<void> {
-        console.log(`installLazarus -- Installing Lazarus ${this._LazarusVersion} on "${this._Platform}"`);
+        console.log(`installLazarus -- Installing Lazarus ${this._LazarusVersion} on platform: "${this._Platform}"; arch: "${this._Arch}"`);
         switch (this._LazarusVersion) {
             // Special case named version that installs the repository pakages on Ubuntu
             // but installs stable version under Windows
@@ -323,8 +347,13 @@ export class Lazarus{
         let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
         switch (this._Platform) {
             case "win32":
-                result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${this._LazarusVersion}/`;
-                result += pkgs[this._Platform][lazVer];
+                if (this._Arch == 'x64') {
+                    result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${this._LazarusVersion}/`;
+                    result += pkgs['win64'][lazVer];
+                } else {
+                    result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${this._LazarusVersion}/`;
+                    result += pkgs[this._Platform][lazVer];
+                }
                 break;
             case "linux":
                 result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${this._LazarusVersion}/`;
