@@ -442,7 +442,7 @@ class Lazarus {
         switch (this._Platform) {
             case "win32":
                 if (this._Arch == 'x64') {
-                    result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2032%20bits/Lazarus%20${this._LazarusVersion}/`;
+                    result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Windows%2064%20bits/Lazarus%20${this._LazarusVersion}/`;
                     result += pkgs['win64'][lazVer];
                 }
                 else {
@@ -706,7 +706,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const inst = __importStar(__webpack_require__(981));
-const _version = '2.2.7';
+const _version = '2.2.8';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
