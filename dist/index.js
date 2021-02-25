@@ -107,9 +107,10 @@ const exec_1 = __webpack_require__(514);
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 const assert_1 = __webpack_require__(357);
-const StableVersion = '2.0.10';
+const StableVersion = '2.0.12';
 const pkgs = {
     "win32": {
+        "v2_0_12": "lazarus-2.0.12-fpc-3.2.0-win32.exe",
         "v2_0_10": "lazarus-2.0.10-fpc-3.2.0-win32.exe",
         "v2_0_8": "lazarus-2.0.8-fpc-3.0.4-win32.exe",
         "v2_0_6": "lazarus-2.0.6-fpc-3.0.4-win32.exe",
@@ -133,6 +134,7 @@ const pkgs = {
         "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win32.exe"
     },
     "win64": {
+        "v2_0_12": "lazarus-2.0.12-fpc-3.2.0-win64.exe",
         "v2_0_10": "lazarus-2.0.10-fpc-3.2.0-win64.exe",
         "v2_0_8": "lazarus-2.0.8-fpc-3.0.4-win64.exe",
         "v2_0_6": "lazarus-2.0.6-fpc-3.0.4-win64.exe",
@@ -156,6 +158,11 @@ const pkgs = {
         "v1_0_12": "lazarus-1.0.12-fpc-2.6.2-win64.exe"
     },
     "linux": {
+        "v2_0_12": {
+            "laz": "lazarus-project_2.0.12-0_amd64.deb",
+            "fpc": "fpc-laz_3.2.0-1_amd64.deb",
+            "fpcsrc": "fpc-src_3.2.0-1_amd64.deb"
+        },
         "v2_0_10": {
             "laz": "lazarus-project_2.0.10-0_amd64.deb",
             "fpc": "fpc-laz_3.2.0-1_amd64.deb",
@@ -295,6 +302,9 @@ class Lazarus {
                 // Special case named version that installs the latest stable version
                 case 'stable':
                     this._LazarusVersion = StableVersion;
+                    yield this._downloadLazarus();
+                    break;
+                case '2.0.12':
                     yield this._downloadLazarus();
                     break;
                 case '2.0.10':
