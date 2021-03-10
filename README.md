@@ -15,29 +15,30 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 Possible values:
 
 * `dist` - Lazarus package that comes with the Ubuntu dist your chose on `runs-on` and latest stable for Windows
-* `stable` - Installs the latest stable version: 2.0.10
-* `2.0.10` - comes with FPC "v3.2.0"
-* `2.0.8` - comes with FPC "v3.0.4"
-* `2.0.6` - comes with FPC "v3.0.4"
-* `2.0.4` - comes with FPC "v3.0.4"
-* `2.0.2` - comes with FPC "v3.0.4"
-* `2.0.0` - comes with FPC "v3.0.4"
-* `1.8.4` - comes with FPC "v3.0.4"
-* `1.8.2` - comes with FPC "v3.0.4"
-* `1.8.0` - comes with FPC "v3.0.4"
-* `1.6.4` - comes with FPC "v3.0.2"
-* `1.6.2` - comes with FPC "v3.0.0"
-* `1.6` - comes with FPC "v3.0.0"
-* `1.4.4` - comes with FPC "v2.6.4"
-* `1.4.2` - comes with FPC "v2.6.4"
-* `1.4` - comes with FPC "v2.6.4"
-* `1.2.6` - comes with FPC "v2.6.4"
-* `1.2.4` - comes with FPC "v2.6.4"
-* `1.2.2` - comes with FPC "v2.6.4"
-* `1.2` - comes with FPC "v2.6.2"
-* `1.2` - comes with FPC "v2.6.2"
-* `1.0.14` - comes with FPC "v2.6.2"
-* `1.0.12` - comes with FPC "v2.6.2"
+* `stable` - Installs the latest stable version: 2.0.12
+* `2.0.12` - comes with `FPC v3.2.0`
+* `2.0.10` - comes with `FPC v3.2.0`
+* `2.0.8`  - comes with `FPC v3.0.4`
+* `2.0.6`  - comes with `FPC v3.0.4`
+* `2.0.4`  - comes with `FPC v3.0.4`
+* `2.0.2`  - comes with `FPC v3.0.4`
+* `2.0.0`  - comes with `FPC v3.0.4`
+* `1.8.4`  - comes with `FPC v3.0.4`
+* `1.8.2`  - comes with `FPC v3.0.4`
+* `1.8.0`  - comes with `FPC v3.0.4`
+* `1.6.4`  - comes with `FPC v3.0.2`
+* `1.6.2`  - comes with `FPC v3.0.0`
+* `1.6`    - comes with `FPC v3.0.0`
+* `1.4.4`  - comes with `FPC v2.6.4`
+* `1.4.2`  - comes with `FPC v2.6.4`
+* `1.4`    - comes with `FPC v2.6.4`
+* `1.2.6`  - comes with `FPC v2.6.4`
+* `1.2.4`  - comes with `FPC v2.6.4`
+* `1.2.2`  - comes with `FPC v2.6.4`
+* `1.2`    - comes with `FPC v2.6.2`
+* `1.2`    - comes with `FPC v2.6.2`
+* `1.0.14` - comes with `FPC v2.6.2`
+* `1.0.12` - comes with `FPC v2.6.2`
 
 ### include-packages
 
