@@ -5,6 +5,8 @@ import * as os from 'os';
 import * as path from 'path';
 import {ok} from 'assert';
 
+const fs = require('fs');
+
 const StableVersion = '2.0.12';
 
 const pkgs: object = {
@@ -383,7 +385,7 @@ export class Lazarus{
                     downloadPath_DAR = await tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), 'fpcsrc.pkg'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                     // Install the package
-                    await exec(`installer -pkg ${downloadPath_DAR} -target CurrentUserHomeDirectory`);
+                    await exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
                 } catch(err) {
                     throw err;
                 }
@@ -396,10 +398,16 @@ export class Lazarus{
                     downloadPath_DAR = await tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), 'fpc.dmg'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                     // Install the package
-                    let lazVerDar = 'v' + this._LazarusVersion.replace(/\./gi, '_');
-                    let pkg_name: string = pkgs[this._Platform][lazVerDar]['fpc'].split('.').slice(0, -1).join('.')
                     await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
-                    await exec(`sudo installer -package /Volumes/fpc-3.2.0.intel-macosx/fpc-3.2.0-intel-macosx.pkg -target /`);
+                    var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
+                    var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
+                    var foo = '/Volumes/'+fpc[0]+'/'+loc[0]
+                    await exec(`echo "**********************************"`);
+                    console.log(fpc);
+                    console.log(loc);
+                    console.log(path);
+                    await exec(`echo "**********************************"`);
+                    await exec(`sudo installer -package ${foo} -target /`);
 
                 } catch(err) {
                     throw err;
@@ -413,7 +421,18 @@ export class Lazarus{
                     downloadPath_DAR = await tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), 'lazarus.pkg'));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                     // Install the package
-                    await exec(`installer -pkg ${downloadPath_DAR} -target CurrentUserHomeDirectory`);
+                    await exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
+                } catch(err) {
+                    throw err;
+                }
+        
+                // Update the symlink to lazbuild
+                console.log(`Updating lazbuild symlink`);
+                try {
+                    // Remove bad symlink
+                    await exec(`rm -rf /usr/local/bin/lazbuild`);
+                    // Add good symlink
+                    await exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
                 } catch(err) {
                     throw err;
                 }

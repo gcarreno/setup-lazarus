@@ -107,6 +107,7 @@ const exec_1 = __webpack_require__(514);
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 const assert_1 = __webpack_require__(357);
+const fs = __webpack_require__(747);
 const StableVersion = '2.0.12';
 const pkgs = {
     "win32": {
@@ -478,7 +479,7 @@ class Lazarus {
                         downloadPath_DAR = yield tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), 'fpcsrc.pkg'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                         // Install the package
-                        yield exec_1.exec(`installer -pkg ${downloadPath_DAR} -target CurrentUserHomeDirectory`);
+                        yield exec_1.exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
                     }
                     catch (err) {
                         throw err;
@@ -491,10 +492,16 @@ class Lazarus {
                         downloadPath_DAR = yield tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), 'fpc.dmg'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                         // Install the package
-                        let lazVerDar = 'v' + this._LazarusVersion.replace(/\./gi, '_');
-                        let pkg_name = pkgs[this._Platform][lazVerDar]['fpc'].split('.').slice(0, -1).join('.');
                         yield exec_1.exec(`sudo hdiutil attach ${downloadPath_DAR}`);
-                        yield exec_1.exec(`sudo installer -package /Volumes/fpc-3.2.0.intel-macosx/fpc-3.2.0-intel-macosx.pkg -target /`);
+                        var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
+                        var loc = fs.readdirSync('/Volumes/' + fpc[0]).filter(fn => fn.endsWith('.pkg'));
+                        var foo = '/Volumes/' + fpc[0] + '/' + loc[0];
+                        yield exec_1.exec(`echo "**********************************"`);
+                        console.log(fpc);
+                        console.log(loc);
+                        console.log(path);
+                        yield exec_1.exec(`echo "**********************************"`);
+                        yield exec_1.exec(`sudo installer -package ${foo} -target /`);
                     }
                     catch (err) {
                         throw err;
@@ -507,7 +514,18 @@ class Lazarus {
                         downloadPath_DAR = yield tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), 'lazarus.pkg'));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                         // Install the package
-                        yield exec_1.exec(`installer -pkg ${downloadPath_DAR} -target CurrentUserHomeDirectory`);
+                        yield exec_1.exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
+                    }
+                    catch (err) {
+                        throw err;
+                    }
+                    // Update the symlink to lazbuild
+                    console.log(`Updating lazbuild symlink`);
+                    try {
+                        // Remove bad symlink
+                        yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
+                        // Add good symlink
+                        yield exec_1.exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
                     }
                     catch (err) {
                         throw err;
