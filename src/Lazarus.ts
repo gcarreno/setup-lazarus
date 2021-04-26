@@ -5,6 +5,8 @@ import * as os from 'os';
 import * as path from 'path';
 import {ok} from 'assert';
 
+const fs = require('fs');
+
 const StableVersion = '2.0.12';
 
 const pkgs: object = {
@@ -167,6 +169,23 @@ const pkgs: object = {
             "fpc": "fpc_2.6.2-0_amd64.deb",
             "fpcsrc": "fpc-src_2.6.2-0_amd64.deb"
         }
+    },
+    "darwin": {
+        "v2_0_12":{
+            "laz": "Lazarus-2.0.12-x86_64-macosx.pkg",
+            "fpc": "fpc-3.2.0.intel-macosx.dmg",
+            "fpcsrc": "fpc-src-3.2.0-2-laz.pkg"
+        },
+        "v2_0_10":{
+            "laz": "Lazarus-2.0.10-x86_64-macosx.pkg",
+            "fpc": "fpc-3.2.0.intel-macosx.dmg",
+            "fpcsrc": "fpc-src-3.2.0-2-laz.pkg"
+        },
+        "v2_0_8": {
+            "laz": "LazarusIDE-2.0.8-macos-x86_64.pkg",
+            "fpc": "fpc-3.0.4-macos-x86_64-laz-2.pkg",
+            "fpcsrc": "fpc-src-3.0.4-laz.pkg"
+        }
     }
 };
 
@@ -191,6 +210,12 @@ export class Lazarus{
                         await exec('sudo apt update');
                         // Install Lazarus from the Ubuntu repository
                         await exec('sudo apt install -y lazarus');
+                    break;
+                    case 'darwin':
+                        // Perform a repository update
+                        await exec('brew update');
+                        // Install Lazarus using homebrew
+                        await exec('brew install lazarus');
                     break;
                     case 'win32':
                         this._LazarusVersion = StableVersion;
@@ -344,6 +369,87 @@ export class Lazarus{
                 }
         
                 break;
+            case 'darwin':
+                let downloadPath_DAR: string;
+        
+                // Get the URL for Free Pascal Source
+                let downloadFPCSRCURLDAR: string = this._getPackageURL('fpcsrc');
+                console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
+                try {
+                    // Perform the download
+                    downloadPath_DAR = await tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), 'fpcsrc.pkg'));
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                    // Install the package
+                    await exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
+                } catch(err) {
+                    throw err;
+                }
+        
+                // Get the URL for Free Pascal's compiler
+                let downloadFPCURLDAR: string = this._getPackageURL('fpc');
+                console.log(`_downloadLazarus - Downloading ${downloadFPCURLDAR}`);
+                try {
+                    // Decide what the local download filename should be
+                    var downloadName = downloadFPCURLDAR.endsWith('.dmg') ? 'fpc.dmg' : 'fpc.pkg';
+
+                    // Perform the download
+                    downloadPath_DAR = await tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), downloadName));
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+
+                    // Download could be a pkg or dmg, handle either case
+                    if (downloadName == 'fpc.dmg') {
+                        // Mount DMG and intall package
+                        await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
+
+                        // There MUST be a better way to do this
+                        var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
+                        var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
+                        var full_path = '/Volumes/'+fpc[0]+'/'+loc[0]
+                        await exec(`sudo installer -package ${full_path} -target /`);
+                    } else {
+                        // Install the package
+                        await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
+                    }
+
+                } catch(err) {
+                    throw err;
+                }
+        
+                // Get the URL for the Lazarus IDE
+                let downloadLazURLDAR: string = this._getPackageURL('laz');
+                console.log(`_downloadLazarus - Downloading ${downloadLazURLDAR}`);
+                try {
+                    // Perform the download
+                    downloadPath_DAR = await tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), 'lazarus.pkg'));
+                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                    // Install the package
+                    await exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
+                } catch(err) {
+                    throw err;
+                }
+        
+                // For 2.0.10 and older, lazbuild symlink is /Library/Lazarus/lazbuild
+                // For 2.0.12, lazbuild symlink is /Applications/Lazarus/lazbuild
+                // Update the symlink to lazbuild
+                const lazLibPath = '/Library/Lazarus/lazbuild'
+                const lazAppPath = '/Applications/Lazarus/lazbuild'
+                try {
+                    if (fs.existsSync(`${lazLibPath}`)) {
+                        console.log(`Do not need to update lazbuild symlink`);
+                    } else if (fs.existsSync(`${lazAppPath}`)) {
+                        console.log(`Updating lazbuild symlink to ${lazAppPath}`);
+                        // Remove bad symlink
+                        await exec(`rm -rf /usr/local/bin/lazbuild`);
+                        // Add good symlink
+                        await exec(`ln -s ${lazAppPath} /usr/local/bin/lazbuild`);
+                    } else {
+                        throw new Error(`Could not find lazbuild in ${lazLibPath} or ${lazAppPath}`);
+                    }
+                } catch(err) {
+                    throw err;
+                }
+        
+                break;
             default:
                 throw new Error(`_downloadLazarus - Platform not implemented: ${this._Platform}`);
         }
@@ -367,6 +473,10 @@ export class Lazarus{
                 break;
             case "linux":
                 result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%20${this._LazarusVersion}/`;
+                result += pkgs[this._Platform][lazVer][pkg];
+                break;
+            case "darwin":
+                result = `https://sourceforge.net/projects/lazarus/files/Lazarus%20macOS%20x86-64/Lazarus%20${this._LazarusVersion}/`;
                 result += pkgs[this._Platform][lazVer][pkg];
                 break;
             default:
