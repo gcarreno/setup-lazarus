@@ -399,15 +399,12 @@ export class Lazarus{
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                     // Install the package
                     await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
+
+                    // There MUST be a better way to do this
                     var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                     var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
-                    var foo = '/Volumes/'+fpc[0]+'/'+loc[0]
-                    await exec(`echo "**********************************"`);
-                    console.log(fpc);
-                    console.log(loc);
-                    console.log(path);
-                    await exec(`echo "**********************************"`);
-                    await exec(`sudo installer -package ${foo} -target /`);
+                    var full_path = '/Volumes/'+fpc[0]+'/'+loc[0]
+                    await exec(`sudo installer -package ${full_path} -target /`);
 
                 } catch(err) {
                     throw err;
@@ -426,13 +423,20 @@ export class Lazarus{
                     throw err;
                 }
         
+                // For 2.0.10 and older, lazbuild symblink is /Library/Lazarus/lazbuild
+                // For 2.0.12, lazbuild symblink is /Applications/Lazarus/lazbuild
                 // Update the symlink to lazbuild
-                console.log(`Updating lazbuild symlink`);
                 try {
-                    // Remove bad symlink
-                    await exec(`rm -rf /usr/local/bin/lazbuild`);
-                    // Add good symlink
-                    await exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
+                    var exitCode = await exec(`ls /Library/Lazarus/lazbuild`);
+                    if (exitCode == 0) {
+                        console.log(`Do not need to update lazbuild symlink`);
+                    } else {
+                        console.log(`Updating lazbuild symlink`);
+                        // Remove bad symlink
+                        await exec(`rm -rf /usr/local/bin/lazbuild`);
+                        // Add good symlink
+                        await exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
+                    }
                 } catch(err) {
                     throw err;
                 }

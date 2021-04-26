@@ -493,15 +493,11 @@ class Lazarus {
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
                         // Install the package
                         yield exec_1.exec(`sudo hdiutil attach ${downloadPath_DAR}`);
+                        // There MUST be a better way to do this
                         var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                         var loc = fs.readdirSync('/Volumes/' + fpc[0]).filter(fn => fn.endsWith('.pkg'));
-                        var foo = '/Volumes/' + fpc[0] + '/' + loc[0];
-                        yield exec_1.exec(`echo "**********************************"`);
-                        console.log(fpc);
-                        console.log(loc);
-                        console.log(path);
-                        yield exec_1.exec(`echo "**********************************"`);
-                        yield exec_1.exec(`sudo installer -package ${foo} -target /`);
+                        var full_path = '/Volumes/' + fpc[0] + '/' + loc[0];
+                        yield exec_1.exec(`sudo installer -package ${full_path} -target /`);
                     }
                     catch (err) {
                         throw err;
@@ -519,13 +515,20 @@ class Lazarus {
                     catch (err) {
                         throw err;
                     }
+                    // For 2.0.10 and older, lazbuild symblink is /Library/Lazarus/lazbuild
+                    // For 2.0.12, lazbuild symblink is /Applications/Lazarus/lazbuild
                     // Update the symlink to lazbuild
-                    console.log(`Updating lazbuild symlink`);
                     try {
-                        // Remove bad symlink
-                        yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
-                        // Add good symlink
-                        yield exec_1.exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
+                        if (this._LazarusVersion.replace(/\./gi, '_') == '2.0.12') {
+                            console.log(`Updating lazbuild symlink`);
+                            // Remove bad symlink
+                            yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
+                            // Add good symlink
+                            yield exec_1.exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
+                        }
+                        else {
+                            console.log(`Do not need to update lazbuild symlink`);
+                        }
                     }
                     catch (err) {
                         throw err;
