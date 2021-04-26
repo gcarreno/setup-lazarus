@@ -185,11 +185,6 @@ const pkgs: object = {
             "laz": "LazarusIDE-2.0.8-macos-x86_64.pkg",
             "fpc": "fpc-3.0.4-macos-x86_64-laz-2.pkg",
             "fpcsrc": "fpc-src-3.0.4-laz.pkg"
-        },
-        "v2_0_6": {
-            "laz": "LazarusIDE-2.0.6-macos-x86_64.pkg",
-            "fpc": "fpc-3.0.4-macos-x86_64-laz.pkg",
-            "fpcsrc": "fpc-src-3.0.4-laz.pkg"
         }
     }
 };
@@ -394,14 +389,15 @@ export class Lazarus{
                 let downloadFPCURLDAR: string = this._getPackageURL('fpc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCURLDAR}`);
                 try {
-                    // Perform the download
-                    var downloadTo = downloadFPCURLDAR.endsWith('.dmg') ? 'fpc.dmg' : 'fpc.pkg';
+                    // Decide what the local download filename should be
+                    var downloadName = downloadFPCURLDAR.endsWith('.dmg') ? 'fpc.dmg' : 'fpc.pkg';
 
-                    downloadPath_DAR = await tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), downloadTo));
+                    // Perform the download
+                    downloadPath_DAR = await tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), downloadName));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
 
                     // Download could be a pkg or dmg, handle either case
-                    if (downloadTo == 'fpc.dmg') {
+                    if (downloadName == 'fpc.dmg') {
                         // Mount DMG and intall package
                         await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
 
@@ -432,8 +428,8 @@ export class Lazarus{
                     throw err;
                 }
         
-                // For 2.0.10 and older, lazbuild symblink is /Library/Lazarus/lazbuild
-                // For 2.0.12, lazbuild symblink is /Applications/Lazarus/lazbuild
+                // For 2.0.10 and older, lazbuild symlink is /Library/Lazarus/lazbuild
+                // For 2.0.12, lazbuild symlink is /Applications/Lazarus/lazbuild
                 // Update the symlink to lazbuild
                 const lazLibPath = '/Library/Lazarus/lazbuild'
                 const lazAppPath = '/Applications/Lazarus/lazbuild'
@@ -445,7 +441,7 @@ export class Lazarus{
                         // Remove bad symlink
                         await exec(`rm -rf /usr/local/bin/lazbuild`);
                         // Add good symlink
-                        await exec(`ln -s /Applications/Lazarus/lazbuild /usr/local/bin/lazbuild`);
+                        await exec(`ln -s ${lazAppPath} /usr/local/bin/lazbuild`);
                     } else {
                         throw new Error(`Could not find lazbuild in ${lazLibPath} or ${lazAppPath}`);
                     }
