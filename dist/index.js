@@ -743,10 +743,12 @@ exports.Packages = void 0;
 const http = __importStar(__webpack_require__(925));
 const tc = __importStar(__webpack_require__(784));
 const exec_1 = __webpack_require__(514);
+const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 const assert_1 = __webpack_require__(357);
 class Packages {
     constructor(LazarusVersion, BaseURL, ParamJSON) {
+        this._Platform = os.platform();
         this._Items = new Array();
         this._LazarusVersion = LazarusVersion;
         this._BaseURL = BaseURL;
@@ -782,19 +784,43 @@ class Packages {
                                 switch (fpkg.PackageType) {
                                     case 0:
                                         // Making Lazarus aware of the package
-                                        console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
-                                        yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}"`);
+                                        if (this._Platform != 'darwin') {
+                                            console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}"`);
+                                        }
+                                        else {
+                                            console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
+                                        }
                                         // Compiling the package
-                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                        yield exec_1.exec(`lazbuild "${pkgLPKFile}"`);
+                                        if (this._Platform != 'darwin') {
+                                            console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild "${pkgLPKFile}"`);
+                                        }
+                                        else {
+                                            console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                        }
                                         break;
                                     case 2:
                                         // Making Lazarus aware of the package
-                                        console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
-                                        yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
+                                        if (this._Platform != 'darwin') {
+                                            console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
+                                        }
+                                        else {
+                                            console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
+                                        }
                                         // Compiling the package
-                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                        yield exec_1.exec(`lazbuild "${pkgLPKFile}"`);
+                                        if (this._Platform != 'darwin') {
+                                            console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild "${pkgLPKFile}"`);
+                                        }
+                                        else {
+                                            console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                            yield exec_1.exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                        }
                                         break;
                                     default:
                                         throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);

@@ -1,10 +1,12 @@
 import * as http from '@actions/http-client';
 import * as tc from '@actions/tool-cache';
 import {exec} from '@actions/exec/lib/exec';
+import * as os from 'os';
 import * as path from 'path';
 import {ok} from 'assert';
 
 export class Packages {
+    private _Platform: string = os.platform();
     private _LazarusVersion: string;
     private _BaseURL: string;
     private _ParamJSON: string;
@@ -66,21 +68,40 @@ export class Packages {
                             switch (fpkg.PackageType) {
                                 case 0:
                                     // Making Lazarus aware of the package
-                                    console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
-                                    await exec(`lazbuild --add-package "${pkgLPKFile}"`);
+                                    if (this._Platform != 'darwin') {
+                                        console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
+                                        await exec(`lazbuild --add-package "${pkgLPKFile}"`);
+                                    } else {
+                                        console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
+                                        await exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
+                                    }
 
                                     // Compiling the package
-                                    console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                    await exec(`lazbuild "${pkgLPKFile}"`);
+                                    if (this._Platform != 'darwin') {
+                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                        await exec(`lazbuild "${pkgLPKFile}"`);
+                                    } else {
+                                        console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                        await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                    }
                                     break;
                                 case 2:
                                     // Making Lazarus aware of the package
-                                    console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
-                                    await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
-
+                                    if (this._Platform != 'darwin') {
+                                        console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
+                                        await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
+                                    } else {
+                                        console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
+                                        await exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
+                                    }
                                     // Compiling the package
-                                    console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                    await exec(`lazbuild "${pkgLPKFile}"`);
+                                    if (this._Platform != 'darwin') {
+                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                        await exec(`lazbuild "${pkgLPKFile}"`);
+                                    } else {
+                                        console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                        await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                    }
                                     break;
                                 default:
                                     throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
