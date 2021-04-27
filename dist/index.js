@@ -314,6 +314,29 @@ class Lazarus {
                             yield exec_1.exec('brew update');
                             // Install Lazarus using homebrew
                             yield exec_1.exec('brew install lazarus');
+                            // For 2.0.10 and older, lazbuild symlink is /Library/Lazarus/lazbuild
+                            // For 2.0.12, lazbuild symlink is /Applications/Lazarus/lazbuild
+                            // Update the symlink to lazbuild
+                            const lazLibPath = '/Library/Lazarus/lazbuild';
+                            const lazAppPath = '/Applications/Lazarus/lazbuild';
+                            try {
+                                if (fs.existsSync(`${lazLibPath}`)) {
+                                    console.log(`installLazarus - Do not need to update lazbuild symlink`);
+                                }
+                                else if (fs.existsSync(`${lazAppPath}`)) {
+                                    console.log(`installLazarus - Updating lazbuild symlink to ${lazAppPath}`);
+                                    // Remove bad symlink
+                                    yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
+                                    // Add good symlink
+                                    yield exec_1.exec(`ln -s ${lazAppPath} /usr/local/bin/lazbuild`);
+                                }
+                                else {
+                                    throw new Error(`Could not find lazbuild in ${lazLibPath} or ${lazAppPath}`);
+                                }
+                            }
+                            catch (err) {
+                                throw err;
+                            }
                             break;
                         case 'win32':
                             this._LazarusVersion = StableVersion;
@@ -621,10 +644,10 @@ class Lazarus {
                     const lazAppPath = '/Applications/Lazarus/lazbuild';
                     try {
                         if (fs.existsSync(`${lazLibPath}`)) {
-                            console.log(`Do not need to update lazbuild symlink`);
+                            console.log(`_downloadLazarus - Do not need to update lazbuild symlink`);
                         }
                         else if (fs.existsSync(`${lazAppPath}`)) {
-                            console.log(`Updating lazbuild symlink to ${lazAppPath}`);
+                            console.log(`_downloadLazarus - Updating lazbuild symlink to ${lazAppPath}`);
                             // Remove bad symlink
                             yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
                             // Add good symlink

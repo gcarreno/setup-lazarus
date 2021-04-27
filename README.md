@@ -77,7 +77,7 @@ Unfortunately there are some restrictions:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v3.0
+- uses: gcarreno/setup-lazarus@v3.0.1
   with:
     lazarus-version: "dist"
     include-packages: "Synapse 40.1"
@@ -109,7 +109,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3.0
+      uses: gcarreno/setup-lazarus@v3.0.1
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
@@ -120,7 +120,7 @@ jobs:
       if: ${{ matrix.operating-system == 'macos-latest' }}
       run: lazbuild -B --ws=cocoa "src/lazaruswithgithubactions.lpi"
     - name: Build the Unit Tests Application
-      run: lazbuild "tests/testconsoleapplication.lpi"
+      run: lazbuild -B "tests/testconsoleapplication.lpi"
     - name: Run the Unit Tests Application
       run: bin/testconsoleapplication "--all" "--format=plain"
 ```
