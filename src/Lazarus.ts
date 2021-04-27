@@ -240,61 +240,137 @@ export class Lazarus{
                 await this._downloadLazarus();
                 break;
             case '2.0.6':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '2.0.4':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '2.0.2':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '2.0.0':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.8.4':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.8.2':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.8.0':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.6.4':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.6.2':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.6':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.4.4':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.4.2':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.4':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.2.6':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.2.4':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.2.2':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.2':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.0.14':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             case '1.0.12':
-                await this._downloadLazarus();
+                if (this._Platform == 'darwin'){
+                    throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                } else {
+                    await this._downloadLazarus();
+                }
                 break;
             default:
                 throw new Error(`getLazarus - Version not available: ${this._LazarusVersion}`);

@@ -59,17 +59,25 @@ The list of packages can be searched at the [Lazarus IDE repository](https://pac
 
 At the moment this action only supports:
 
-* Windows (win32)
-* Linux (linux64)
+- Windows (platform=win32, arch=x64)
+- Linux (platform=linux, arch=x64)
+- macOS (platform=darwin, arch=x64)
 
-**Note** If someone wants to help get masOS (darwin) running I'll be more than happy!
+### IMPORTANT
+
+Due to the hard work of [Levi](https://github.com/leviable) there is now support for macOS.
+
+Unfortunately there are some restrictions:
+
+- The GitHub macOS runners only support Lazarus versions 2.0.8 and up.
+- Until further notice only Cocoa widgset is supported on macOS runners.
 
 ## Example usage
 
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v2.2.9
+- uses: gcarreno/setup-lazarus@v3.0
   with:
     lazarus-version: "dist"
     include-packages: "Synapse 40.1"
@@ -96,17 +104,21 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubuntu-18.04,ubuntu-latest]
-        lazarus-versions: [dist, stable, 2.0.10, 2.0.6]
+        operating-system: [windows-latest,ubuntu-latest,macos-latest]
+        lazarus-versions: [dist, stable, 2.0.10, 2.0.8, 2.0.6]
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v2.2.9
+      uses: gcarreno/setup-lazarus@v3.0
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
     - name: Build the Main Application
-      run: lazbuild "src/lazaruswithgithubactions.lpi"
+      if: ${{ matrix.operating-system != 'macos-latest' }}
+      run: lazbuild -B "src/lazaruswithgithubactions.lpi"
+    - name: Build the Main Application (macOS)
+      if: ${{ matrix.operating-system == 'macos-latest' }}
+      run: lazbuild -B --ws=cocoa "src/lazaruswithgithubactions.lpi"
     - name: Build the Unit Tests Application
       run: lazbuild "tests/testconsoleapplication.lpi"
     - name: Run the Unit Tests Application

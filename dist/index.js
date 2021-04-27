@@ -338,61 +338,156 @@ class Lazarus {
                     yield this._downloadLazarus();
                     break;
                 case '2.0.6':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '2.0.4':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '2.0.2':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '2.0.0':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.8.4':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.8.2':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.8.0':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.6.4':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.6.2':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.6':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.4.4':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.4.2':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.4':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.2.6':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.2.4':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.2.2':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.2':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.0.14':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 case '1.0.12':
-                    yield this._downloadLazarus();
+                    if (this._Platform == 'darwin') {
+                        throw new Error('GitHub runners do not support Lazarus below 2.0.8 on macos');
+                    }
+                    else {
+                        yield this._downloadLazarus();
+                    }
                     break;
                 default:
                     throw new Error(`getLazarus - Version not available: ${this._LazarusVersion}`);
@@ -1043,7 +1138,6 @@ exports.getInput = getInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
-    process.stdout.write(os.EOL);
     command_1.issueCommand('set-output', { name }, value);
 }
 exports.setOutput = setOutput;
@@ -2518,18 +2612,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const assert_1 = __webpack_require__(357);
-const fs = __importStar(__webpack_require__(747));
-const path = __importStar(__webpack_require__(622));
+const fs = __webpack_require__(747);
+const path = __webpack_require__(622);
 _a = fs.promises, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
 exports.IS_WINDOWS = process.platform === 'win32';
 function exists(fsPath) {
@@ -2727,18 +2814,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const childProcess = __importStar(__webpack_require__(129));
-const path = __importStar(__webpack_require__(622));
+const childProcess = __webpack_require__(129);
+const path = __webpack_require__(622);
 const util_1 = __webpack_require__(669);
-const ioUtil = __importStar(__webpack_require__(962));
+const ioUtil = __webpack_require__(962);
 const exec = util_1.promisify(childProcess.exec);
 /**
  * Copies a file or folder.
@@ -2906,73 +2986,58 @@ function which(tool, check) {
                     throw new Error(`Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.`);
                 }
             }
-            return result;
         }
-        const matches = yield findInPath(tool);
-        if (matches && matches.length > 0) {
-            return matches[0];
+        try {
+            // build the list of extensions to try
+            const extensions = [];
+            if (ioUtil.IS_WINDOWS && process.env.PATHEXT) {
+                for (const extension of process.env.PATHEXT.split(path.delimiter)) {
+                    if (extension) {
+                        extensions.push(extension);
+                    }
+                }
+            }
+            // if it's rooted, return it if exists. otherwise return empty.
+            if (ioUtil.isRooted(tool)) {
+                const filePath = yield ioUtil.tryGetExecutablePath(tool, extensions);
+                if (filePath) {
+                    return filePath;
+                }
+                return '';
+            }
+            // if any path separators, return empty
+            if (tool.includes('/') || (ioUtil.IS_WINDOWS && tool.includes('\\'))) {
+                return '';
+            }
+            // build the list of directories
+            //
+            // Note, technically "where" checks the current directory on Windows. From a toolkit perspective,
+            // it feels like we should not do this. Checking the current directory seems like more of a use
+            // case of a shell, and the which() function exposed by the toolkit should strive for consistency
+            // across platforms.
+            const directories = [];
+            if (process.env.PATH) {
+                for (const p of process.env.PATH.split(path.delimiter)) {
+                    if (p) {
+                        directories.push(p);
+                    }
+                }
+            }
+            // return the first match
+            for (const directory of directories) {
+                const filePath = yield ioUtil.tryGetExecutablePath(directory + path.sep + tool, extensions);
+                if (filePath) {
+                    return filePath;
+                }
+            }
+            return '';
         }
-        return '';
+        catch (err) {
+            throw new Error(`which failed with message ${err.message}`);
+        }
     });
 }
 exports.which = which;
-/**
- * Returns a list of all occurrences of the given tool on the system path.
- *
- * @returns   Promise<string[]>  the paths of the tool
- */
-function findInPath(tool) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!tool) {
-            throw new Error("parameter 'tool' is required");
-        }
-        // build the list of extensions to try
-        const extensions = [];
-        if (ioUtil.IS_WINDOWS && process.env['PATHEXT']) {
-            for (const extension of process.env['PATHEXT'].split(path.delimiter)) {
-                if (extension) {
-                    extensions.push(extension);
-                }
-            }
-        }
-        // if it's rooted, return it if exists. otherwise return empty.
-        if (ioUtil.isRooted(tool)) {
-            const filePath = yield ioUtil.tryGetExecutablePath(tool, extensions);
-            if (filePath) {
-                return [filePath];
-            }
-            return [];
-        }
-        // if any path separators, return empty
-        if (tool.includes(path.sep)) {
-            return [];
-        }
-        // build the list of directories
-        //
-        // Note, technically "where" checks the current directory on Windows. From a toolkit perspective,
-        // it feels like we should not do this. Checking the current directory seems like more of a use
-        // case of a shell, and the which() function exposed by the toolkit should strive for consistency
-        // across platforms.
-        const directories = [];
-        if (process.env.PATH) {
-            for (const p of process.env.PATH.split(path.delimiter)) {
-                if (p) {
-                    directories.push(p);
-                }
-            }
-        }
-        // find all matches
-        const matches = [];
-        for (const directory of directories) {
-            const filePath = yield ioUtil.tryGetExecutablePath(path.join(directory, tool), extensions);
-            if (filePath) {
-                matches.push(filePath);
-            }
-        }
-        return matches;
-    });
-}
-exports.findInPath = findInPath;
 function readCopyOptions(options) {
     const force = options.force == null ? true : options.force;
     const recursive = Boolean(options.recursive);
@@ -3869,12 +3934,7 @@ var MAX_SAFE_COMPONENT_LENGTH = 16
 // The actual regexps go on exports.re
 var re = exports.re = []
 var src = exports.src = []
-var t = exports.tokens = {}
 var R = 0
-
-function tok (n) {
-  t[n] = R++
-}
 
 // The following Regular Expressions can be used for tokenizing,
 // validating, and parsing SemVer version strings.
@@ -3882,67 +3942,67 @@ function tok (n) {
 // ## Numeric Identifier
 // A single `0`, or a non-zero digit followed by zero or more digits.
 
-tok('NUMERICIDENTIFIER')
-src[t.NUMERICIDENTIFIER] = '0|[1-9]\\d*'
-tok('NUMERICIDENTIFIERLOOSE')
-src[t.NUMERICIDENTIFIERLOOSE] = '[0-9]+'
+var NUMERICIDENTIFIER = R++
+src[NUMERICIDENTIFIER] = '0|[1-9]\\d*'
+var NUMERICIDENTIFIERLOOSE = R++
+src[NUMERICIDENTIFIERLOOSE] = '[0-9]+'
 
 // ## Non-numeric Identifier
 // Zero or more digits, followed by a letter or hyphen, and then zero or
 // more letters, digits, or hyphens.
 
-tok('NONNUMERICIDENTIFIER')
-src[t.NONNUMERICIDENTIFIER] = '\\d*[a-zA-Z-][a-zA-Z0-9-]*'
+var NONNUMERICIDENTIFIER = R++
+src[NONNUMERICIDENTIFIER] = '\\d*[a-zA-Z-][a-zA-Z0-9-]*'
 
 // ## Main Version
 // Three dot-separated numeric identifiers.
 
-tok('MAINVERSION')
-src[t.MAINVERSION] = '(' + src[t.NUMERICIDENTIFIER] + ')\\.' +
-                   '(' + src[t.NUMERICIDENTIFIER] + ')\\.' +
-                   '(' + src[t.NUMERICIDENTIFIER] + ')'
+var MAINVERSION = R++
+src[MAINVERSION] = '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+                   '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+                   '(' + src[NUMERICIDENTIFIER] + ')'
 
-tok('MAINVERSIONLOOSE')
-src[t.MAINVERSIONLOOSE] = '(' + src[t.NUMERICIDENTIFIERLOOSE] + ')\\.' +
-                        '(' + src[t.NUMERICIDENTIFIERLOOSE] + ')\\.' +
-                        '(' + src[t.NUMERICIDENTIFIERLOOSE] + ')'
+var MAINVERSIONLOOSE = R++
+src[MAINVERSIONLOOSE] = '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+                        '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+                        '(' + src[NUMERICIDENTIFIERLOOSE] + ')'
 
 // ## Pre-release Version Identifier
 // A numeric identifier, or a non-numeric identifier.
 
-tok('PRERELEASEIDENTIFIER')
-src[t.PRERELEASEIDENTIFIER] = '(?:' + src[t.NUMERICIDENTIFIER] +
-                            '|' + src[t.NONNUMERICIDENTIFIER] + ')'
+var PRERELEASEIDENTIFIER = R++
+src[PRERELEASEIDENTIFIER] = '(?:' + src[NUMERICIDENTIFIER] +
+                            '|' + src[NONNUMERICIDENTIFIER] + ')'
 
-tok('PRERELEASEIDENTIFIERLOOSE')
-src[t.PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[t.NUMERICIDENTIFIERLOOSE] +
-                                 '|' + src[t.NONNUMERICIDENTIFIER] + ')'
+var PRERELEASEIDENTIFIERLOOSE = R++
+src[PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[NUMERICIDENTIFIERLOOSE] +
+                                 '|' + src[NONNUMERICIDENTIFIER] + ')'
 
 // ## Pre-release Version
 // Hyphen, followed by one or more dot-separated pre-release version
 // identifiers.
 
-tok('PRERELEASE')
-src[t.PRERELEASE] = '(?:-(' + src[t.PRERELEASEIDENTIFIER] +
-                  '(?:\\.' + src[t.PRERELEASEIDENTIFIER] + ')*))'
+var PRERELEASE = R++
+src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
+                  '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))'
 
-tok('PRERELEASELOOSE')
-src[t.PRERELEASELOOSE] = '(?:-?(' + src[t.PRERELEASEIDENTIFIERLOOSE] +
-                       '(?:\\.' + src[t.PRERELEASEIDENTIFIERLOOSE] + ')*))'
+var PRERELEASELOOSE = R++
+src[PRERELEASELOOSE] = '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
+                       '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))'
 
 // ## Build Metadata Identifier
 // Any combination of digits, letters, or hyphens.
 
-tok('BUILDIDENTIFIER')
-src[t.BUILDIDENTIFIER] = '[0-9A-Za-z-]+'
+var BUILDIDENTIFIER = R++
+src[BUILDIDENTIFIER] = '[0-9A-Za-z-]+'
 
 // ## Build Metadata
 // Plus sign, followed by one or more period-separated build metadata
 // identifiers.
 
-tok('BUILD')
-src[t.BUILD] = '(?:\\+(' + src[t.BUILDIDENTIFIER] +
-             '(?:\\.' + src[t.BUILDIDENTIFIER] + ')*))'
+var BUILD = R++
+src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] +
+             '(?:\\.' + src[BUILDIDENTIFIER] + ')*))'
 
 // ## Full Version String
 // A main version, followed optionally by a pre-release version and
@@ -3953,133 +4013,129 @@ src[t.BUILD] = '(?:\\+(' + src[t.BUILDIDENTIFIER] +
 // capturing group, because it should not ever be used in version
 // comparison.
 
-tok('FULL')
-tok('FULLPLAIN')
-src[t.FULLPLAIN] = 'v?' + src[t.MAINVERSION] +
-                  src[t.PRERELEASE] + '?' +
-                  src[t.BUILD] + '?'
+var FULL = R++
+var FULLPLAIN = 'v?' + src[MAINVERSION] +
+                src[PRERELEASE] + '?' +
+                src[BUILD] + '?'
 
-src[t.FULL] = '^' + src[t.FULLPLAIN] + '$'
+src[FULL] = '^' + FULLPLAIN + '$'
 
 // like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
 // also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
 // common in the npm registry.
-tok('LOOSEPLAIN')
-src[t.LOOSEPLAIN] = '[v=\\s]*' + src[t.MAINVERSIONLOOSE] +
-                  src[t.PRERELEASELOOSE] + '?' +
-                  src[t.BUILD] + '?'
+var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
+                 src[PRERELEASELOOSE] + '?' +
+                 src[BUILD] + '?'
 
-tok('LOOSE')
-src[t.LOOSE] = '^' + src[t.LOOSEPLAIN] + '$'
+var LOOSE = R++
+src[LOOSE] = '^' + LOOSEPLAIN + '$'
 
-tok('GTLT')
-src[t.GTLT] = '((?:<|>)?=?)'
+var GTLT = R++
+src[GTLT] = '((?:<|>)?=?)'
 
 // Something like "2.*" or "1.2.x".
 // Note that "x.x" is a valid xRange identifer, meaning "any version"
 // Only the first item is strictly required.
-tok('XRANGEIDENTIFIERLOOSE')
-src[t.XRANGEIDENTIFIERLOOSE] = src[t.NUMERICIDENTIFIERLOOSE] + '|x|X|\\*'
-tok('XRANGEIDENTIFIER')
-src[t.XRANGEIDENTIFIER] = src[t.NUMERICIDENTIFIER] + '|x|X|\\*'
+var XRANGEIDENTIFIERLOOSE = R++
+src[XRANGEIDENTIFIERLOOSE] = src[NUMERICIDENTIFIERLOOSE] + '|x|X|\\*'
+var XRANGEIDENTIFIER = R++
+src[XRANGEIDENTIFIER] = src[NUMERICIDENTIFIER] + '|x|X|\\*'
 
-tok('XRANGEPLAIN')
-src[t.XRANGEPLAIN] = '[v=\\s]*(' + src[t.XRANGEIDENTIFIER] + ')' +
-                   '(?:\\.(' + src[t.XRANGEIDENTIFIER] + ')' +
-                   '(?:\\.(' + src[t.XRANGEIDENTIFIER] + ')' +
-                   '(?:' + src[t.PRERELEASE] + ')?' +
-                   src[t.BUILD] + '?' +
+var XRANGEPLAIN = R++
+src[XRANGEPLAIN] = '[v=\\s]*(' + src[XRANGEIDENTIFIER] + ')' +
+                   '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+                   '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+                   '(?:' + src[PRERELEASE] + ')?' +
+                   src[BUILD] + '?' +
                    ')?)?'
 
-tok('XRANGEPLAINLOOSE')
-src[t.XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[t.XRANGEIDENTIFIERLOOSE] + ')' +
-                        '(?:\\.(' + src[t.XRANGEIDENTIFIERLOOSE] + ')' +
-                        '(?:\\.(' + src[t.XRANGEIDENTIFIERLOOSE] + ')' +
-                        '(?:' + src[t.PRERELEASELOOSE] + ')?' +
-                        src[t.BUILD] + '?' +
+var XRANGEPLAINLOOSE = R++
+src[XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+                        '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+                        '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+                        '(?:' + src[PRERELEASELOOSE] + ')?' +
+                        src[BUILD] + '?' +
                         ')?)?'
 
-tok('XRANGE')
-src[t.XRANGE] = '^' + src[t.GTLT] + '\\s*' + src[t.XRANGEPLAIN] + '$'
-tok('XRANGELOOSE')
-src[t.XRANGELOOSE] = '^' + src[t.GTLT] + '\\s*' + src[t.XRANGEPLAINLOOSE] + '$'
+var XRANGE = R++
+src[XRANGE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAIN] + '$'
+var XRANGELOOSE = R++
+src[XRANGELOOSE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAINLOOSE] + '$'
 
 // Coercion.
 // Extract anything that could conceivably be a part of a valid semver
-tok('COERCE')
-src[t.COERCE] = '(^|[^\\d])' +
+var COERCE = R++
+src[COERCE] = '(?:^|[^\\d])' +
               '(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '})' +
               '(?:\\.(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '}))?' +
               '(?:\\.(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '}))?' +
               '(?:$|[^\\d])'
-tok('COERCERTL')
-re[t.COERCERTL] = new RegExp(src[t.COERCE], 'g')
 
 // Tilde ranges.
 // Meaning is "reasonably at or greater than"
-tok('LONETILDE')
-src[t.LONETILDE] = '(?:~>?)'
+var LONETILDE = R++
+src[LONETILDE] = '(?:~>?)'
 
-tok('TILDETRIM')
-src[t.TILDETRIM] = '(\\s*)' + src[t.LONETILDE] + '\\s+'
-re[t.TILDETRIM] = new RegExp(src[t.TILDETRIM], 'g')
+var TILDETRIM = R++
+src[TILDETRIM] = '(\\s*)' + src[LONETILDE] + '\\s+'
+re[TILDETRIM] = new RegExp(src[TILDETRIM], 'g')
 var tildeTrimReplace = '$1~'
 
-tok('TILDE')
-src[t.TILDE] = '^' + src[t.LONETILDE] + src[t.XRANGEPLAIN] + '$'
-tok('TILDELOOSE')
-src[t.TILDELOOSE] = '^' + src[t.LONETILDE] + src[t.XRANGEPLAINLOOSE] + '$'
+var TILDE = R++
+src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$'
+var TILDELOOSE = R++
+src[TILDELOOSE] = '^' + src[LONETILDE] + src[XRANGEPLAINLOOSE] + '$'
 
 // Caret ranges.
 // Meaning is "at least and backwards compatible with"
-tok('LONECARET')
-src[t.LONECARET] = '(?:\\^)'
+var LONECARET = R++
+src[LONECARET] = '(?:\\^)'
 
-tok('CARETTRIM')
-src[t.CARETTRIM] = '(\\s*)' + src[t.LONECARET] + '\\s+'
-re[t.CARETTRIM] = new RegExp(src[t.CARETTRIM], 'g')
+var CARETTRIM = R++
+src[CARETTRIM] = '(\\s*)' + src[LONECARET] + '\\s+'
+re[CARETTRIM] = new RegExp(src[CARETTRIM], 'g')
 var caretTrimReplace = '$1^'
 
-tok('CARET')
-src[t.CARET] = '^' + src[t.LONECARET] + src[t.XRANGEPLAIN] + '$'
-tok('CARETLOOSE')
-src[t.CARETLOOSE] = '^' + src[t.LONECARET] + src[t.XRANGEPLAINLOOSE] + '$'
+var CARET = R++
+src[CARET] = '^' + src[LONECARET] + src[XRANGEPLAIN] + '$'
+var CARETLOOSE = R++
+src[CARETLOOSE] = '^' + src[LONECARET] + src[XRANGEPLAINLOOSE] + '$'
 
 // A simple gt/lt/eq thing, or just "" to indicate "any version"
-tok('COMPARATORLOOSE')
-src[t.COMPARATORLOOSE] = '^' + src[t.GTLT] + '\\s*(' + src[t.LOOSEPLAIN] + ')$|^$'
-tok('COMPARATOR')
-src[t.COMPARATOR] = '^' + src[t.GTLT] + '\\s*(' + src[t.FULLPLAIN] + ')$|^$'
+var COMPARATORLOOSE = R++
+src[COMPARATORLOOSE] = '^' + src[GTLT] + '\\s*(' + LOOSEPLAIN + ')$|^$'
+var COMPARATOR = R++
+src[COMPARATOR] = '^' + src[GTLT] + '\\s*(' + FULLPLAIN + ')$|^$'
 
 // An expression to strip any whitespace between the gtlt and the thing
 // it modifies, so that `> 1.2.3` ==> `>1.2.3`
-tok('COMPARATORTRIM')
-src[t.COMPARATORTRIM] = '(\\s*)' + src[t.GTLT] +
-                      '\\s*(' + src[t.LOOSEPLAIN] + '|' + src[t.XRANGEPLAIN] + ')'
+var COMPARATORTRIM = R++
+src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] +
+                      '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')'
 
 // this one has to use the /g flag
-re[t.COMPARATORTRIM] = new RegExp(src[t.COMPARATORTRIM], 'g')
+re[COMPARATORTRIM] = new RegExp(src[COMPARATORTRIM], 'g')
 var comparatorTrimReplace = '$1$2$3'
 
 // Something like `1.2.3 - 1.2.4`
 // Note that these all use the loose form, because they'll be
 // checked against either the strict or loose comparator form
 // later.
-tok('HYPHENRANGE')
-src[t.HYPHENRANGE] = '^\\s*(' + src[t.XRANGEPLAIN] + ')' +
+var HYPHENRANGE = R++
+src[HYPHENRANGE] = '^\\s*(' + src[XRANGEPLAIN] + ')' +
                    '\\s+-\\s+' +
-                   '(' + src[t.XRANGEPLAIN] + ')' +
+                   '(' + src[XRANGEPLAIN] + ')' +
                    '\\s*$'
 
-tok('HYPHENRANGELOOSE')
-src[t.HYPHENRANGELOOSE] = '^\\s*(' + src[t.XRANGEPLAINLOOSE] + ')' +
+var HYPHENRANGELOOSE = R++
+src[HYPHENRANGELOOSE] = '^\\s*(' + src[XRANGEPLAINLOOSE] + ')' +
                         '\\s+-\\s+' +
-                        '(' + src[t.XRANGEPLAINLOOSE] + ')' +
+                        '(' + src[XRANGEPLAINLOOSE] + ')' +
                         '\\s*$'
 
 // Star ranges basically just allow anything at all.
-tok('STAR')
-src[t.STAR] = '(<|>)?=?\\s*\\*'
+var STAR = R++
+src[STAR] = '(<|>)?=?\\s*\\*'
 
 // Compile to actual regexp objects.
 // All are flag-free, unless they were created above with a flag.
@@ -4111,7 +4167,7 @@ function parse (version, options) {
     return null
   }
 
-  var r = options.loose ? re[t.LOOSE] : re[t.FULL]
+  var r = options.loose ? re[LOOSE] : re[FULL]
   if (!r.test(version)) {
     return null
   }
@@ -4166,7 +4222,7 @@ function SemVer (version, options) {
   this.options = options
   this.loose = !!options.loose
 
-  var m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
+  var m = version.trim().match(options.loose ? re[LOOSE] : re[FULL])
 
   if (!m) {
     throw new TypeError('Invalid Version: ' + version)
@@ -4259,30 +4315,6 @@ SemVer.prototype.comparePre = function (other) {
   do {
     var a = this.prerelease[i]
     var b = other.prerelease[i]
-    debug('prerelease compare', i, a, b)
-    if (a === undefined && b === undefined) {
-      return 0
-    } else if (b === undefined) {
-      return 1
-    } else if (a === undefined) {
-      return -1
-    } else if (a === b) {
-      continue
-    } else {
-      return compareIdentifiers(a, b)
-    }
-  } while (++i)
-}
-
-SemVer.prototype.compareBuild = function (other) {
-  if (!(other instanceof SemVer)) {
-    other = new SemVer(other, this.options)
-  }
-
-  var i = 0
-  do {
-    var a = this.build[i]
-    var b = other.build[i]
     debug('prerelease compare', i, a, b)
     if (a === undefined && b === undefined) {
       return 0
@@ -4492,13 +4524,6 @@ function compareLoose (a, b) {
   return compare(a, b, true)
 }
 
-exports.compareBuild = compareBuild
-function compareBuild (a, b, loose) {
-  var versionA = new SemVer(a, loose)
-  var versionB = new SemVer(b, loose)
-  return versionA.compare(versionB) || versionA.compareBuild(versionB)
-}
-
 exports.rcompare = rcompare
 function rcompare (a, b, loose) {
   return compare(b, a, loose)
@@ -4507,14 +4532,14 @@ function rcompare (a, b, loose) {
 exports.sort = sort
 function sort (list, loose) {
   return list.sort(function (a, b) {
-    return exports.compareBuild(a, b, loose)
+    return exports.compare(a, b, loose)
   })
 }
 
 exports.rsort = rsort
 function rsort (list, loose) {
   return list.sort(function (a, b) {
-    return exports.compareBuild(b, a, loose)
+    return exports.rcompare(a, b, loose)
   })
 }
 
@@ -4627,14 +4652,14 @@ function Comparator (comp, options) {
 
 var ANY = {}
 Comparator.prototype.parse = function (comp) {
-  var r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
+  var r = this.options.loose ? re[COMPARATORLOOSE] : re[COMPARATOR]
   var m = comp.match(r)
 
   if (!m) {
     throw new TypeError('Invalid comparator: ' + comp)
   }
 
-  this.operator = m[1] !== undefined ? m[1] : ''
+  this.operator = m[1]
   if (this.operator === '=') {
     this.operator = ''
   }
@@ -4654,16 +4679,12 @@ Comparator.prototype.toString = function () {
 Comparator.prototype.test = function (version) {
   debug('Comparator.test', version, this.options.loose)
 
-  if (this.semver === ANY || version === ANY) {
+  if (this.semver === ANY) {
     return true
   }
 
   if (typeof version === 'string') {
-    try {
-      version = new SemVer(version, this.options)
-    } catch (er) {
-      return false
-    }
+    version = new SemVer(version, this.options)
   }
 
   return cmp(version, this.operator, this.semver, this.options)
@@ -4684,15 +4705,9 @@ Comparator.prototype.intersects = function (comp, options) {
   var rangeTmp
 
   if (this.operator === '') {
-    if (this.value === '') {
-      return true
-    }
     rangeTmp = new Range(comp.value, options)
     return satisfies(this.value, rangeTmp, options)
   } else if (comp.operator === '') {
-    if (comp.value === '') {
-      return true
-    }
     rangeTmp = new Range(this.value, options)
     return satisfies(comp.semver, rangeTmp, options)
   }
@@ -4782,18 +4797,18 @@ Range.prototype.parseRange = function (range) {
   var loose = this.options.loose
   range = range.trim()
   // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
-  var hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
+  var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE]
   range = range.replace(hr, hyphenReplace)
   debug('hyphen replace', range)
   // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
-  range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace)
-  debug('comparator trim', range, re[t.COMPARATORTRIM])
+  range = range.replace(re[COMPARATORTRIM], comparatorTrimReplace)
+  debug('comparator trim', range, re[COMPARATORTRIM])
 
   // `~ 1.2.3` => `~1.2.3`
-  range = range.replace(re[t.TILDETRIM], tildeTrimReplace)
+  range = range.replace(re[TILDETRIM], tildeTrimReplace)
 
   // `^ 1.2.3` => `^1.2.3`
-  range = range.replace(re[t.CARETTRIM], caretTrimReplace)
+  range = range.replace(re[CARETTRIM], caretTrimReplace)
 
   // normalize spaces
   range = range.split(/\s+/).join(' ')
@@ -4801,7 +4816,7 @@ Range.prototype.parseRange = function (range) {
   // At this point, the range is completely trimmed and
   // ready to be split into comparators.
 
-  var compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
+  var compRe = loose ? re[COMPARATORLOOSE] : re[COMPARATOR]
   var set = range.split(' ').map(function (comp) {
     return parseComparator(comp, this.options)
   }, this).join(' ').split(/\s+/)
@@ -4824,38 +4839,14 @@ Range.prototype.intersects = function (range, options) {
   }
 
   return this.set.some(function (thisComparators) {
-    return (
-      isSatisfiable(thisComparators, options) &&
-      range.set.some(function (rangeComparators) {
-        return (
-          isSatisfiable(rangeComparators, options) &&
-          thisComparators.every(function (thisComparator) {
-            return rangeComparators.every(function (rangeComparator) {
-              return thisComparator.intersects(rangeComparator, options)
-            })
-          })
-        )
+    return thisComparators.every(function (thisComparator) {
+      return range.set.some(function (rangeComparators) {
+        return rangeComparators.every(function (rangeComparator) {
+          return thisComparator.intersects(rangeComparator, options)
+        })
       })
-    )
-  })
-}
-
-// take a set of comparators and determine whether there
-// exists a version which can satisfy it
-function isSatisfiable (comparators, options) {
-  var result = true
-  var remainingComparators = comparators.slice()
-  var testComparator = remainingComparators.pop()
-
-  while (result && remainingComparators.length) {
-    result = remainingComparators.every(function (otherComparator) {
-      return testComparator.intersects(otherComparator, options)
     })
-
-    testComparator = remainingComparators.pop()
-  }
-
-  return result
+  })
 }
 
 // Mostly just for testing and legacy API reasons
@@ -4901,7 +4892,7 @@ function replaceTildes (comp, options) {
 }
 
 function replaceTilde (comp, options) {
-  var r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE]
+  var r = options.loose ? re[TILDELOOSE] : re[TILDE]
   return comp.replace(r, function (_, M, m, p, pr) {
     debug('tilde', comp, _, M, m, p, pr)
     var ret
@@ -4942,7 +4933,7 @@ function replaceCarets (comp, options) {
 
 function replaceCaret (comp, options) {
   debug('caret', comp, options)
-  var r = options.loose ? re[t.CARETLOOSE] : re[t.CARET]
+  var r = options.loose ? re[CARETLOOSE] : re[CARET]
   return comp.replace(r, function (_, M, m, p, pr) {
     debug('caret', comp, _, M, m, p, pr)
     var ret
@@ -5001,7 +4992,7 @@ function replaceXRanges (comp, options) {
 
 function replaceXRange (comp, options) {
   comp = comp.trim()
-  var r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE]
+  var r = options.loose ? re[XRANGELOOSE] : re[XRANGE]
   return comp.replace(r, function (ret, gtlt, M, m, p, pr) {
     debug('xRange', comp, ret, gtlt, M, m, p, pr)
     var xM = isX(M)
@@ -5013,14 +5004,10 @@ function replaceXRange (comp, options) {
       gtlt = ''
     }
 
-    // if we're including prereleases in the match, then we need
-    // to fix this to -0, the lowest possible prerelease value
-    pr = options.includePrerelease ? '-0' : ''
-
     if (xM) {
       if (gtlt === '>' || gtlt === '<') {
         // nothing is allowed
-        ret = '<0.0.0-0'
+        ret = '<0.0.0'
       } else {
         // nothing is forbidden
         ret = '*'
@@ -5057,12 +5044,11 @@ function replaceXRange (comp, options) {
         }
       }
 
-      ret = gtlt + M + '.' + m + '.' + p + pr
+      ret = gtlt + M + '.' + m + '.' + p
     } else if (xm) {
-      ret = '>=' + M + '.0.0' + pr + ' <' + (+M + 1) + '.0.0' + pr
+      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0'
     } else if (xp) {
-      ret = '>=' + M + '.' + m + '.0' + pr +
-        ' <' + M + '.' + (+m + 1) + '.0' + pr
+      ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0'
     }
 
     debug('xRange return', ret)
@@ -5076,10 +5062,10 @@ function replaceXRange (comp, options) {
 function replaceStars (comp, options) {
   debug('replaceStars', comp, options)
   // Looseness is ignored here.  star is always as loose as it gets!
-  return comp.trim().replace(re[t.STAR], '')
+  return comp.trim().replace(re[STAR], '')
 }
 
-// This function is passed to string.replace(re[t.HYPHENRANGE])
+// This function is passed to string.replace(re[HYPHENRANGE])
 // M, m, patch, prerelease, build
 // 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
 // 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
@@ -5119,11 +5105,7 @@ Range.prototype.test = function (version) {
   }
 
   if (typeof version === 'string') {
-    try {
-      version = new SemVer(version, this.options)
-    } catch (er) {
-      return false
-    }
+    version = new SemVer(version, this.options)
   }
 
   for (var i = 0; i < this.set.length; i++) {
@@ -5385,54 +5367,24 @@ function intersects (r1, r2, options) {
 }
 
 exports.coerce = coerce
-function coerce (version, options) {
+function coerce (version) {
   if (version instanceof SemVer) {
     return version
-  }
-
-  if (typeof version === 'number') {
-    version = String(version)
   }
 
   if (typeof version !== 'string') {
     return null
   }
 
-  options = options || {}
+  var match = version.match(re[COERCE])
 
-  var match = null
-  if (!options.rtl) {
-    match = version.match(re[t.COERCE])
-  } else {
-    // Find the right-most coercible string that does not share
-    // a terminus with a more left-ward coercible string.
-    // Eg, '1.2.3.4' wants to coerce '2.3.4', not '3.4' or '4'
-    //
-    // Walk through the string checking with a /g regexp
-    // Manually set the index so as to pick up overlapping matches.
-    // Stop when we get a match that ends at the string end, since no
-    // coercible string can be more right-ward without the same terminus.
-    var next
-    while ((next = re[t.COERCERTL].exec(version)) &&
-      (!match || match.index + match[0].length !== version.length)
-    ) {
-      if (!match ||
-          next.index + next[0].length !== match.index + match[0].length) {
-        match = next
-      }
-      re[t.COERCERTL].lastIndex = next.index + next[1].length + next[2].length
-    }
-    // leave it in a clean state
-    re[t.COERCERTL].lastIndex = -1
-  }
-
-  if (match === null) {
+  if (match == null) {
     return null
   }
 
-  return parse(match[2] +
-    '.' + (match[3] || '0') +
-    '.' + (match[4] || '0'), options)
+  return parse(match[1] +
+    '.' + (match[2] || '0') +
+    '.' + (match[3] || '0'))
 }
 
 
