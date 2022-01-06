@@ -505,9 +505,9 @@ export class Lazarus{
                         var loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
                         if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
                             console.log('loc or loc[0] undefined');
-                            loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
+                            loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
-                        var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
+                        var full_path = '/Volumes/'+fpcsrc[0]+'/'+loc[0]
                         await exec(`sudo installer -package ${full_path} -target /`);
                     } else {
                         // Install the package
@@ -538,9 +538,9 @@ export class Lazarus{
                         var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
                         if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
                             console.log('loc or loc[0] undefined');
-                            loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
+                            loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
-                        var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
+                        var full_path = '/Volumes/'+fpc[0]+'/'+loc[0]
                         await exec(`sudo installer -package ${full_path} -target /`);
                     } else {
                         // Install the package
