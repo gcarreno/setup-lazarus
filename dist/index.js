@@ -648,13 +648,13 @@ class Lazarus {
                             // There MUST be a better way to do this
                             var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                             yield exec_1.exec(`ls -alF /Volumes/${fpc[0]}`);
-                            var loc = fs.readdirSync('/Volumes/' + fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
+                            var loc = fs.readdirSync('/Volumes/' + fpc[0]).filter(fn => fn.endsWith('.pkg'));
                             if (loc) {
-                                var full_path = '/Volumes/' + fpcsrc[0] + '/' + loc[0];
+                                var full_path = '/Volumes/' + fpc[0] + '/' + loc[0];
                             }
                             else {
-                                loc = fs.readdirSync('/Volumes/' + fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
-                                var full_path = '/Volumes/' + fpcsrc[0] + '/' + loc[0];
+                                loc = fs.readdirSync('/Volumes/' + fpc[0]).filter(fn => fn.endsWith('.mpkg'));
+                                var full_path = '/Volumes/' + fpc[0] + '/' + loc[0];
                             }
                             yield exec_1.exec(`sudo installer -package ${full_path} -target /`);
                         }
@@ -682,13 +682,13 @@ class Lazarus {
                             // There MUST be a better way to do this
                             var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
                             yield exec_1.exec(`ls -alF /Volumes/${laz[0]}`);
-                            var loc = fs.readdirSync('/Volumes/' + fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
+                            var loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.pkg'));
                             if (loc) {
-                                var full_path = '/Volumes/' + fpcsrc[0] + '/' + loc[0];
+                                var full_path = '/Volumes/' + laz[0] + '/' + loc[0];
                             }
                             else {
-                                loc = fs.readdirSync('/Volumes/' + fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
-                                var full_path = '/Volumes/' + fpcsrc[0] + '/' + loc[0];
+                                loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.mpkg'));
+                                var full_path = '/Volumes/' + laz[0] + '/' + loc[0];
                             }
                             yield exec_1.exec(`sudo installer -package ${full_path} -target /`);
                         }
@@ -1030,7 +1030,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const inst = __importStar(__webpack_require__(981));
-const _version = '3.0.7';
+const _version = '3.0.8';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

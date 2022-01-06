@@ -537,12 +537,12 @@ export class Lazarus{
                         // There MUST be a better way to do this
                         var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                         await exec(`ls -alF /Volumes/${fpc[0]}`);
-                        var loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
+                        var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
                         if (loc) {
-                            var full_path = '/Volumes/'+fpcsrc[0]+'/'+loc[0]
+                            var full_path = '/Volumes/'+fpc[0]+'/'+loc[0]
                         } else {
-                            loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
-                            var full_path = '/Volumes/'+fpcsrc[0]+'/'+loc[0]
+                            loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.mpkg'));
+                            var full_path = '/Volumes/'+fpc[0]+'/'+loc[0]
                         }
                         await exec(`sudo installer -package ${full_path} -target /`);
                     } else {
@@ -573,12 +573,12 @@ export class Lazarus{
                         // There MUST be a better way to do this
                         var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
                         await exec(`ls -alF /Volumes/${laz[0]}`);
-                        var loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
+                        var loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.pkg'));
                         if (loc) {
-                            var full_path = '/Volumes/'+fpcsrc[0]+'/'+loc[0]
+                            var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
                         } else {
-                            loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
-                            var full_path = '/Volumes/'+fpcsrc[0]+'/'+loc[0]
+                            loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
+                            var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
                         }
                         await exec(`sudo installer -package ${full_path} -target /`);
                     } else {
