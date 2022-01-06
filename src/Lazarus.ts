@@ -181,7 +181,7 @@ const pkgs: object = {
         "v2_2_0":{
             "laz": "Lazarus-2.2.0-0-x86_64-macosx.pkg",
             "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
-            "fpcsrc": "fpc-src-3.2.2-20210709-macosx.pkg"
+            "fpcsrc": "fpc-src-3.2.2-20210709-macosx.dmg"
         },
         "v2_0_12":{
             "laz": "Lazarus-2.0.12-x86_64-macosx.pkg",
