@@ -281,7 +281,7 @@ const pkgs = {
         "v2_2_0": {
             "laz": "Lazarus-2.2.0-0-x86_64-macosx.pkg",
             "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
-            "fpcsrc": "fpc-src-3.2.2-20210709-laz.pkg"
+            "fpcsrc": "fpc-src-3.2.2-20210709-macosx.pkg"
         },
         "v2_0_12": {
             "laz": "Lazarus-2.0.12-x86_64-macosx.pkg",
@@ -982,7 +982,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const inst = __importStar(__webpack_require__(981));
-const _version = '3.0.3';
+const _version = '3.0.4';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
