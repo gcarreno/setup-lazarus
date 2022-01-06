@@ -503,7 +503,10 @@ export class Lazarus{
                         // There MUST be a better way to do this
                         var fpcsrc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpcsrc'));
                         var loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
-                        if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
+                        if (loc !== undefined && loc[0] !== undefined) {
+                            console.log('loc and loc[0] not undefined');
+                        }
+                        if (loc === undefined || loc[0] === undefined) {
                             console.log('loc or loc[0] undefined');
                             loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
@@ -536,7 +539,10 @@ export class Lazarus{
                         // There MUST be a better way to do this
                         var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                         var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
-                        if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
+                        if (loc !== undefined && loc[0] !== undefined) {
+                            console.log('loc and loc[0] not undefined');
+                        }
+                        if (loc === undefined || loc[0] === undefined) {
                             console.log('loc or loc[0] undefined');
                             loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
@@ -570,7 +576,10 @@ export class Lazarus{
                         // There MUST be a better way to do this
                         var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
                         var loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.pkg'));
-                        if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
+                        if (loc !== undefined && loc[0] !== undefined) {
+                            console.log('loc and loc[0] not undefined');
+                        }
+                        if (loc === undefined || loc[0] === undefined) {
                             console.log('loc or loc[0] undefined');
                             loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
