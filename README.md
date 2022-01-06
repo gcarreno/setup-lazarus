@@ -15,7 +15,8 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 Possible values:
 
 * `dist` - Lazarus package that comes with the Ubuntu dist your chose on `runs-on` and latest stable for Windows
-* `stable` - Installs the latest stable version: 2.0.12
+* `stable` - Installs the latest stable version: 2.2.0
+* `2.2.0`  - comes with `FPC v3.2.2`
 * `2.0.12` - comes with `FPC v3.2.0`
 * `2.0.10` - comes with `FPC v3.2.0`
 * `2.0.8`  - comes with `FPC v3.0.4`
@@ -50,7 +51,7 @@ Format is a string with the packages separated by comma: "Package 1, Package 2, 
 
 The list of packages can be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
 
-**IMPORTANT** 
+**IMPORTANT**
 
 > There is no dependency checks implemented YET.
 > You must order your package list in order to satisfy the dendencies yourself.
@@ -77,7 +78,7 @@ Unfortunately there are some restrictions:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v3.0.2
+- uses: gcarreno/setup-lazarus@v3.0.3
   with:
     lazarus-version: "dist"
     include-packages: "Synapse 40.1"
@@ -109,7 +110,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3.0.2
+      uses: gcarreno/setup-lazarus@v3.0.3
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
