@@ -615,7 +615,7 @@ class Lazarus {
                             // There MUST be a better way to do this
                             var fpcsrc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpcsrc'));
                             var loc = fs.readdirSync('/Volumes/' + fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
-                            if (loc === undefined || loc[0] === undefined) {
+                            if (typeof (loc) === undefined || typeof (loc[0]) === undefined) {
                                 loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.mpkg'));
                             }
                             var full_path = '/Volumes/' + laz[0] + '/' + loc[0];
@@ -645,7 +645,7 @@ class Lazarus {
                             // There MUST be a better way to do this
                             var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                             var loc = fs.readdirSync('/Volumes/' + fpc[0]).filter(fn => fn.endsWith('.pkg'));
-                            if (loc === undefined || loc[0] === undefined) {
+                            if (typeof (loc) === undefined || typeof (loc[0]) === undefined) {
                                 loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.mpkg'));
                             }
                             var full_path = '/Volumes/' + laz[0] + '/' + loc[0];
@@ -675,7 +675,7 @@ class Lazarus {
                             // There MUST be a better way to do this
                             var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
                             var loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.pkg'));
-                            if (loc === undefined || loc[0] === undefined) {
+                            if (typeof (loc) === undefined || typeof (loc[0]) === undefined) {
                                 loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.mpkg'));
                             }
                             var full_path = '/Volumes/' + laz[0] + '/' + loc[0];
@@ -1019,7 +1019,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const inst = __importStar(__webpack_require__(981));
-const _version = '3.0.11';
+const _version = '3.0.12';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
