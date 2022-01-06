@@ -503,7 +503,7 @@ export class Lazarus{
                         // There MUST be a better way to do this
                         var fpcsrc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpcsrc'));
                         var loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
-                        if (loc) {
+                        if (loc != 'undefined') {
                             var full_path = '/Volumes/'+fpcsrc[0]+'/'+loc[0]
                         } else {
                             loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.mpkg'));
@@ -536,9 +536,8 @@ export class Lazarus{
 
                         // There MUST be a better way to do this
                         var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
-                        await exec(`ls -alF /Volumes/${fpc[0]}`);
                         var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
-                        if (loc) {
+                        if (loc != 'undefined') {
                             var full_path = '/Volumes/'+fpc[0]+'/'+loc[0]
                         } else {
                             loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.mpkg'));
@@ -572,9 +571,8 @@ export class Lazarus{
 
                         // There MUST be a better way to do this
                         var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
-                        await exec(`ls -alF /Volumes/${laz[0]}`);
                         var loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.pkg'));
-                        if (loc) {
+                        if (loc != 'undefined') {
                             var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
                         } else {
                             loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
