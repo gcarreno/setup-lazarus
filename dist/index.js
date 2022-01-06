@@ -603,11 +603,25 @@ class Lazarus {
                     let downloadFPCSRCURLDAR = this._getPackageURL('fpcsrc');
                     console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
                     try {
+                        // Decide what the local download filename should be
+                        var downloadName = downloadFPCSRCURLDAR.endsWith('.dmg') ? 'fpcsrc.dmg' : 'fpcsrc.pkg';
                         // Perform the download
-                        downloadPath_DAR = yield tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), 'fpcsrc.pkg'));
+                        downloadPath_DAR = yield tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), downloadName));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
-                        // Install the package
-                        yield exec_1.exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
+                        // Download could be a pkg or dmg, handle either case
+                        if (downloadName == 'fpcsrc.dmg') {
+                            // Mount DMG and intall package
+                            yield exec_1.exec(`sudo hdiutil attach ${downloadPath_DAR}`);
+                            // There MUST be a better way to do this
+                            var fpcsrc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpcsrc'));
+                            var loc = fs.readdirSync('/Volumes/' + fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
+                            var full_path = '/Volumes/' + fpcsrc[0] + '/' + loc[0];
+                            yield exec_1.exec(`sudo installer -package ${full_path} -target /`);
+                        }
+                        else {
+                            // Install the package
+                            yield exec_1.exec(`sudo installer -package ${downloadPath_DAR} -target /`);
+                        }
                     }
                     catch (err) {
                         throw err;
@@ -643,11 +657,25 @@ class Lazarus {
                     let downloadLazURLDAR = this._getPackageURL('laz');
                     console.log(`_downloadLazarus - Downloading ${downloadLazURLDAR}`);
                     try {
+                        // Decide what the local download filename should be
+                        var downloadName = downloadLazURLDAR.endsWith('.dmg') ? 'lazarus.dmg' : 'lazarus.pkg';
                         // Perform the download
-                        downloadPath_DAR = yield tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), 'lazarus.pkg'));
+                        downloadPath_DAR = yield tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), downloadName));
                         console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
-                        // Install the package
-                        yield exec_1.exec(`sudo installer -pkg ${downloadPath_DAR} -target /`);
+                        // Download could be a pkg or dmg, handle either case
+                        if (downloadName == 'lazarus.dmg') {
+                            // Mount DMG and intall package
+                            yield exec_1.exec(`sudo hdiutil attach ${downloadPath_DAR}`);
+                            // There MUST be a better way to do this
+                            var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
+                            var loc = fs.readdirSync('/Volumes/' + laz[0]).filter(fn => fn.endsWith('.pkg'));
+                            var full_path = '/Volumes/' + laz[0] + '/' + loc[0];
+                            yield exec_1.exec(`sudo installer -package ${full_path} -target /`);
+                        }
+                        else {
+                            // Install the package
+                            yield exec_1.exec(`sudo installer -package ${downloadPath_DAR} -target /`);
+                        }
                     }
                     catch (err) {
                         throw err;
@@ -982,7 +1010,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const inst = __importStar(__webpack_require__(981));
-const _version = '3.0.5';
+const _version = '3.0.6';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
