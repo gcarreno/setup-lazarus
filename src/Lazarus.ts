@@ -504,6 +504,7 @@ export class Lazarus{
                         var fpcsrc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpcsrc'));
                         var loc = fs.readdirSync('/Volumes/'+fpcsrc[0]).filter(fn => fn.endsWith('.pkg'));
                         if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
+                            console.log('loc or loc[0] undefined');
                             loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
                         var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
@@ -536,6 +537,7 @@ export class Lazarus{
                         var fpc = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('fpc'));
                         var loc = fs.readdirSync('/Volumes/'+fpc[0]).filter(fn => fn.endsWith('.pkg'));
                         if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
+                            console.log('loc or loc[0] undefined');
                             loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
                         var full_path = '/Volumes/'+laz[0]+'/'+loc[0]
@@ -569,6 +571,7 @@ export class Lazarus{
                         var laz = fs.readdirSync('/Volumes').filter(fn => fn.startsWith('lazarus'));
                         var loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.pkg'));
                         if (typeof(loc) === undefined || typeof(loc[0]) === undefined) {
+                            console.log('loc or loc[0] undefined');
                             loc = fs.readdirSync('/Volumes/'+laz[0]).filter(fn => fn.endsWith('.mpkg'));
                         }
                         var full_path = '/Volumes/'+laz[0]+'/'+loc[0]

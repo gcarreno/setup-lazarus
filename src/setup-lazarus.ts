@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as inst from './Installer';
 
-const _version = '3.0.12';
+const _version = '3.0.13';
 
 async function run(): Promise<void> {
   try {
