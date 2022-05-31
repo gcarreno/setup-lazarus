@@ -56,7 +56,7 @@ class Cache {
     }
     restore() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
+            core.info(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
             let cacheLoaded = (yield cache.restoreCache([this._dir], this._key)) != null;
             if (!cacheLoaded) {
                 core.exportVariable('SAVE_CACHE_DIR', this._dir);
@@ -68,15 +68,18 @@ class Cache {
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let dir = process.env['SAVE_CACHE_DIR'] || '';
-                assert_1.ok(dir, 'Expected SAVE_CACHE_DIR to be defined');
                 let key = process.env['SAVE_CACHE_KEY'] || '';
-                assert_1.ok(key, 'Expected SAVE_CACHE_KEY to be defined');
-                console.log(`Cache.save -- Key: ${key} dir: ${dir}`);
-                yield cache.saveCache([dir], key);
+                let dir = process.env['SAVE_CACHE_DIR'] || '';
+                if (key != '' && dir != '') {
+                    core.info(`Cache.save -- Key: ${key} dir: ${dir}`);
+                    yield cache.saveCache([dir], key);
+                }
+                else {
+                    core.info(`Cache.save -- nothing to save`);
+                }
             }
             catch (error) {
-                console.log(error.message);
+                core.info(error.message);
             }
         });
     }
@@ -409,7 +412,7 @@ class Lazarus {
     }
     installLazarus() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`installLazarus -- Installing Lazarus ${this._LazarusVersion} on platform: "${this._Platform}"; arch: "${this._Arch}"`);
+            core.info(`installLazarus -- Installing Lazarus ${this._LazarusVersion} on platform: "${this._Platform}"; arch: "${this._Arch}"`);
             switch (this._LazarusVersion) {
                 // Special case named version that installs the repository pakages on Ubuntu
                 // but installs stable version under Windows
@@ -433,10 +436,10 @@ class Lazarus {
                             const lazAppPath = '/Applications/Lazarus/lazbuild';
                             try {
                                 if (fs.existsSync(`${lazLibPath}`)) {
-                                    console.log(`installLazarus - Do not need to update lazbuild symlink`);
+                                    core.info(`installLazarus - Do not need to update lazbuild symlink`);
                                 }
                                 else if (fs.existsSync(`${lazAppPath}`)) {
-                                    console.log(`installLazarus - Updating lazbuild symlink to ${lazAppPath}`);
+                                    core.info(`installLazarus - Updating lazbuild symlink to ${lazAppPath}`);
                                     // Remove bad symlink
                                     yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
                                     // Add good symlink
@@ -637,23 +640,31 @@ class Lazarus {
     }
     _downloadLazarus() {
         return __awaiter(this, void 0, void 0, function* () {
+            // Try to restore installers from cache
+            let cacheRestored = yield this._Cache.restore();
             switch (this._Platform) {
                 case 'win32':
                     // Get the URL of the file to download
                     let downloadURL = this._getPackageURL('laz');
-                    console.log(`_downloadLazarus - Downloading ${downloadURL}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadURL}`);
                     let downloadPath_WIN;
                     try {
-                        // TODO: Cache logic must be implemented here
-                        // Perform the download
-                        downloadPath_WIN = yield tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
-                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
+                        if (cacheRestored) {
+                            // Use cached version
+                            downloadPath_WIN = path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_WIN}`);
+                        }
+                        else {
+                            // Perform the download
+                            downloadPath_WIN = yield tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
+                        }
                         // Run the installer
                         let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
                         yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
                         // Add this path to the runner's global path
                         core.addPath(lazarusDir);
-                        console.log(`_downloadLazarus - Adding '${lazarusDir}' to PATH`);
+                        core.info(`_downloadLazarus - Adding '${lazarusDir}' to PATH`);
                         // Add the path to fpc.exe to the runner's global path
                         // TODO: This is very sketchy and may break in the future. Needs better implementation!
                         let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
@@ -661,7 +672,7 @@ class Lazarus {
                         let fpc_version = parts[3];
                         let fpcDir = path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64');
                         core.addPath(fpcDir);
-                        console.log(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
+                        core.info(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
                     }
                     catch (err) {
                         throw err;
@@ -671,20 +682,19 @@ class Lazarus {
                     // Perform a repository update
                     yield exec_1.exec('sudo apt update');
                     let downloadPath_LIN;
-                    // Try to restore installers from cache
-                    let cacheRestored = yield this._Cache.restore();
                     // Get the URL for Free Pascal Source
                     let downloadFPCSRCURL = this._getPackageURL('fpcsrc');
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                     try {
                         if (cacheRestored) {
+                            // Use cached version
                             downloadPath_LIN = path.join(this._getTempDirectory(), 'fpcsrc.deb');
-                            console.log(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
                         }
                         else {
                             // Perform the download
                             downloadPath_LIN = yield tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
-                            console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                         }
                         // Install the package
                         yield exec_1.exec(`sudo apt install -y ${downloadPath_LIN}`);
@@ -694,16 +704,17 @@ class Lazarus {
                     }
                     // Get the URL for Free Pascal's compiler
                     let downloadFPCURL = this._getPackageURL('fpc');
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                     try {
                         if (cacheRestored) {
+                            // Use cached version
                             downloadPath_LIN = path.join(this._getTempDirectory(), 'fpc.deb');
-                            console.log(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
                         }
                         else {
                             // Perform the download
                             downloadPath_LIN = yield tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
-                            console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                         }
                         // Install the package
                         yield exec_1.exec(`sudo apt install -y ${downloadPath_LIN}`);
@@ -713,17 +724,17 @@ class Lazarus {
                     }
                     // Get the URL for the Lazarus IDE
                     let downloadLazURL = this._getPackageURL('laz');
-                    console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadLazURL}`);
                     try {
                         if (cacheRestored) {
-                            // Perform the download
+                            // Use cached version
                             downloadPath_LIN = path.join(this._getTempDirectory(), 'lazarus.deb');
-                            console.log(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
                         }
                         else {
                             // Perform the download
                             downloadPath_LIN = yield tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
-                            console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
                         }
                         // Install the package
                         yield exec_1.exec(`sudo apt install -y ${downloadPath_LIN}`);
@@ -736,13 +747,20 @@ class Lazarus {
                     let downloadPath_DAR;
                     // Get the URL for Free Pascal Source
                     let downloadFPCSRCURLDAR = this._getPackageURL('fpcsrc');
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
                     try {
                         // Decide what the local download filename should be
                         var downloadName = downloadFPCSRCURLDAR.endsWith('.dmg') ? 'fpcsrc.dmg' : 'fpcsrc.pkg';
-                        // Perform the download
-                        downloadPath_DAR = yield tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), downloadName));
-                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        if (cacheRestored) {
+                            // Use cached version
+                            downloadPath_DAR = path.join(this._getTempDirectory(), downloadName);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_DAR}`);
+                        }
+                        else {
+                            // Perform the download
+                            downloadPath_DAR = yield tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), downloadName));
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        }
                         // Download could be a pkg or dmg, handle either case
                         if (downloadName == 'fpcsrc.dmg') {
                             // Mount DMG and intall package
@@ -766,13 +784,20 @@ class Lazarus {
                     }
                     // Get the URL for Free Pascal's compiler
                     let downloadFPCURLDAR = this._getPackageURL('fpc');
-                    console.log(`_downloadLazarus - Downloading ${downloadFPCURLDAR}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadFPCURLDAR}`);
                     try {
                         // Decide what the local download filename should be
                         var downloadName = downloadFPCURLDAR.endsWith('.dmg') ? 'fpc.dmg' : 'fpc.pkg';
-                        // Perform the download
-                        downloadPath_DAR = yield tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), downloadName));
-                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        if (cacheRestored) {
+                            // Use cached version
+                            downloadPath_DAR = path.join(this._getTempDirectory(), downloadName);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_DAR}`);
+                        }
+                        else {
+                            // Perform the download
+                            downloadPath_DAR = yield tc.downloadTool(downloadFPCURLDAR, path.join(this._getTempDirectory(), downloadName));
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        }
                         // Download could be a pkg or dmg, handle either case
                         if (downloadName == 'fpc.dmg') {
                             // Mount DMG and intall package
@@ -796,13 +821,20 @@ class Lazarus {
                     }
                     // Get the URL for the Lazarus IDE
                     let downloadLazURLDAR = this._getPackageURL('laz');
-                    console.log(`_downloadLazarus - Downloading ${downloadLazURLDAR}`);
+                    core.info(`_downloadLazarus - Downloading ${downloadLazURLDAR}`);
                     try {
                         // Decide what the local download filename should be
                         var downloadName = downloadLazURLDAR.endsWith('.dmg') ? 'lazarus.dmg' : 'lazarus.pkg';
-                        // Perform the download
-                        downloadPath_DAR = yield tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), downloadName));
-                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        if (cacheRestored) {
+                            // Use the cached version
+                            downloadPath_DAR = path.join(this._getTempDirectory(), downloadName);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_DAR}`);
+                        }
+                        else {
+                            // Perform the download
+                            downloadPath_DAR = yield tc.downloadTool(downloadLazURLDAR, path.join(this._getTempDirectory(), downloadName));
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        }
                         // Download could be a pkg or dmg, handle either case
                         if (downloadName == 'lazarus.dmg') {
                             // Mount DMG and intall package
@@ -831,10 +863,10 @@ class Lazarus {
                     const lazAppPath = '/Applications/Lazarus/lazbuild';
                     try {
                         if (fs.existsSync(`${lazLibPath}`)) {
-                            console.log(`_downloadLazarus - Do not need to update lazbuild symlink`);
+                            core.info(`_downloadLazarus - Do not need to update lazbuild symlink`);
                         }
                         else if (fs.existsSync(`${lazAppPath}`)) {
-                            console.log(`_downloadLazarus - Updating lazbuild symlink to ${lazAppPath}`);
+                            core.info(`_downloadLazarus - Updating lazbuild symlink to ${lazAppPath}`);
                             // Remove bad symlink
                             yield exec_1.exec(`rm -rf /usr/local/bin/lazbuild`);
                             // Add good symlink
@@ -928,6 +960,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Packages = void 0;
+const core = __importStar(__webpack_require__(2186));
 const http = __importStar(__webpack_require__(9925));
 const tc = __importStar(__webpack_require__(7784));
 const exec_1 = __webpack_require__(1514);
@@ -944,10 +977,10 @@ class Packages {
     }
     installPackages(includePackages) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Installing Lazarus packages:`);
-            console.log(includePackages);
+            core.info(`Installing Lazarus packages:`);
+            core.info(includePackages.join(', '));
             this._Items = yield this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
-            console.log(`installPackages -- Got ${this._Items.length} package items`);
+            core.info(`installPackages -- Got ${this._Items.length} package items`);
             try {
                 for (let index = 0; index < includePackages.length; index++) {
                     let ipkg = includePackages[index];
@@ -963,7 +996,7 @@ class Packages {
                             let pkgFile = yield this._download(pkg.RepositoryFileName);
                             // Unzip the package
                             let pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
-                            console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                            core.info(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
                             // Clean up, no need for the file to lay around any more
                             yield exec_1.exec(`rm ${pkgFile}`);
                             for (let fIndex = 0; fIndex < pkg.Packages.length; fIndex++) {
@@ -973,40 +1006,40 @@ class Packages {
                                     case 0:
                                         // Making Lazarus aware of the package
                                         if (this._Platform != 'darwin') {
-                                            console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild --add-package "${pkgLPKFile}"`);
                                         }
                                         else {
-                                            console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
                                         }
                                         // Compiling the package
                                         if (this._Platform != 'darwin') {
-                                            console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild "${pkgLPKFile}"`);
                                         }
                                         else {
-                                            console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                         }
                                         break;
                                     case 2:
                                         // Making Lazarus aware of the package
                                         if (this._Platform != 'darwin') {
-                                            console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
                                         }
                                         else {
-                                            console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
                                         }
                                         // Compiling the package
                                         if (this._Platform != 'darwin') {
-                                            console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild "${pkgLPKFile}"`);
                                         }
                                         else {
-                                            console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                            core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
                                             yield exec_1.exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                         }
                                         break;
@@ -1033,7 +1066,7 @@ class Packages {
     _download(filename) {
         return __awaiter(this, void 0, void 0, function* () {
             let tempDir = this._getTempDirectory();
-            console.log(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
+            core.info(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
             let pkgFilename = yield tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
             return pkgFilename;
         });
@@ -1052,7 +1085,7 @@ class Packages {
                 throw new Error(`getPackageList -- ${error.message}`);
             }
             let pkgCount = Object.keys(packageList).length / 2;
-            //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
+            //core.info(`_getPackageList -- We have ${pkgCount} packages from repo`);
             for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
                 let _pkgData = packageList[`PackageData${dIndex}`];
                 let pkgData = new PackageData();
@@ -1174,6 +1207,7 @@ function run() {
     });
 }
 run();
+exports.default = run;
 
 
 /***/ }),

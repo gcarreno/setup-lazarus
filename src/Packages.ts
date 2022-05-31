@@ -1,3 +1,4 @@
+import * as core from '@actions/core';
 import * as http from '@actions/http-client';
 import * as tc from '@actions/tool-cache';
 import { exec } from '@actions/exec/lib/exec';
@@ -19,11 +20,11 @@ export class Packages {
     }
 
     async installPackages(includePackages:string[]) {
-        console.log(`Installing Lazarus packages:`);
-        console.log(includePackages);
+        core.info(`Installing Lazarus packages:`);
+        core.info(includePackages.join(', '));
 
         this._Items = await this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
-        console.log(`installPackages -- Got ${this._Items.length} package items`);
+        core.info(`installPackages -- Got ${this._Items.length} package items`);
 
         try {
             for (let index: number = 0; index < includePackages.length; index++) {
@@ -51,7 +52,7 @@ export class Packages {
                             pkgFile,
                             path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
 
-                        console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                        core.info(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
                         // Clean up, no need for the file to lay around any more
                         await exec(`rm ${pkgFile}`);
 
@@ -69,37 +70,37 @@ export class Packages {
                                 case 0:
                                     // Making Lazarus aware of the package
                                     if (this._Platform != 'darwin') {
-                                        console.log(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
                                         await exec(`lazbuild --add-package "${pkgLPKFile}"`);
                                     } else {
-                                        console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
                                         await exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
                                     }
 
                                     // Compiling the package
                                     if (this._Platform != 'darwin') {
-                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                         await exec(`lazbuild "${pkgLPKFile}"`);
                                     } else {
-                                        console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
                                         await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                     }
                                     break;
                                 case 2:
                                     // Making Lazarus aware of the package
                                     if (this._Platform != 'darwin') {
-                                        console.log(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
                                         await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
                                     } else {
-                                        console.log(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
                                         await exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
                                     }
                                     // Compiling the package
                                     if (this._Platform != 'darwin') {
-                                        console.log(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
                                         await exec(`lazbuild "${pkgLPKFile}"`);
                                     } else {
-                                        console.log(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                        core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
                                         await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                     }
                                     break;
@@ -131,7 +132,7 @@ export class Packages {
         filename: string
     ): Promise<string> {
         let tempDir = this._getTempDirectory();
-        console.log(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
+        core.info(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
 
         let pkgFilename: string = await tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
         return pkgFilename;
@@ -153,7 +154,7 @@ export class Packages {
         }
 
         let pkgCount = Object.keys(packageList).length / 2;
-        //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
+        //core.info(`_getPackageList -- We have ${pkgCount} packages from repo`);
 
         for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
             let _pkgData = packageList[`PackageData${dIndex}`];

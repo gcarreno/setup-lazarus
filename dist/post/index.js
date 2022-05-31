@@ -56,7 +56,7 @@ class Cache {
     }
     restore() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
+            core.info(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
             let cacheLoaded = (yield cache.restoreCache([this._dir], this._key)) != null;
             if (!cacheLoaded) {
                 core.exportVariable('SAVE_CACHE_DIR', this._dir);
@@ -68,15 +68,18 @@ class Cache {
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let dir = process.env['SAVE_CACHE_DIR'] || '';
-                assert_1.ok(dir, 'Expected SAVE_CACHE_DIR to be defined');
                 let key = process.env['SAVE_CACHE_KEY'] || '';
-                assert_1.ok(key, 'Expected SAVE_CACHE_KEY to be defined');
-                console.log(`Cache.save -- Key: ${key} dir: ${dir}`);
-                yield cache.saveCache([dir], key);
+                let dir = process.env['SAVE_CACHE_DIR'] || '';
+                if (key != '' && dir != '') {
+                    core.info(`Cache.save -- Key: ${key} dir: ${dir}`);
+                    yield cache.saveCache([dir], key);
+                }
+                else {
+                    core.info(`Cache.save -- nothing to save`);
+                }
             }
             catch (error) {
-                console.log(error.message);
+                core.info(error.message);
             }
         });
     }
@@ -134,6 +137,7 @@ function run() {
     });
 }
 run();
+exports.default = run;
 
 
 /***/ }),
