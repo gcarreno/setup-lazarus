@@ -446,13 +446,16 @@ export class Lazarus{
 
                     // Add this path to the runner's global path
                     core.addPath(lazarusDir);
+                    console.log(`_downloadLazarus - Adding '${lazarusDir}' to PATH`);
                     
                     // Add the path to fpc.exe to the runner's global path
                     // TODO: This is very sketchy and may break in the future. Needs better implementation!
                     let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
                     let parts = pkgs['win64'][lazVer].split('-');
                     let fpc_version = parts[3];
-                    core.addPath(path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64'));
+                    let fpcDir = path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64';
+                    core.addPath(fpcDir));
+                    console.log(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
                     
                 } catch(err) {
                     throw err;
