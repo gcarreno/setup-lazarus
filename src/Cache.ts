@@ -5,7 +5,7 @@ import * as path from 'path';
 
 export class Cache {
     private _key: string = '';
-    private _installersPath;
+    private _dir;
 
     get Key(): string {
         return this._key;
@@ -19,13 +19,14 @@ export class Cache {
         let tempDirectory = process.env['RUNNER_TEMP'] || '';
         ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
 
-        this._installersPath = path.join(tempDirectory, 'installers');
+        this._dir = path.join(tempDirectory, 'installers');
     }
 
     async restore(): Promise<boolean> {
-        let cacheLoaded = await cache.restoreCache([this._installersPath], this._key) != null;
+        console.log(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
+        let cacheLoaded = await cache.restoreCache([this._dir], this._key) != null;
         if (!cacheLoaded) {
-            core.exportVariable('SAVE_CACHE_DIR', this._installersPath);
+            core.exportVariable('SAVE_CACHE_DIR', this._dir);
             core.exportVariable('SAVE_CACHE_KEY', this._key);
         }
 
@@ -40,6 +41,7 @@ export class Cache {
             let key = process.env['SAVE_CACHE_KEY'] || '';
             ok(key, 'Expected SAVE_CACHE_KEY to be defined');
 
+            console.log(`Cache.save -- Key: ${key} dir: ${dir}`);
             await cache.saveCache([dir], key);
         } catch (error) {
             console.log(error.message);

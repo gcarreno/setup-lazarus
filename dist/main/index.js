@@ -46,7 +46,7 @@ class Cache {
         this._key = '';
         let tempDirectory = process.env['RUNNER_TEMP'] || '';
         assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
-        this._installersPath = path.join(tempDirectory, 'installers');
+        this._dir = path.join(tempDirectory, 'installers');
     }
     get Key() {
         return this._key;
@@ -56,9 +56,10 @@ class Cache {
     }
     restore() {
         return __awaiter(this, void 0, void 0, function* () {
-            let cacheLoaded = (yield cache.restoreCache([this._installersPath], this._key)) != null;
+            console.log(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
+            let cacheLoaded = (yield cache.restoreCache([this._dir], this._key)) != null;
             if (!cacheLoaded) {
-                core.exportVariable('SAVE_CACHE_DIR', this._installersPath);
+                core.exportVariable('SAVE_CACHE_DIR', this._dir);
                 core.exportVariable('SAVE_CACHE_KEY', this._key);
             }
             return cacheLoaded;
@@ -71,6 +72,7 @@ class Cache {
                 assert_1.ok(dir, 'Expected SAVE_CACHE_DIR to be defined');
                 let key = process.env['SAVE_CACHE_KEY'] || '';
                 assert_1.ok(key, 'Expected SAVE_CACHE_KEY to be defined');
+                console.log(`Cache.save -- Key: ${key} dir: ${dir}`);
                 yield cache.saveCache([dir], key);
             }
             catch (error) {
