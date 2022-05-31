@@ -562,7 +562,16 @@ class Lazarus {
                         let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
                         yield exec_1.exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
                         // Add this path to the runner's global path
-                        core.addPath(`${lazarusDir}`);
+                        core.addPath(lazarusDir);
+                        console.log(`_downloadLazarus - Adding '${lazarusDir}' to PATH`);
+                        // Add the path to fpc.exe to the runner's global path
+                        // TODO: This is very sketchy and may break in the future. Needs better implementation!
+                        let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
+                        let parts = pkgs['win64'][lazVer].split('-');
+                        let fpc_version = parts[3];
+                        let fpcDir = path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64');
+                        core.addPath(fpcDir);
+                        console.log(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
                     }
                     catch (err) {
                         throw err;

@@ -453,8 +453,8 @@ export class Lazarus{
                     let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
                     let parts = pkgs['win64'][lazVer].split('-');
                     let fpc_version = parts[3];
-                    let fpcDir = path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64';
-                    core.addPath(fpcDir));
+                    let fpcDir = path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64');
+                    core.addPath(fpcDir);
                     console.log(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
                     
                 } catch(err) {
