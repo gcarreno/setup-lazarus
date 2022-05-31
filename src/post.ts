@@ -1,7 +1,7 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 
-const _version = '3.1.0';
+import { _version } from './constants';
 
 async function run(): Promise<void> {
 }
