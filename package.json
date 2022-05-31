@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/gcarreno/setup-lazarus#readme",
   "dependencies": {
+    "@actions/cache": "^2.0.5",
     "@actions/core": "^1.2.6",
     "@actions/exec": "^1.0.4",
     "@actions/github": "^2.2.0",
