@@ -61,6 +61,10 @@ class Cache {
             if (!cacheLoaded) {
                 core.exportVariable('SAVE_CACHE_DIR', this._dir);
                 core.exportVariable('SAVE_CACHE_KEY', this._key);
+                core.info('Cache.restore -- no hit');
+            }
+            else {
+                core.info('Cache.restore -- hit');
             }
             return cacheLoaded;
         });

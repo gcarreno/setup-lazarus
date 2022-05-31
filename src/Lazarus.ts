@@ -279,6 +279,7 @@ export class Lazarus{
             // Special case named version that installs the latest stable version
             case 'stable':
                 this._LazarusVersion = StableVersion;
+                this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
                 await this._downloadLazarus();
                 break;
             case '2.2.2':

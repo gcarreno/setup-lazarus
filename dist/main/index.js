@@ -61,6 +61,10 @@ class Cache {
             if (!cacheLoaded) {
                 core.exportVariable('SAVE_CACHE_DIR', this._dir);
                 core.exportVariable('SAVE_CACHE_KEY', this._key);
+                core.info('Cache.restore -- no hit');
+            }
+            else {
+                core.info('Cache.restore -- hit');
             }
             return cacheLoaded;
         });
@@ -464,6 +468,7 @@ class Lazarus {
                 // Special case named version that installs the latest stable version
                 case 'stable':
                     this._LazarusVersion = StableVersion;
+                    this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
                     yield this._downloadLazarus();
                     break;
                 case '2.2.2':
