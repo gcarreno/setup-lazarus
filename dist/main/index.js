@@ -459,6 +459,7 @@ class Lazarus {
                             break;
                         case 'win32':
                             this._LazarusVersion = StableVersion;
+                            this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
                             yield this._downloadLazarus();
                             break;
                         default:
