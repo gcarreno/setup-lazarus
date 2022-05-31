@@ -1,11 +1,14 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
-import {exec} from '@actions/exec/lib/exec';
+import { exec } from '@actions/exec/lib/exec';
 import * as os from 'os';
 import * as path from 'path';
-import {ok} from 'assert';
+import { ok } from 'assert';
+import * as fs from 'fs';
 
-const fs = require('fs');
+import { Cache } from './Cache';
+
+//const fs = require('fs');
 
 const StableVersion = '2.2.2';
 
@@ -217,9 +220,12 @@ export class Lazarus{
     private _Platform: string = os.platform();
     private _Arch: string = os.arch();
     private _LazarusVersion: string = '';
+    private _Cache: Cache;
 
     constructor(LazarusVersion: string) {
         this._LazarusVersion = LazarusVersion;
+        this._Cache = new Cache();
+        this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
     }
 
     async installLazarus(): Promise<void> {
@@ -437,6 +443,9 @@ export class Lazarus{
 
                 let downloadPath_WIN: string;
                 try {
+
+                    // TODO: Cache logic must be implemented here
+                    // Perform the download
                     downloadPath_WIN = await tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
                     console.log(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
 
@@ -447,7 +456,7 @@ export class Lazarus{
                     // Add this path to the runner's global path
                     core.addPath(lazarusDir);
                     console.log(`_downloadLazarus - Adding '${lazarusDir}' to PATH`);
-                    
+
                     // Add the path to fpc.exe to the runner's global path
                     // TODO: This is very sketchy and may break in the future. Needs better implementation!
                     let lazVer = 'v' + this._LazarusVersion.replace(/\./gi, '_');
@@ -456,7 +465,7 @@ export class Lazarus{
                     let fpcDir = path.join(lazarusDir, 'fpc', fpc_version, 'bin', 'x86_64-win64');
                     core.addPath(fpcDir);
                     console.log(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
-                    
+
                 } catch(err) {
                     throw err;
                 }
@@ -467,13 +476,21 @@ export class Lazarus{
 
                 let downloadPath_LIN: string;
 
+                // Try to restore installers from cache
+                let cacheRestored = await this._Cache.restore();
+
                 // Get the URL for Free Pascal Source
                 let downloadFPCSRCURL: string = this._getPackageURL('fpcsrc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCSRCURL}`);
                 try {
-                    // Perform the download
-                    downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    if (cacheRestored) {
+                        downloadPath_LIN = path.join(this._getTempDirectory(), 'fpcsrc.deb');
+                        console.log(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
+                    } else {
+                        // Perform the download
+                        downloadPath_LIN = await tc.downloadTool(downloadFPCSRCURL, path.join(this._getTempDirectory(), 'fpcsrc.deb'));
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    }
                     // Install the package
                     await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
@@ -484,9 +501,14 @@ export class Lazarus{
                 let downloadFPCURL: string = this._getPackageURL('fpc');
                 console.log(`_downloadLazarus - Downloading ${downloadFPCURL}`);
                 try {
-                    // Perform the download
-                    downloadPath_LIN = await tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    if (cacheRestored) {
+                        downloadPath_LIN = path.join(this._getTempDirectory(), 'fpc.deb');
+                        console.log(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
+                    } else {
+                        // Perform the download
+                        downloadPath_LIN = await tc.downloadTool(downloadFPCURL, path.join(this._getTempDirectory(), 'fpc.deb'));
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    }
                     // Install the package
                     await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
@@ -497,9 +519,15 @@ export class Lazarus{
                 let downloadLazURL: string = this._getPackageURL('laz');
                 console.log(`_downloadLazarus - Downloading ${downloadLazURL}`);
                 try {
-                    // Perform the download
-                    downloadPath_LIN = await tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
-                    console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    if (cacheRestored) {
+                        // Perform the download
+                        downloadPath_LIN = path.join(this._getTempDirectory(), 'lazarus.deb');
+                        console.log(`_downloadLazarus - Using cache restored into ${downloadPath_LIN}`);
+                    } else {
+                        // Perform the download
+                        downloadPath_LIN = await tc.downloadTool(downloadLazURL, path.join(this._getTempDirectory(), 'lazarus.deb'));
+                        console.log(`_downloadLazarus - Downloaded into ${downloadPath_LIN}`);
+                    }
                     // Install the package
                     await exec(`sudo apt install -y ${downloadPath_LIN}`);
                 } catch(err) {
@@ -666,8 +694,9 @@ export class Lazarus{
     }
 
     private _getTempDirectory(): string {
-        const tempDirectory = process.env['RUNNER_TEMP'] || ''
-        ok(tempDirectory, 'Expected RUNNER_TEMP to be defined')
-        return tempDirectory
+        let tempDirectory = process.env['RUNNER_TEMP'] || '';
+        ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+        tempDirectory = path.join(tempDirectory, 'installers');
+        return tempDirectory;
     }
 }

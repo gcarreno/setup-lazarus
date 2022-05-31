@@ -1,9 +1,9 @@
 import * as http from '@actions/http-client';
 import * as tc from '@actions/tool-cache';
-import {exec} from '@actions/exec/lib/exec';
+import { exec } from '@actions/exec/lib/exec';
 import * as os from 'os';
 import * as path from 'path';
-import {ok} from 'assert';
+import { ok } from 'assert';
 
 export class Packages {
     private _Platform: string = os.platform();
@@ -24,33 +24,33 @@ export class Packages {
 
         this._Items = await this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
         console.log(`installPackages -- Got ${this._Items.length} package items`);
-        
+
         try {
             for (let index: number = 0; index < includePackages.length; index++) {
-                    
+
                 let ipkg: string = includePackages[index];
 
                 for (let _iIndex: number = 0; _iIndex < this._Items.length; _iIndex++) {
-                        
+
                     let pkg: PackageData = this._Items[_iIndex];
-                
+
 
                     if (ipkg.trim() == pkg.Name) {
-                        
+
                         /*
                          *   At this point I need to implement dependency test and installation
                          * recursively to have this thing complete.
                          *   For the moment I'll have to mention that in a proeminent place.
                          */
-                        
+
                          // Download the package
                         let pkgFile = await this._download(pkg.RepositoryFileName);
-                        
+
                         // Unzip the package
                         let pkgFolder = await this._extract(
-                            pkgFile, 
+                            pkgFile,
                             path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
-                        
+
                         console.log(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
                         // Clean up, no need for the file to lay around any more
                         await exec(`rm ${pkgFile}`);
@@ -132,7 +132,7 @@ export class Packages {
     ): Promise<string> {
         let tempDir = this._getTempDirectory();
         console.log(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
-        
+
         let pkgFilename: string = await tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
         return pkgFilename;
     }
@@ -141,7 +141,7 @@ export class Packages {
         repoURL: string
     ): Promise<PackageData[]> {
         let result = new Array<PackageData>();
-    
+
         let httpClient: http.HttpClient = new http.HttpClient();
         let httpResponse: http.HttpClientResponse;
         let packageList: any;
@@ -151,44 +151,44 @@ export class Packages {
         } catch (error) {
             throw new Error(`getPackageList -- ${error.message}`);
         }
-    
+
         let pkgCount = Object.keys(packageList).length / 2;
         //console.log(`_getPackageList -- We have ${pkgCount} packages from repo`);
-    
+
         for (let dIndex = 0; dIndex < pkgCount; dIndex++) {
             let _pkgData = packageList[`PackageData${dIndex}`];
             let pkgData = new PackageData();
-    
+
             pkgData.Name = _pkgData['Name'];
             pkgData.RepositoryFileName = _pkgData['RepositoryFileName'];
             pkgData.RepositoryFileHash = _pkgData['RepositoryFileHash'];
             pkgData.PackageBaseDir = _pkgData['PackageBaseDir'];
-    
+
             let _pkgFiles = packageList[`PackageFiles${dIndex}`];
             for (let fIndex = 0; fIndex < _pkgFiles.length; fIndex++) {
                 let _pkgFile = _pkgFiles[fIndex];
                 let pkgFile = new PackageFile();
-    
+
                 pkgFile.PackageFile = _pkgFile['Name'];
                 pkgFile.RelativeFilePath = _pkgFile['RelativeFilePath'];
                 pkgFile.LazCompatibility = _pkgFile['LazCompatibility'];
                 pkgFile.FPCCompatability = _pkgFile['FPCCompatability'];
                 pkgFile.DependenciesAsString = _pkgFile['DependenciesAsString'];
                 pkgFile.PackageType = _pkgFile['PackageType'];
-    
+
                 pkgData.Packages.push(pkgFile);
             }
-    
+
             result.push(pkgData);
         }
-        
+
         return result;
     }
     private _getTempDirectory(): string {
         const tempDirectory = process.env['RUNNER_TEMP'] || ''
         ok(tempDirectory, 'Expected RUNNER_TEMP to be defined')
         return tempDirectory
-     }    
+     }
 }
 
 class PackageData {
