@@ -29,6 +29,7 @@ export class Packages {
         try {
 
             let pkgsToInstall: PackageData[] = [];
+            let pkgsToInstallStrings: string[] = [];
 
             for (const sPKG of includePackages) {
                 for (const PKG of this._Items) {
@@ -38,14 +39,16 @@ export class Packages {
                         const deps = await this._getDependencies(PKG);
                         for (const dep of deps) {
                             pkgsToInstall.push(dep);
+                            pkgsToInstallStrings.push(dep.Name);
                         }
                         pkgsToInstall.push(PKG);
+                        pkgsToInstallStrings.push(PKG.Name);
                     }
                 }
             }
 
             core.info(`Installing Lazarus packages(with found dependencies):`);
-            core.info(pkgsToInstall.join(', '));
+            core.info(pkgsToInstallStrings.join(', '));
 
             for (const pkg of pkgsToInstall) {
 

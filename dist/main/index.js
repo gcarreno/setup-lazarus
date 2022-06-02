@@ -1001,19 +1001,22 @@ class Packages {
             core.info(`installPackages -- Got ${this._Items.length} package items`);
             try {
                 let pkgsToInstall = [];
+                let pkgsToInstallStrings = [];
                 for (const sPKG of includePackages) {
                     for (const PKG of this._Items) {
                         if (sPKG.trim() == PKG.Name) {
                             const deps = yield this._getDependencies(PKG);
                             for (const dep of deps) {
                                 pkgsToInstall.push(dep);
+                                pkgsToInstallStrings.push(dep.Name);
                             }
                             pkgsToInstall.push(PKG);
+                            pkgsToInstallStrings.push(PKG.Name);
                         }
                     }
                 }
                 core.info(`Installing Lazarus packages(with found dependencies):`);
-                core.info(pkgsToInstall.join(', '));
+                core.info(pkgsToInstallStrings.join(', '));
                 for (const pkg of pkgsToInstall) {
                     // Download the package
                     const pkgFile = yield this._download(pkg.RepositoryFileName);
