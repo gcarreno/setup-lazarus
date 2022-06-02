@@ -10,12 +10,15 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 ### lazarus-version
 
-**Required** Lazarus version. Default `dist`.
+**REQUIRED** Lazarus version. Default `dist`.
+
+**DEFAULT** dist.
 
 Possible values:
 
 * `dist` - Lazarus package that comes with the Ubuntu dist your chose on `runs-on` and latest stable for Windows
-* `stable` - Installs the latest stable version: 2.2.0
+* `stable` - Installs the latest stable version: 2.2.2
+* `2.2.2`  - comes with `FPC v3.2.2`
 * `2.2.0`  - comes with `FPC v3.2.2`
 * `2.0.12` - comes with `FPC v3.2.0`
 * `2.0.10` - comes with `FPC v3.2.0`
@@ -51,10 +54,20 @@ Format is a string with the packages separated by comma: "Package 1, Package 2, 
 
 The list of packages can be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
 
-**IMPORTANT**
+### with-cache
 
-> There is no dependency checks implemented YET.
-> You must order your package list in order to satisfy the dendencies yourself.
+**OPTIONAL** Use cached installer files.
+
+**DEFAULT** true.
+
+This is a boolean input and will use cache if set to `true`.
+
+**NOTE**
+
+> At this moment, there's an issue with the retrieved install execuatbles for Windows.
+> I'm trying to get to the bottom of why, but it's going to take some time.
+> I suggest you turn cache off if you're going to compile for Windows.
+
 
 ## Platforms
 
@@ -78,10 +91,11 @@ Unfortunately there are some restrictions:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v3.0.16
+- uses: gcarreno/setup-lazarus@v3.2
   with:
-    lazarus-version: "dist"
+    lazarus-version: "stable"
     include-packages: "Synapse 40.1"
+    with-cache: true
 - run: lazbuild YourTestProject.lpi
 - run: YourTestProject
 ```
@@ -106,14 +120,16 @@ jobs:
     strategy:
       matrix:
         operating-system: [windows-latest,ubuntu-latest,macos-latest]
-        lazarus-versions: [dist, stable, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
+        lazarus-versions: [dist, stable, 2.2.0, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout source code
+      uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3.0.16
+      uses: gcarreno/setup-lazarus@v3.2
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
+        with-cache: true
     - name: Build the Main Application
       if: ${{ matrix.operating-system != 'macos-latest' }}
       run: lazbuild -B "src/lazaruswithgithubactions.lpi"
