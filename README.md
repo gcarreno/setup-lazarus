@@ -10,7 +10,7 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 ### lazarus-version
 
-**REQUIRED** Lazarus version. Default `dist`.
+**REQUIRED** Lazarus version.
 
 **DEFAULT** dist.
 
@@ -64,9 +64,9 @@ This is a boolean input and will use cache if set to `true`.
 
 **NOTE**
 
-> At this moment, there's an issue with the retrieved install execuatbles for Windows.
+> At this moment, there's an issue with the retrieved install executables for Windows.
 > I'm trying to get to the bottom of why, but it's going to take some time.
-> I suggest you turn cache off if you're going to compile for Windows.
+> I suggest you turn the cache off if you're going to compile for Windows.
 
 
 ## Platforms
