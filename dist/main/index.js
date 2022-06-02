@@ -1026,6 +1026,7 @@ class Packages {
                         const pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath, fpkg.PackageFile);
                         switch (fpkg.PackageType) {
                             case 0:
+                            case 1:
                                 // Making Lazarus aware of the package
                                 if (this._Platform != 'darwin') {
                                     core.info(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
