@@ -34,15 +34,15 @@ export class Packages {
             for (const sPKG of includePackages) {
                 for (const PKG of this._Items) {
 
-                    if (sPKG.trim() == PKG.Name) {
+                    if (sPKG.trim() == PKG.DisplayName) {
 
                         const deps = await this._getDependencies(PKG);
                         for (const dep of deps) {
                             pkgsToInstall.push(dep);
-                            pkgsToInstallStrings.push(dep.Name);
+                            pkgsToInstallStrings.push(dep.DisplayName);
                         }
                         pkgsToInstall.push(PKG);
-                        pkgsToInstallStrings.push(PKG.Name);
+                        pkgsToInstallStrings.push(PKG.DisplayName);
                     }
                 }
             }
@@ -194,6 +194,7 @@ export class Packages {
             let pkgData = new PackageData();
 
             pkgData.Name = _pkgData['Name'];
+            pkgData.DisplayName = _pkgData['DisplayName'];
             pkgData.RepositoryFileName = _pkgData['RepositoryFileName'];
             pkgData.RepositoryFileHash = _pkgData['RepositoryFileHash'];
             pkgData.PackageBaseDir = _pkgData['PackageBaseDir'];
@@ -227,6 +228,7 @@ export class Packages {
 
 class PackageData {
     Name: string = '';
+    DisplayName = '';
     RepositoryFileName: string = '';
     RepositoryFileHash: string = '';
     private _PackageBaseDir: string = '';

@@ -1004,14 +1004,14 @@ class Packages {
                 let pkgsToInstallStrings = [];
                 for (const sPKG of includePackages) {
                     for (const PKG of this._Items) {
-                        if (sPKG.trim() == PKG.Name) {
+                        if (sPKG.trim() == PKG.DisplayName) {
                             const deps = yield this._getDependencies(PKG);
                             for (const dep of deps) {
                                 pkgsToInstall.push(dep);
-                                pkgsToInstallStrings.push(dep.Name);
+                                pkgsToInstallStrings.push(dep.DisplayName);
                             }
                             pkgsToInstall.push(PKG);
-                            pkgsToInstallStrings.push(PKG.Name);
+                            pkgsToInstallStrings.push(PKG.DisplayName);
                         }
                     }
                 }
@@ -1138,6 +1138,7 @@ class Packages {
                 let _pkgData = packageList[`PackageData${dIndex}`];
                 let pkgData = new PackageData();
                 pkgData.Name = _pkgData['Name'];
+                pkgData.DisplayName = _pkgData['DisplayName'];
                 pkgData.RepositoryFileName = _pkgData['RepositoryFileName'];
                 pkgData.RepositoryFileHash = _pkgData['RepositoryFileHash'];
                 pkgData.PackageBaseDir = _pkgData['PackageBaseDir'];
@@ -1168,6 +1169,7 @@ exports.Packages = Packages;
 class PackageData {
     constructor() {
         this.Name = '';
+        this.DisplayName = '';
         this.RepositoryFileName = '';
         this.RepositoryFileHash = '';
         this._PackageBaseDir = '';
