@@ -42,10 +42,11 @@ const core = __importStar(__webpack_require__(2186));
 const assert_1 = __webpack_require__(2357);
 const path = __importStar(__webpack_require__(5622));
 class Cache {
-    constructor() {
+    constructor(WithCache) {
         this._key = '';
         let tempDirectory = process.env['RUNNER_TEMP'] || '';
         assert_1.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+        this._withCache = WithCache;
         this._dir = path.join(tempDirectory, 'installers');
     }
     get Key() {
@@ -56,34 +57,45 @@ class Cache {
     }
     restore() {
         return __awaiter(this, void 0, void 0, function* () {
-            core.info(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
-            let cacheLoaded = (yield cache.restoreCache([this._dir], this._key)) != null;
-            if (!cacheLoaded) {
-                core.exportVariable('SAVE_CACHE_DIR', this._dir);
-                core.exportVariable('SAVE_CACHE_KEY', this._key);
-                core.info('Cache.restore -- no hit');
+            if (this._withCache === true) {
+                core.info(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
+                let cacheLoaded = (yield cache.restoreCache([this._dir], this._key)) != null;
+                if (!cacheLoaded) {
+                    core.exportVariable('SAVE_CACHE_DIR', this._dir);
+                    core.exportVariable('SAVE_CACHE_KEY', this._key);
+                    core.info('Cache.restore -- no hit');
+                }
+                else {
+                    core.info('Cache.restore -- hit');
+                }
+                return cacheLoaded;
             }
             else {
-                core.info('Cache.restore -- hit');
+                core.info('Cache.restore -- Cache is disabled');
+                return false;
             }
-            return cacheLoaded;
         });
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let key = process.env['SAVE_CACHE_KEY'] || '';
-                let dir = process.env['SAVE_CACHE_DIR'] || '';
-                if (key != '' && dir != '') {
-                    core.info(`Cache.save -- Key: ${key} dir: ${dir}`);
-                    yield cache.saveCache([dir], key);
+            if (this._withCache === true) {
+                try {
+                    let key = process.env['SAVE_CACHE_KEY'] || '';
+                    let dir = process.env['SAVE_CACHE_DIR'] || '';
+                    if (key != '' && dir != '') {
+                        core.info(`Cache.save -- Key: ${key} dir: ${dir}`);
+                        yield cache.saveCache([dir], key);
+                    }
+                    else {
+                        core.info('Cache.save -- nothing to save');
+                    }
                 }
-                else {
-                    core.info(`Cache.save -- nothing to save`);
+                catch (error) {
+                    core.info(error.message);
                 }
             }
-            catch (error) {
-                core.info(error.message);
+            else {
+                core.info('Cache.save -- Cache is disabled');
             }
         });
     }
@@ -131,8 +143,10 @@ const core = __importStar(__webpack_require__(2186));
 const Cache_1 = __webpack_require__(3123);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        // `with-cache` input defined in action metadata file
+        let withCache = core.getInput('with-cache') == 'true';
         try {
-            let installCache = new Cache_1.Cache();
+            let installCache = new Cache_1.Cache(withCache);
             yield installCache.save();
         }
         catch (error) {

@@ -7,13 +7,17 @@ branding:
   color: 'blue'
 
 inputs:
-  lazarus-version:  # id of input
+  lazarus-version:
     description: 'Version of Lazarus'
     required: true
     default: 'dist'
   include-packages:
     description: 'Include packages that the project needs'
     required: false
+  with-cache:
+    description: 'Use cache for installer files'
+    required: false
+    default: true
 
 runs:
   using: 'node16'

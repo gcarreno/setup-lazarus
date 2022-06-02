@@ -6,13 +6,16 @@ import { Cache } from './Cache';
 import { _version } from './constants';
 
 async function run(): Promise<void> {
-  try {
-    let installCache = new Cache();
-    await installCache.save();
 
-  } catch (error) {
-    core.setFailed(error.message);
-  }
+    // `with-cache` input defined in action metadata file
+    let withCache = core.getInput('with-cache') == 'true';
+
+    try {
+        let installCache = new Cache(withCache);
+        await installCache.save();
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
 
 run();

@@ -10,8 +10,8 @@ export class Installer {
     private _IncludePackages: string[];
     private _Packages: pkgs.Packages;
 
-    constructor(LazarusVerzion: string, PackageList: string[]) {
-        this._Lazarus = new laz.Lazarus(LazarusVerzion);
+    constructor(LazarusVerzion: string, PackageList: string[], WithCache: boolean) {
+        this._Lazarus = new laz.Lazarus(LazarusVerzion, WithCache);
         this._IncludePackages = PackageList;
         this._Packages = new pkgs.Packages(LazarusVerzion, RepoBaseURL, ParamJSON);
     }

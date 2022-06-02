@@ -222,9 +222,9 @@ export class Lazarus{
     private _LazarusVersion: string = '';
     private _Cache: Cache;
 
-    constructor(LazarusVersion: string) {
+    constructor(LazarusVersion: string, WithCache: boolean) {
         this._LazarusVersion = LazarusVersion;
-        this._Cache = new Cache();
+        this._Cache = new Cache(WithCache);
         this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
     }
 

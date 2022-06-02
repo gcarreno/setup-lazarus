@@ -11,11 +11,14 @@ async function run(): Promise<void> {
     // `include-packages` input defined in action metadata file
     let includePackages = core.getInput('include-packages');
 
+    // `with-cache` input defined in action metadata file
+    let withCache = core.getInput('with-cache') == 'true';
+
     // Get the JSON webhook payload for the event that triggered the workflow
     //const payload = JSON.stringify(github.context.payload, undefined, 2)
     //console.log(`The event payload: ${payload}`);
 
-    let Installer = new inst.Installer(lazarusVersion, includePackages.split(','));
+    let Installer = new inst.Installer(lazarusVersion, includePackages.split(','), withCache);
     await Installer.install();
 
   } catch (error) {
