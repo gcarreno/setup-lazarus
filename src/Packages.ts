@@ -27,98 +27,124 @@ export class Packages {
         core.info(`installPackages -- Got ${this._Items.length} package items`);
 
         try {
-            for (let index: number = 0; index < includePackages.length; index++) {
 
-                let ipkg: string = includePackages[index];
+            let pkgsToInstall: PackageData[] = [];
 
-                for (let _iIndex: number = 0; _iIndex < this._Items.length; _iIndex++) {
+            for (const sPKG of includePackages) {
+                for (const PKG of this._Items) {
 
-                    let pkg: PackageData = this._Items[_iIndex];
+                    if (sPKG.trim() == PKG.Name) {
 
+                        const deps = await this._getDependencies(PKG);
+                        for (const dep of deps) {
+                            pkgsToInstall.push(dep);
+                        }
+                        pkgsToInstall.push(PKG);
+                    }
+                }
+            }
 
-                    if (ipkg.trim() == pkg.Name) {
+            for (const pkg of pkgsToInstall) {
 
-                        /*
-                         *   At this point I need to implement dependency test and installation
-                         * recursively to have this thing complete.
-                         *   For the moment I'll have to mention that in a proeminent place.
-                         */
+                // Download the package
+                const pkgFile = await this._download(pkg.RepositoryFileName);
 
-                         // Download the package
-                        let pkgFile = await this._download(pkg.RepositoryFileName);
+                // Unzip the package
+                const pkgFolder = await this._extract(
+                    pkgFile,
+                    path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
 
-                        // Unzip the package
-                        let pkgFolder = await this._extract(
-                            pkgFile,
-                            path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
+                core.info(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                // Clean up, no need for the file to lay around any more
+                await exec(`rm ${pkgFile}`);
 
-                        core.info(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
-                        // Clean up, no need for the file to lay around any more
-                        await exec(`rm ${pkgFile}`);
+                for (const fpkg of pkg.Packages) {
 
-                        for (let fIndex: number = 0; fIndex < pkg.Packages.length; fIndex++) {
-                            let fpkg: PackageFile = pkg.Packages[fIndex];
+                    const pkgLPKFile = path.join(
+                        pkgFolder,
+                        pkg.PackageBaseDir,
+                        fpkg.RelativeFilePath,
+                        fpkg.PackageFile
+                    );
 
-                            let pkgLPKFile = path.join(
-                                pkgFolder,
-                                pkg.PackageBaseDir,
-                                fpkg.RelativeFilePath,
-                                fpkg.PackageFile
-                            );
-
-                            switch (fpkg.PackageType) {
-                                case 0:
-                                    // Making Lazarus aware of the package
-                                    if (this._Platform != 'darwin') {
-                                        core.info(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
-                                        await exec(`lazbuild --add-package "${pkgLPKFile}"`);
-                                    } else {
-                                        core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
-                                        await exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
-                                    }
-
-                                    // Compiling the package
-                                    if (this._Platform != 'darwin') {
-                                        core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                        await exec(`lazbuild "${pkgLPKFile}"`);
-                                    } else {
-                                        core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
-                                        await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
-                                    }
-                                    break;
-                                case 2:
-                                    // Making Lazarus aware of the package
-                                    if (this._Platform != 'darwin') {
-                                        core.info(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
-                                        await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
-                                    } else {
-                                        core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
-                                        await exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
-                                    }
-                                    // Compiling the package
-                                    if (this._Platform != 'darwin') {
-                                        core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
-                                        await exec(`lazbuild "${pkgLPKFile}"`);
-                                    } else {
-                                        core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
-                                        await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
-                                    }
-                                    break;
-                                default:
-                                    throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
-                                    break;
+                    switch (fpkg.PackageType) {
+                        case 0:
+                            // Making Lazarus aware of the package
+                            if (this._Platform != 'darwin') {
+                                core.info(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
+                                await exec(`lazbuild --add-package "${pkgLPKFile}"`);
+                            } else {
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
+                                await exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
                             }
 
-                        }
-
+                            // Compiling the package
+                            if (this._Platform != 'darwin') {
+                                core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                await exec(`lazbuild "${pkgLPKFile}"`);
+                            } else {
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                            }
+                            break;
+                        case 2:
+                            // Making Lazarus aware of the package
+                            if (this._Platform != 'darwin') {
+                                core.info(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
+                                await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
+                            } else {
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
+                                await exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
+                            }
+                            // Compiling the package
+                            if (this._Platform != 'darwin') {
+                                core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                await exec(`lazbuild "${pkgLPKFile}"`);
+                            } else {
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                            }
+                            break;
+                        default:
+                            throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
+                            break;
                     }
 
                 }
+
             }
+
         } catch (error) {
             throw error;
         }
 
+    }
+
+    private async _getDependencies(
+        Package: PackageData
+    ): Promise<PackageData[]> {
+        let result: PackageData[] = [];
+
+        for (const file of Package.Packages) {
+            const deps = file.DependenciesAsString.split(',');
+            for (const dep of deps) {
+                for (const pkg of this._Items) {
+                    if (Package.Name == pkg.Name) {
+                        continue;
+                    }
+                    if (pkg.containsPackage(dep)) {
+                        console.log(`   Found dependency ${pkg.Name} for ${Package.Name}`);
+                        const pdeps = await this._getDependencies(pkg);
+                        for (const pdep of pdeps) {
+                            result.push(pdep);
+                        }
+                        result.push(pkg);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private async _extract(
@@ -204,6 +230,24 @@ class PackageData {
     }
     set PackageBaseDir(value: string) {
         this._PackageBaseDir = value.replace(/\\/gi, '');
+    }
+
+    public containsPackage(Needle: String): boolean {
+        let name: string = '';
+        let version: string = '';
+
+        if (Needle.includes('(')) {
+            const parts = Needle.split('(');
+            name = parts[0].trim() + '.lpk';
+            version = parts[1].trim();
+            version = version.substr(0, version.length - 1);
+        }
+        for (const file of this.Packages) {
+            if (file.PackageFile == name) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
