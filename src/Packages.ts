@@ -20,7 +20,7 @@ export class Packages {
     }
 
     async installPackages(includePackages:string[]) {
-        core.info(`Installing Lazarus packages:`);
+        core.info(`Requested Lazarus packages:`);
         core.info(includePackages.join(', '));
 
         this._Items = await this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
@@ -43,6 +43,9 @@ export class Packages {
                     }
                 }
             }
+
+            core.info(`Installing Lazarus packages(with found dependencies):`);
+            core.info(pkgsToInstall.join(', '));
 
             for (const pkg of pkgsToInstall) {
 
@@ -133,7 +136,7 @@ export class Packages {
                         continue;
                     }
                     if (pkg.containsPackage(dep)) {
-                        console.log(`   Found dependency ${pkg.Name} for ${Package.Name}`);
+                        //console.log(`   Found dependency ${pkg.Name} for ${Package.Name}`);
                         const pdeps = await this._getDependencies(pkg);
                         for (const pdep of pdeps) {
                             result.push(pdep);

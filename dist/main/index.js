@@ -995,7 +995,7 @@ class Packages {
     }
     installPackages(includePackages) {
         return __awaiter(this, void 0, void 0, function* () {
-            core.info(`Installing Lazarus packages:`);
+            core.info(`Requested Lazarus packages:`);
             core.info(includePackages.join(', '));
             this._Items = yield this._getPackageList(`${this._BaseURL}/${this._ParamJSON}`);
             core.info(`installPackages -- Got ${this._Items.length} package items`);
@@ -1012,6 +1012,8 @@ class Packages {
                         }
                     }
                 }
+                core.info(`Installing Lazarus packages(with found dependencies):`);
+                core.info(pkgsToInstall.join(', '));
                 for (const pkg of pkgsToInstall) {
                     // Download the package
                     const pkgFile = yield this._download(pkg.RepositoryFileName);
@@ -1086,7 +1088,7 @@ class Packages {
                             continue;
                         }
                         if (pkg.containsPackage(dep)) {
-                            console.log(`   Found dependency ${pkg.Name} for ${Package.Name}`);
+                            //console.log(`   Found dependency ${pkg.Name} for ${Package.Name}`);
                             const pdeps = yield this._getDependencies(pkg);
                             for (const pdep of pdeps) {
                                 result.push(pdep);
