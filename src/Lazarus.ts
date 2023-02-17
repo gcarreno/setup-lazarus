@@ -462,7 +462,7 @@ export class Lazarus{
 
                     // Run the installer
                     let lazarusDir: string = path.join(this._getTempDirectory(), 'lazarus');
-                    await exec(`${downloadPath_WIN} /VERYSILENT /DIR=${lazarusDir}`);
+                    await exec(`${downloadPath_WIN} /VERYSILENT /SP- /DIR=${lazarusDir}`);
 
                     // Add this path to the runner's global path
                     core.addPath(lazarusDir);
