@@ -56,7 +56,7 @@ export class Cache {
                     core.info('Cache.save -- nothing to save');
                 }
             } catch (error) {
-                core.info(error.message);
+                core.info((error as Error).message);
             }
         } else {
             core.info('Cache.save -- Cache is disabled');

@@ -183,7 +183,7 @@ export class Packages {
             httpResponse = await httpClient.get(repoURL);
             packageList = JSON.parse(await httpResponse.readBody());
         } catch (error) {
-            throw new Error(`getPackageList -- ${error.message}`);
+            throw new Error(`getPackageList -- ${(error as Error).message}`);
         }
 
         let pkgCount = Object.keys(packageList).length / 2;

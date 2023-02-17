@@ -14,7 +14,7 @@ async function run(): Promise<void> {
         let installCache = new Cache(withCache);
         await installCache.save();
     } catch (error) {
-        core.setFailed(error.message);
+        core.setFailed((error as Error).message);
     }
 }
 

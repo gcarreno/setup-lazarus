@@ -264,8 +264,8 @@ export class Lazarus{
                             } else {
                                 throw new Error(`Could not find lazbuild in ${lazLibPath} or ${lazAppPath}`);
                             }
-                        } catch(err) {
-                            throw err;
+                        } catch(error) {
+                            throw (error as Error);
                         }
                         break;
                     case 'win32':
@@ -477,8 +477,8 @@ export class Lazarus{
                     core.addPath(fpcDir);
                     core.info(`_downloadLazarus - Adding '${fpcDir}' to PATH`);
 
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
                 break;
             case 'linux':
@@ -502,8 +502,8 @@ export class Lazarus{
                     }
                     // Install the package
                     await exec(`sudo apt install -y ${downloadPath_LIN}`);
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 // Get the URL for Free Pascal's compiler
@@ -521,8 +521,8 @@ export class Lazarus{
                     }
                     // Install the package
                     await exec(`sudo apt install -y ${downloadPath_LIN}`);
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 // Get the URL for the Lazarus IDE
@@ -540,8 +540,8 @@ export class Lazarus{
                     }
                     // Install the package
                     await exec(`sudo apt install -y ${downloadPath_LIN}`);
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 break;
@@ -582,8 +582,8 @@ export class Lazarus{
                         // Install the package
                         await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
                     }
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 // Get the URL for Free Pascal's compiler
@@ -621,8 +621,8 @@ export class Lazarus{
                         await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
                     }
 
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 // Get the URL for the Lazarus IDE
@@ -659,8 +659,8 @@ export class Lazarus{
                         // Install the package
                         await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
                     }
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 // For 2.0.10 and older, lazbuild symlink is /Library/Lazarus/lazbuild
@@ -680,8 +680,8 @@ export class Lazarus{
                     } else {
                         throw new Error(`Could not find lazbuild in ${lazLibPath} or ${lazAppPath}`);
                     }
-                } catch(err) {
-                    throw err;
+                } catch(error) {
+                    throw (error as Error);
                 }
 
                 break;

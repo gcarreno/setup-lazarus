@@ -22,7 +22,7 @@ async function run(): Promise<void> {
     await Installer.install();
 
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed((error as Error).message);
   }
 }
 
