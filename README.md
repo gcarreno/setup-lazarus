@@ -92,7 +92,7 @@ Unfortunately there are some restrictions:
 
 ```yaml
 steps:
-- uses: actions/checkout@v2
+- uses: actions/checkout@v3
 - uses: gcarreno/setup-lazarus@v3.2.5
   with:
     lazarus-version: "stable"
@@ -125,7 +125,7 @@ jobs:
         lazarus-versions: [dist, stable, 2.2.0, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install Lazarus
       uses: gcarreno/setup-lazarus@v3.2.5
       with:
