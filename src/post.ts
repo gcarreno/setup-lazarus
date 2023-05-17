@@ -3,8 +3,6 @@ import * as core from "@actions/core";
 
 import { Cache } from './Cache';
 
-import { _version } from './constants';
-
 async function run(): Promise<void> {
 
     // `with-cache` input defined in action metadata file
