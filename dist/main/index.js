@@ -707,16 +707,17 @@ class Lazarus {
                     core.info(`_downloadLazarus - Downloading ${downloadURL}`);
                     let downloadPath_WIN;
                     try {
+                        /*  Until I can get a solution for the setup.exe timeout, no cache for Windows
                         if (cacheRestored) {
                             // Use cached version
                             downloadPath_WIN = path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`);
                             core.info(`_downloadLazarus - Using cache restored into ${downloadPath_WIN}`);
-                        }
-                        else {
-                            // Perform the download
-                            downloadPath_WIN = yield tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
-                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
-                        }
+                        } else {
+                        */
+                        // Perform the download
+                        downloadPath_WIN = yield tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
+                        core.info(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
+                        //}
                         // Run the installer
                         let lazarusDir = path.join(this._getTempDirectory(), 'lazarus');
                         yield (0, exec_1.exec)(`${downloadPath_WIN} /VERYSILENT /SP- /DIR=${lazarusDir}`);

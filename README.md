@@ -68,7 +68,7 @@ This is a boolean input and will use cache if set to `true`.
 
 > At this moment, there's an issue with the retrieved install executables for Windows.
 > I'm trying to get to the bottom of why, but it's going to take some time.
-> I suggest you turn the cache off if you're going to compile for Windows.
+> Caching is now off ny default for Windows until I can solve this issue!
 
 
 ## Platforms
@@ -93,7 +93,7 @@ Unfortunately there are some restrictions:
 ```yaml
 steps:
 - uses: actions/checkout@v3
-- uses: gcarreno/setup-lazarus@v3.2.5
+- uses: gcarreno/setup-lazarus@v3.2.6
   with:
     lazarus-version: "stable"
     include-packages: "Synapse 40.1"
@@ -127,7 +127,7 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v3
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3.2.5
+      uses: gcarreno/setup-lazarus@v3.2.6
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
