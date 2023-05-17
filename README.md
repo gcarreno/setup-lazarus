@@ -93,7 +93,7 @@ Unfortunately there are some restrictions:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: gcarreno/setup-lazarus@v3.2.3
+- uses: gcarreno/setup-lazarus@v3.2.5
   with:
     lazarus-version: "stable"
     include-packages: "Synapse 40.1"
@@ -127,7 +127,7 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3.2.3
+      uses: gcarreno/setup-lazarus@v3.2.5
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         include-packages: "Synapse 40.1"
