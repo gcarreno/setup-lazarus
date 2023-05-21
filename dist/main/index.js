@@ -1070,6 +1070,12 @@ class Packages {
                     // Unzip the package
                     const pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
                     core.info(`installPackage -- Unzipped to "${pkgFolder}/${pkg.PackageBaseDir}"`);
+                    //DEBUG
+                    core.info(`installPackage -- Listing "${pkgFolder}"`);
+                    yield (0, exec_1.exec)(`ls -alF ${pkgFolder}`);
+                    core.info(`installPackage -- Listing "${pkgFolder}/${pkg.PackageBaseDir}"`);
+                    yield (0, exec_1.exec)(`ls -alF ${pkgFolder}/${pkg.PackageBaseDir}`);
+                    //DEBUG
                     // Clean up, no need for the file to lay around any more
                     yield (0, exec_1.exec)(`rm ${pkgFile}`);
                     for (const fpkg of pkg.Packages) {
