@@ -68,9 +68,9 @@ export class Packages {
 
                     const pkgLPKFile = path.join(
                         pkgFolder,
-                        pkg.PackageBaseDir.replace(/ /gi, '\ '),
-                        fpkg.RelativeFilePath.replace(/ /gi, '\ '),
-                        fpkg.PackageFile.replace(/ /gi, '\ ')
+                        pkg.PackageBaseDir,
+                        fpkg.RelativeFilePath,
+                        fpkg.PackageFile
                     );
 
                     switch (fpkg.PackageType) {
@@ -79,37 +79,37 @@ export class Packages {
                             // Making Lazarus aware of the package
                             if (this._Platform != 'darwin') {
                                 core.info(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}"`);
-                                await exec(`lazbuild --add-package "${pkgLPKFile}"`);
+                                await exec('lazbuild --add-package "' + pkgLPKFile + '"');
                             } else {
                                 core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
-                                await exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
+                                await exec('lazbuild --ws=cocoa --add-package "' + pkgLPKFile + '"');
                             }
 
                             // Compiling the package
                             if (this._Platform != 'darwin') {
                                 core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
-                                await exec(`lazbuild "${pkgLPKFile}"`);
+                                await exec('lazbuild "' + pkgLPKFile + '"');
                             } else {
                                 core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
-                                await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                await exec('lazbuild --ws=cocoa "' + pkgLPKFile + '"');
                             }
                             break;
                         case 2:
                             // Making Lazarus aware of the package
                             if (this._Platform != 'darwin') {
                                 core.info(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}"`);
-                                await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
+                                await exec('lazbuild --add-package-link "' + pkgLPKFile + '"');
                             } else {
                                 core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
-                                await exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
+                                await exec('lazbuild --ws=cocoa --add-package-link "' + pkgLPKFile + '"');
                             }
                             // Compiling the package
                             if (this._Platform != 'darwin') {
                                 core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
-                                await exec(`lazbuild "${pkgLPKFile}"`);
+                                await exec('lazbuild "' + pkgLPKFile + '"');
                             } else {
                                 core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
-                                await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                await exec('lazbuild --ws=cocoa "' + pkgLPKFile + '"');
                             }
                             break;
                         default:
