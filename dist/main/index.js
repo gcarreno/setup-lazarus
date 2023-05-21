@@ -1073,51 +1073,51 @@ class Packages {
                     // Clean up, no need for the file to lay around any more
                     yield (0, exec_1.exec)(`rm ${pkgFile}`);
                     for (const fpkg of pkg.Packages) {
-                        const pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath, fpkg.PackageFile);
+                        const pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath.replace(/ /gi, '\ '), fpkg.PackageFile);
                         switch (fpkg.PackageType) {
                             case 0:
                             case 1:
                                 // Making Lazarus aware of the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild --add-package '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild --add-package '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild --add-package "${pkgLPKFile}"`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
                                 }
                                 // Compiling the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild "${pkgLPKFile}"`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                 }
                                 break;
                             case 2:
                                 // Making Lazarus aware of the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild --add-package-link '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild --add-package-link '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild --add-package-link "${pkgLPKFile}"`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package-link '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
                                 }
                                 // Compiling the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild "${pkgLPKFile}"`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa '${pkgLPKFile}'`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa '${pkgLPKFile}'`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                 }
                                 break;
                             default:
-                                throw new Error(`installPackage -- PackageType '${fpkg.PackageType}' not implemented`);
+                                throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
                                 break;
                         }
                     }
@@ -1161,7 +1161,7 @@ class Packages {
     _download(filename) {
         return __awaiter(this, void 0, void 0, function* () {
             let tempDir = this._getTempDirectory();
-            core.info(`_download -- Going to download '${this._BaseURL}/${filename}' to '${tempDir}'`);
+            core.info(`_download -- Going to download "${this._BaseURL}/${filename}" to "${tempDir}"`);
             let pkgFilename = yield tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
             return pkgFilename;
         });
