@@ -58,9 +58,9 @@ export class Packages {
                 // Unzip the package
                 const pkgFolder = await this._extract(
                     pkgFile,
-                    path.join(this._getTempDirectory(), pkg.RepositoryFileHash)) ;
+                    path.join(this._getTempDirectory(), pkg.RepositoryFileHash.replace(/ /gi, '_'))) ;
 
-                core.info(`installPackage -- Unzipped to ${pkgFolder}/${pkg.PackageBaseDir}`);
+                core.info(`installPackage -- Unzipped to "${pkgFolder}/${pkg.PackageBaseDir}"`);
                 // Clean up, no need for the file to lay around any more
                 await exec(`rm ${pkgFile}`);
 
@@ -78,37 +78,37 @@ export class Packages {
                         case 1:
                             // Making Lazarus aware of the package
                             if (this._Platform != 'darwin') {
-                                core.info(`installPackages -- executing lazbuild --add-package ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}"`);
                                 await exec(`lazbuild --add-package "${pkgLPKFile}"`);
                             } else {
-                                core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
                                 await exec(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
                             }
 
                             // Compiling the package
                             if (this._Platform != 'darwin') {
-                                core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
                                 await exec(`lazbuild "${pkgLPKFile}"`);
                             } else {
-                                core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                 await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                             }
                             break;
                         case 2:
                             // Making Lazarus aware of the package
                             if (this._Platform != 'darwin') {
-                                core.info(`installPackages -- executing lazbuild --add-package-link ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}"`);
                                 await exec(`lazbuild --add-package-link "${pkgLPKFile}"`);
                             } else {
-                                core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
                                 await exec(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
                             }
                             // Compiling the package
                             if (this._Platform != 'darwin') {
-                                core.info(`installPackages -- executing lazbuild ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
                                 await exec(`lazbuild "${pkgLPKFile}"`);
                             } else {
-                                core.info(`installPackages -- executing lazbuild --ws=cocoa ${pkgLPKFile}`);
+                                core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
                                 await exec(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
                             }
                             break;
