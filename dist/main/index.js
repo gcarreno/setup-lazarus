@@ -1068,7 +1068,7 @@ class Packages {
                     // Download the package
                     const pkgFile = yield this._download(pkg.RepositoryFileName);
                     // Unzip the package
-                    const pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash.replace(/ /gi, '_')));
+                    const pkgFolder = yield this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
                     core.info(`installPackage -- Unzipped to "${pkgFolder}/${pkg.PackageBaseDir}"`);
                     // Clean up, no need for the file to lay around any more
                     yield (0, exec_1.exec)(`rm ${pkgFile}`);
@@ -1079,45 +1079,45 @@ class Packages {
                             case 1:
                                 // Making Lazarus aware of the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild --add-package "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild --add-package "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild --add-package '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild --add-package '${pkgLPKFile}'`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package '${pkgLPKFile}'`);
                                 }
                                 // Compiling the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild '${pkgLPKFile}'`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa '${pkgLPKFile}'`);
                                 }
                                 break;
                             case 2:
                                 // Making Lazarus aware of the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild --add-package-link "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild --add-package-link "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild --add-package-link '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild --add-package-link '${pkgLPKFile}'`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package-link "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa --add-package-link '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa --add-package-link '${pkgLPKFile}'`);
                                 }
                                 // Compiling the package
                                 if (this._Platform != 'darwin') {
-                                    core.info(`installPackages -- executing lazbuild "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild '${pkgLPKFile}'`);
                                 }
                                 else {
-                                    core.info(`installPackages -- executing lazbuild --ws=cocoa "${pkgLPKFile}"`);
-                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa "${pkgLPKFile}"`);
+                                    core.info(`installPackages -- executing lazbuild --ws=cocoa '${pkgLPKFile}'`);
+                                    yield (0, exec_1.exec)(`lazbuild --ws=cocoa '${pkgLPKFile}'`);
                                 }
                                 break;
                             default:
-                                throw new Error(`installPackage -- PackageType "${fpkg.PackageType}" not implemented`);
+                                throw new Error(`installPackage -- PackageType '${fpkg.PackageType}' not implemented`);
                                 break;
                         }
                     }
@@ -1161,7 +1161,7 @@ class Packages {
     _download(filename) {
         return __awaiter(this, void 0, void 0, function* () {
             let tempDir = this._getTempDirectory();
-            core.info(`_download -- Going to download ${this._BaseURL}/${filename} to ${tempDir}`);
+            core.info(`_download -- Going to download '${this._BaseURL}/${filename}' to '${tempDir}'`);
             let pkgFilename = yield tc.downloadTool(`${this._BaseURL}/${filename}`, path.join(this._getTempDirectory(), filename));
             return pkgFilename;
         });
@@ -16168,10 +16168,10 @@ var __createBinding;
                 if (result === null || typeof result !== "object") throw new TypeError("Object expected");
                 if (_ = accept(result.get)) descriptor.get = _;
                 if (_ = accept(result.set)) descriptor.set = _;
-                if (_ = accept(result.init)) initializers.push(_);
+                if (_ = accept(result.init)) initializers.unshift(_);
             }
             else if (_ = accept(result)) {
-                if (kind === "field") initializers.push(_);
+                if (kind === "field") initializers.unshift(_);
                 else descriptor[key] = _;
             }
         }
@@ -18472,10 +18472,10 @@ var __createBinding;
                 if (result === null || typeof result !== "object") throw new TypeError("Object expected");
                 if (_ = accept(result.get)) descriptor.get = _;
                 if (_ = accept(result.set)) descriptor.set = _;
-                if (_ = accept(result.init)) initializers.push(_);
+                if (_ = accept(result.init)) initializers.unshift(_);
             }
             else if (_ = accept(result)) {
-                if (kind === "field") initializers.push(_);
+                if (kind === "field") initializers.unshift(_);
                 else descriptor[key] = _;
             }
         }
@@ -44702,10 +44702,10 @@ var __createBinding;
                 if (result === null || typeof result !== "object") throw new TypeError("Object expected");
                 if (_ = accept(result.get)) descriptor.get = _;
                 if (_ = accept(result.set)) descriptor.set = _;
-                if (_ = accept(result.init)) initializers.push(_);
+                if (_ = accept(result.init)) initializers.unshift(_);
             }
             else if (_ = accept(result)) {
-                if (kind === "field") initializers.push(_);
+                if (kind === "field") initializers.unshift(_);
                 else descriptor[key] = _;
             }
         }
