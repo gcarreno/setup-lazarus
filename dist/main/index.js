@@ -1073,7 +1073,7 @@ class Packages {
                     // Clean up, no need for the file to lay around any more
                     yield (0, exec_1.exec)(`rm ${pkgFile}`);
                     for (const fpkg of pkg.Packages) {
-                        const pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir, fpkg.RelativeFilePath.replace(/ /gi, '\ '), fpkg.PackageFile);
+                        const pkgLPKFile = path.join(pkgFolder, pkg.PackageBaseDir.replace(/ /gi, '\ '), fpkg.RelativeFilePath.replace(/ /gi, '\ '), fpkg.PackageFile.replace(/ /gi, '\ '));
                         switch (fpkg.PackageType) {
                             case 0:
                             case 1:

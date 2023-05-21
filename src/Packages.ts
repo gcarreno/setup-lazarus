@@ -68,9 +68,9 @@ export class Packages {
 
                     const pkgLPKFile = path.join(
                         pkgFolder,
-                        pkg.PackageBaseDir,
+                        pkg.PackageBaseDir.replace(/ /gi, '\ '),
                         fpkg.RelativeFilePath.replace(/ /gi, '\ '),
-                        fpkg.PackageFile
+                        fpkg.PackageFile.replace(/ /gi, '\ ')
                     );
 
                     switch (fpkg.PackageType) {
