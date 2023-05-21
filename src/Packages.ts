@@ -62,14 +62,6 @@ export class Packages {
 
                 core.info(`installPackage -- Unzipped to "${pkgFolder}/${pkg.PackageBaseDir}"`);
 
-                //REMOVE
-                core.info(`installPackage -- Listing "${pkgFolder}"`);
-                await exec(`ls -alF ${pkgFolder}`);
-                
-                core.info(`installPackage -- Listing "${pkgFolder}/${pkg.PackageBaseDir}"`);
-                await exec(`ls -alF ${pkgFolder}/${pkg.PackageBaseDir}`);
-                //REMOVE
-                
                 // Clean up, no need for the file to lay around any more
                 await exec(`rm ${pkgFile}`);
 
