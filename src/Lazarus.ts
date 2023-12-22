@@ -8,10 +8,11 @@ import * as fs from 'fs';
 
 import { Cache } from './Cache';
 
-const StableVersion = '2.2.6';
+const StableVersion = '3.0';
 
 const pkgs: object = {
     "win32": {
+        "v3_0"    : "lazarus-3.0-fpc-3.2.2-win32.exe",
         "v2_2_6"  : "lazarus-2.2.6-fpc-3.2.2-win32.exe",
         "v2_2_4"  : "lazarus-2.2.4-fpc-3.2.2-win32.exe",
         "v2_2_2"  : "lazarus-2.2.2-fpc-3.2.2-win32.exe",
@@ -40,6 +41,7 @@ const pkgs: object = {
         "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win32.exe"
     },
     "win64": {
+        "v3_0"    : "lazarus-3.0-fpc-3.2.2-win64.exe",
         "v2_2_6"  : "lazarus-2.2.6-fpc-3.2.2-win64.exe",
         "v2_2_4"  : "lazarus-2.2.4-fpc-3.2.2-win64.exe",
         "v2_2_2"  : "lazarus-2.2.2-fpc-3.2.2-win64.exe",
@@ -68,6 +70,11 @@ const pkgs: object = {
         "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win64.exe"
     },
     "linux": {
+        "v3_0":{
+            "laz": "lazarus-project_3.0.0-0_amd64.deb",
+            "fpc": "fpc-laz_3.2.2-210709_amd64.deb",
+            "fpcsrc": "fpc-src_3.2.2-210709_amd64.deb"
+        },
         "v2_2_6":{
             "laz": "lazarus-project_2.2.6-0_amd64.deb",
             "fpc": "fpc-laz_3.2.2-210709_amd64.deb",
@@ -200,6 +207,11 @@ const pkgs: object = {
         }
     },
     "darwin": {
+        "v3_0":{
+            "laz": "Lazarus-3.0-0-x86_64-macosx.pkg",
+            "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
+            "fpcsrc": "fpc-src-3.2.2-20210709-macosx.dmg"
+        },
         "v2_2_6":{
             "laz": "Lazarus-2.2.6-0-x86_64-macosx.pkg",
             "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
@@ -305,6 +317,7 @@ export class Lazarus{
                 this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
                 await this._downloadLazarus();
                 break;
+            case '3.0':
             case '2.2.6':
             case '2.2.4':
             case '2.2.2':
@@ -366,7 +379,7 @@ export class Lazarus{
                         downloadPath_WIN = path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`);
                         core.info(`_downloadLazarus - Using cache restored into ${downloadPath_WIN}`);
                     } else {
-                    
+
                         // Perform the download
                         downloadPath_WIN = await tc.downloadTool(downloadURL, path.join(this._getTempDirectory(), `lazarus-${this._LazarusVersion}.exe`));
                         core.info(`_downloadLazarus - Downloaded into ${downloadPath_WIN}`);
