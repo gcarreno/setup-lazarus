@@ -17,7 +17,8 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 Possible values:
 
 * `dist` - Lazarus package that comes with the Ubuntu dist you chose on `runs-on` and for Windows the latest stable
-* `stable` - Installs the latest stable version: 2.2.6
+* `stable` - Installs the latest stable version: 3.0
+* `3.0`    - comes with `FPC v3.2.2`
 * `2.2.6`  - comes with `FPC v3.2.2`
 * `2.2.4`  - comes with `FPC v3.2.2`
 * `2.2.2`  - comes with `FPC v3.2.2`
@@ -92,7 +93,7 @@ Unfortunately there are some restrictions:
 
 ```yaml
 steps:
-- uses: actions/checkout@v3
+- uses: actions/checkout@v4
 - uses: gcarreno/setup-lazarus@v3
   with:
     lazarus-version: "stable"
@@ -125,7 +126,7 @@ jobs:
         lazarus-versions: [dist, stable, 2.2.0, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Install Lazarus
       uses: gcarreno/setup-lazarus@v3
       with:
