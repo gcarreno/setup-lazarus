@@ -208,7 +208,7 @@ const pkgs: object = {
     },
     "darwin": {
         "v3_0":{
-            "laz": "Lazarus-3.0-0-x86_64-macosx.pkg",
+            "laz": "Lazarus-3.0-macosx-x86_64.pkg",
             "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
             "fpcsrc": "fpc-src-3.2.2-20210709-macosx.dmg"
         },
