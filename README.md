@@ -12,7 +12,7 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 >
 > This is due to the fact that `libqt5pas` is outdated and does not support the new code delivered by Lazarus 3.0.
 >
-> This is a problem related to the Ubuntu distributions repositories and the version of `libqt5pas` they carry, used by the GitHub runners.
+> This is a problem related to the Ubuntu distribution's repositories and the version of `libqt5pas` they carry, used by the GitHub runners.
 >
 > According to the maintainer of said `libqt5pas`, in [this answer](https://forum.lazarus.freepascal.org/index.php/topic,65619.msg500216.html#msg500216), one solution is to have the workflow script download and install a newer version.
 >
