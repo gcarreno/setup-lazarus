@@ -83,7 +83,7 @@ This is a boolean input and will use cache if set to `true`.
 
 > At this moment, there's an issue with the retrieved install executables for Windows.
 > I'm trying to get to the bottom of why, but it's going to take some time.
-> Caching is now off ny default for Windows until I can solve this issue!
+> Caching is now off by default for Windows until I can solve this issue!
 
 
 ## Platforms
