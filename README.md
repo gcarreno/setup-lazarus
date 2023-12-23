@@ -8,7 +8,7 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 ## VERY IMPORTANT NOTICE
 
-> The combination of `stable`/`v3.0` and `ubuntu-latest`/`ubuntu-22.01` is going to fail.
+> The combination of `stable`/`v3.0` and `ubuntu-latest`/`ubuntu-22.04` is going to fail.
 >
 > This is due to the fact that `libqt5pas` is outdated and does not support the new code delivered by Lazarus 3.0.
 >
