@@ -8,10 +8,11 @@ import * as fs from 'fs';
 
 import { Cache } from './Cache';
 
-const StableVersion = '3.0';
+const StableVersion = '3.2';
 
 const pkgs: object = {
     "win32": {
+        "v3_2"    : "lazarus-3.2-fpc-3.2.2-win32.exe",
         "v3_0"    : "lazarus-3.0-fpc-3.2.2-win32.exe",
         "v2_2_6"  : "lazarus-2.2.6-fpc-3.2.2-win32.exe",
         "v2_2_4"  : "lazarus-2.2.4-fpc-3.2.2-win32.exe",
@@ -41,6 +42,7 @@ const pkgs: object = {
         "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win32.exe"
     },
     "win64": {
+        "v3_2"    : "lazarus-3.2-fpc-3.2.2-win64.exe",
         "v3_0"    : "lazarus-3.0-fpc-3.2.2-win64.exe",
         "v2_2_6"  : "lazarus-2.2.6-fpc-3.2.2-win64.exe",
         "v2_2_4"  : "lazarus-2.2.4-fpc-3.2.2-win64.exe",
@@ -70,6 +72,11 @@ const pkgs: object = {
         "v1_0_12" : "lazarus-1.0.12-fpc-2.6.2-win64.exe"
     },
     "linux": {
+        "v3_2":{
+            "laz": "lazarus-project_3.2.0-0_amd64.deb",
+            "fpc": "fpc-laz_3.2.2-210709_amd64.deb",
+            "fpcsrc": "fpc-src_3.2.2-210709_amd64.deb"
+        },
         "v3_0":{
             "laz": "lazarus-project_3.0.0-0_amd64.deb",
             "fpc": "fpc-laz_3.2.2-210709_amd64.deb",
@@ -207,6 +214,11 @@ const pkgs: object = {
         }
     },
     "darwin": {
+        "v3_2":{
+            "laz": "Lazarus-3.2-macosx-x86_64.pkg",
+            "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
+            "fpcsrc": "fpc-src-3.2.2-20210709-macosx.dmg"
+        },
         "v3_0":{
             "laz": "Lazarus-3.0-macosx-x86_64.pkg",
             "fpc": "fpc-3.2.2.intelarm64-macosx.dmg",
@@ -317,6 +329,7 @@ export class Lazarus{
                 this._Cache.Key = this._LazarusVersion + '-' + this._Arch + '-' + this._Platform;
                 await this._downloadLazarus();
                 break;
+            case '3.2':
             case '3.0':
             case '2.2.6':
             case '2.2.4':
