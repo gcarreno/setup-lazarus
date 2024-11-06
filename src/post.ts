@@ -1,4 +1,3 @@
-import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 
 import { Cache } from './Cache';

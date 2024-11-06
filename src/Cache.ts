@@ -16,7 +16,7 @@ export class Cache {
         this._key = Value;
     }
 
-    constructor (WithCache: boolean) {
+    constructor(WithCache: boolean) {
         let tempDirectory = process.env['RUNNER_TEMP'] || '';
         ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
 
@@ -49,7 +49,7 @@ export class Cache {
                 let key = process.env['SAVE_CACHE_KEY'] || '';
                 let dir = process.env['SAVE_CACHE_DIR'] || '';
 
-                if (key !='' && dir != '') {
+                if (key != '' && dir != '') {
                     core.info(`Cache.save -- Key: ${key} dir: ${dir}`);
                     await cache.saveCache([dir], key);
                 } else {

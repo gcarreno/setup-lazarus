@@ -8,18 +8,18 @@ import { ok } from 'assert';
 
 export class Packages {
     private _Platform: string = os.platform();
-    private _LazarusVersion: string;
+    // private _LazarusVersion: string;
     private _BaseURL: string;
     private _ParamJSON: string;
     private _Items: PackageData[] = new Array<PackageData>();
 
     constructor(LazarusVersion, BaseURL, ParamJSON: string) {
-        this._LazarusVersion = LazarusVersion;
+        // this._LazarusVersion = LazarusVersion;
         this._BaseURL = BaseURL;
         this._ParamJSON = ParamJSON;
     }
 
-    async installPackages(includePackages:string[]) {
+    async installPackages(includePackages: string[]) {
         core.info(`Requested Lazarus packages:`);
         core.info(includePackages.join(', '));
 
@@ -224,7 +224,7 @@ export class Packages {
         const tempDirectory = process.env['RUNNER_TEMP'] || ''
         ok(tempDirectory, 'Expected RUNNER_TEMP to be defined')
         return tempDirectory
-     }
+    }
 }
 
 class PackageData {
