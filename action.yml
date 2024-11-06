@@ -17,10 +17,10 @@ inputs:
   with-cache:
     description: 'Use cache for installer files'
     required: false
-    default: true
+    default: "false"
 
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/main/index.js'
   post: 'dist/post/index.js'
 
