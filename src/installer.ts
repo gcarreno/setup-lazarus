@@ -1,34 +1,53 @@
 import * as core from "@actions/core";
-import * as laz from "./lazarus";
+import * as lazarus from "./lazarus";
 import * as pkgs from "./packages";
 
-const RepoBaseURL = "https://packages.lazarus-ide.org";
-const ParamJSON = "packagelist.json";
+const REPO_BASE_URL = "https://packages.lazarus-ide.org";
+const PACKAGE_LIST_JSON = "packagelist.json";
 
 export class Installer {
-  private _Lazarus: laz.Lazarus;
-  private _IncludePackages: string[];
-  private _Packages: pkgs.Packages;
+  private lazarus: lazarus.Lazarus;
+  private packages: pkgs.Packages;
+  private packageList: string[];
 
   constructor(
-    LazarusVerzion: string,
-    PackageList: string[],
-    WithCache: boolean
+    lazarusVersion: string,
+    packageList: string[],
+    useCache: boolean
   ) {
-    this._Lazarus = new laz.Lazarus(LazarusVerzion, WithCache);
-    this._IncludePackages = PackageList;
-    this._Packages = new pkgs.Packages(LazarusVerzion, RepoBaseURL, ParamJSON);
+    this.lazarus = new lazarus.Lazarus(lazarusVersion, useCache);
+    this.packageList = packageList;
+    this.packages = new pkgs.Packages(
+      lazarusVersion,
+      REPO_BASE_URL,
+      PACKAGE_LIST_JSON
+    );
   }
 
   async install(): Promise<void> {
-    core.startGroup("Installing Lazarus");
-    await this._Lazarus.installLazarus();
-    core.endGroup();
+    try {
+      core.info("Starting the installation process.");
 
-    if (this._IncludePackages.length > 0) {
-      core.startGroup("Installing Packages");
-      await this._Packages.installPackages(this._IncludePackages);
+      core.startGroup("Installing Lazarus IDE");
+      await this.lazarus.installLazarus();
+      
       core.endGroup();
+      core.info("Lazarus installation completed.");
+
+      if (this.packageList.length > 0) {
+        core.startGroup("Installing Additional Packages");
+        core.info(`Packages to install: ${this.packageList.join(", ")}`);
+        await this.packages.installPackages(this.packageList);
+        core.endGroup();
+        core.info("Package installation completed.");
+      } else {
+        core.info("No additional packages specified for installation.");
+      }
+    } catch (error) {
+      core.setFailed(
+        `Installation process failed: ${(error as Error).message}`
+      );
+      throw error;
     }
   }
 }
