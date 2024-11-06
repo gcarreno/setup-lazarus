@@ -4,63 +4,83 @@ import { ok } from "assert";
 import * as path from "path";
 
 export class Cache {
-  private _withCache: boolean;
-  private _key: string = "";
-  private _dir;
+  private withCache: boolean;
+  private cacheKey: string = "";
+  private cacheDir;
 
-  get Key(): string {
-    return this._key;
+  get key(): string {
+    return this.cacheKey;
   }
 
-  set Key(Value: string) {
-    this._key = Value;
+  set key(value: string) {
+    this.cacheKey = value;
   }
 
-  constructor(WithCache: boolean) {
-    let tempDirectory = process.env["RUNNER_TEMP"] || "";
-    ok(tempDirectory, "Expected RUNNER_TEMP to be defined");
+  constructor(enableCache: boolean) {
+    const tempDir = process.env["RUNNER_TEMP"] || "";
+    ok(tempDir, "Expected RUNNER_TEMP to be defined");
 
-    this._withCache = WithCache;
-    this._dir = path.join(tempDirectory, "installers");
+    this.withCache = enableCache;
+    this.cacheDir = path.join(tempDir, "installers");
   }
 
   async restore(): Promise<boolean> {
-    if (this._withCache === true) {
-      core.info(`Cache.restore -- Key: ${this._key} dir: ${this._dir}`);
-      let cacheLoaded =
-        (await cache.restoreCache([this._dir], this._key)) != null;
-      if (!cacheLoaded) {
-        core.exportVariable("SAVE_CACHE_DIR", this._dir);
-        core.exportVariable("SAVE_CACHE_KEY", this._key);
-        core.info("Cache.restore -- no hit");
-      } else {
-        core.info("Cache.restore -- hit");
-      }
-
-      return cacheLoaded;
-    } else {
+    if (!this.withCache) {
       core.info("Cache.restore -- Cache is disabled");
+      return false;
+    }
+
+    core.info(
+      `Cache.restore -- Attempting to restore with Key: ${this.cacheKey}, Directory: ${this.cacheDir}`
+    );
+    try {
+      const cacheRestored = await cache.restoreCache(
+        [this.cacheDir],
+        this.cacheKey
+      );
+      if (cacheRestored) {
+        core.info("Cache.restore -- Cache hit, cache restored successfully.");
+      } else {
+        core.info("Cache.restore -- Cache miss, no cache found.");
+        core.exportVariable("SAVE_CACHE_DIR", this.cacheDir);
+        core.exportVariable("SAVE_CACHE_KEY", this.cacheKey);
+      }
+      return cacheRestored !== null;
+    } catch (error) {
+      core.error(
+        `Cache.restore -- Error during cache restoration: ${
+          (error as Error).message
+        }`
+      );
       return false;
     }
   }
 
   async save(): Promise<void> {
-    if (this._withCache === true) {
-      try {
-        let key = process.env["SAVE_CACHE_KEY"] || "";
-        let dir = process.env["SAVE_CACHE_DIR"] || "";
+    if (!this.withCache) {
+      core.info("Cache.save -- Caching is disabled.");
+      return;
+    }
+    
+    const key = process.env["SAVE_CACHE_KEY"] || "";
+    const dir = process.env["SAVE_CACHE_DIR"] || "";
 
-        if (key != "" && dir != "") {
-          core.info(`Cache.save -- Key: ${key} dir: ${dir}`);
-          await cache.saveCache([dir], key);
-        } else {
-          core.info("Cache.save -- nothing to save");
-        }
+    if (key && dir) {
+      core.info(
+        `Cache.save -- Saving cache with Key: ${key}, Directory: ${dir}`
+      );
+      try {
+        await cache.saveCache([dir], key);
+        core.info("Cache.save -- Cache saved successfully.");
       } catch (error) {
-        core.info((error as Error).message);
+        core.warning(
+          `Cache.save -- Failed to save cache: ${(error as Error).message}`
+        );
       }
     } else {
-      core.info("Cache.save -- Cache is disabled");
+      core.info(
+        "Cache.save -- No cache key or directory specified, skipping cache save."
+      );
     }
   }
 }

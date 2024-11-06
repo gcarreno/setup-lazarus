@@ -259,7 +259,7 @@ export class Lazarus {
   constructor(LazarusVersion: string, WithCache: boolean) {
     this._LazarusVersion = LazarusVersion;
     this._Cache = new Cache(WithCache);
-    this._Cache.Key =
+    this._Cache.key =
       this._LazarusVersion + "-" + this._Arch + "-" + this._Platform;
   }
 
@@ -313,7 +313,7 @@ export class Lazarus {
             break;
           case "win32":
             this._LazarusVersion = StableVersion;
-            this._Cache.Key =
+            this._Cache.key =
               this._LazarusVersion + "-" + this._Arch + "-" + this._Platform;
             await this._downloadLazarus();
             break;
@@ -326,7 +326,7 @@ export class Lazarus {
       // Special case named version that installs the latest stable version
       case "stable":
         this._LazarusVersion = StableVersion;
-        this._Cache.Key =
+        this._Cache.key =
           this._LazarusVersion + "-" + this._Arch + "-" + this._Platform;
         await this._downloadLazarus();
         break;
