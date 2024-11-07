@@ -21,15 +21,6 @@
     "url": "https://github.com/gcarreno/setup-lazarus/issues"
   },
   "homepage": "https://github.com/gcarreno/setup-lazarus#readme",
-  "dependencies": {
-    "@actions/cache": "^3.3.0",
-    "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.0.4",
-    "@actions/github": "^6.0.0",
-    "@actions/http-client": "^2.2.3",
-    "@actions/io": "^1.0.2",
-    "@actions/tool-cache": "^2.0.1"
-  },
   "devDependencies": {
     "@vercel/ncc": "^0.38.2",
     "typescript": "^5.6.3"
