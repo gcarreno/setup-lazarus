@@ -16,7 +16,7 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 >
 > According to the maintainer of said `libqt5pas`, in [this answer](https://forum.lazarus.freepascal.org/index.php/topic,65619.msg500216.html#msg500216), one solution is to have the workflow script download and install a newer version.
 >
-> The newer version can be obtained here: https://github.com/davidbannon/libqt5pas/releases
+> The newer version can be obtained here: <https://github.com/davidbannon/libqt5pas/releases>
 >
 > Thank you for your patience, continued support and please accept my deepest apologies for this inconvenience.
 
@@ -30,36 +30,39 @@ Set up your GitHub Actions workflow with a specific version of Lazarus
 
 Possible values:
 
-* `dist` - Lazarus package that comes with the Ubuntu dist you chose on `runs-on` and for Windows the latest stable
-* `stable` - Installs the latest stable version: 3.0
-* `3.0`    - comes with `FPC v3.2.2`
-* `2.2.6`  - comes with `FPC v3.2.2`
-* `2.2.4`  - comes with `FPC v3.2.2`
-* `2.2.2`  - comes with `FPC v3.2.2`
-* `2.2.0`  - comes with `FPC v3.2.2`
-* `2.0.12` - comes with `FPC v3.2.0`
-* `2.0.10` - comes with `FPC v3.2.0`
-* `2.0.8`  - comes with `FPC v3.0.4`
-* `2.0.6`  - comes with `FPC v3.0.4`
-* `2.0.4`  - comes with `FPC v3.0.4`
-* `2.0.2`  - comes with `FPC v3.0.4`
-* `2.0.0`  - comes with `FPC v3.0.4`
-* `1.8.4`  - comes with `FPC v3.0.4`
-* `1.8.2`  - comes with `FPC v3.0.4`
-* `1.8.0`  - comes with `FPC v3.0.4`
-* `1.6.4`  - comes with `FPC v3.0.2`
-* `1.6.2`  - comes with `FPC v3.0.0`
-* `1.6`    - comes with `FPC v3.0.0`
-* `1.4.4`  - comes with `FPC v2.6.4`
-* `1.4.2`  - comes with `FPC v2.6.4`
-* `1.4`    - comes with `FPC v2.6.4`
-* `1.2.6`  - comes with `FPC v2.6.4`
-* `1.2.4`  - comes with `FPC v2.6.4`
-* `1.2.2`  - comes with `FPC v2.6.4`
-* `1.2`    - comes with `FPC v2.6.2`
-* `1.2`    - comes with `FPC v2.6.2`
-* `1.0.14` - comes with `FPC v2.6.2`
-* `1.0.12` - comes with `FPC v2.6.2`
+- `dist` - Lazarus package that comes with the Ubuntu dist you chose on `runs-on` and for Windows the latest stable
+- `stable` - Installs the latest stable version: 3.6
+- `3.6` - comes with `FPC v3.2.2`
+- `3.2` - comes with `FPC v3.2.2`
+- `3.4` - comes with `FPC v3.2.2`
+- `3.0` - comes with `FPC v3.2.2`
+- `2.2.6` - comes with `FPC v3.2.2`
+- `2.2.4` - comes with `FPC v3.2.2`
+- `2.2.2` - comes with `FPC v3.2.2`
+- `2.2.0` - comes with `FPC v3.2.2`
+- `2.0.12` - comes with `FPC v3.2.0`
+- `2.0.10` - comes with `FPC v3.2.0`
+- `2.0.8` - comes with `FPC v3.0.4`
+- `2.0.6` - comes with `FPC v3.0.4`
+- `2.0.4` - comes with `FPC v3.0.4`
+- `2.0.2` - comes with `FPC v3.0.4`
+- `2.0.0` - comes with `FPC v3.0.4`
+- `1.8.4` - comes with `FPC v3.0.4`
+- `1.8.2` - comes with `FPC v3.0.4`
+- `1.8.0` - comes with `FPC v3.0.4`
+- `1.6.4` - comes with `FPC v3.0.2`
+- `1.6.2` - comes with `FPC v3.0.0`
+- `1.6` - comes with `FPC v3.0.0`
+- `1.4.4` - comes with `FPC v2.6.4`
+- `1.4.2` - comes with `FPC v2.6.4`
+- `1.4` - comes with `FPC v2.6.4`
+- `1.2.6` - comes with `FPC v2.6.4`
+- `1.2.4` - comes with `FPC v2.6.4`
+- `1.2.2` - comes with `FPC v2.6.4`
+- `1.2` - comes with `FPC v2.6.2`
+- `1.2` - comes with `FPC v2.6.2`
+- `1.0.14` - comes with `FPC v2.6.2`
+- `1.0.12` - comes with `FPC v2.6.2`
 
 ### include-packages
 
@@ -85,7 +88,6 @@ This is a boolean input and will use cache if set to `true`.
 > I'm trying to get to the bottom of why, but it's going to take some time.
 > Caching is now off by default for Windows until I can solve this issue!
 
-
 ## Platforms
 
 At the moment this action only supports:
@@ -107,14 +109,14 @@ Unfortunately there are some restrictions:
 
 ```yaml
 steps:
-- uses: actions/checkout@v4
-- uses: gcarreno/setup-lazarus@v3
-  with:
-    lazarus-version: "stable"
-    include-packages: "Synapse 40.1"
-    with-cache: true
-- run: lazbuild YourTestProject.lpi
-- run: YourTestProject
+  - uses: actions/checkout@v4
+  - uses: gcarreno/setup-lazarus@v3
+    with:
+      lazarus-version: "stable"
+      include-packages: "Synapse 40.1"
+      with-cache: true
+  - run: lazbuild YourTestProject.lpi
+  - run: YourTestProject
 ```
 
 ## Matrix example usage
@@ -126,7 +128,7 @@ on:
   pull_request:
   push:
     paths-ignore:
-    - "README.md"
+      - "README.md"
     branches:
       - master
       - releases/*
@@ -136,25 +138,25 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [windows-latest,ubuntu-latest,macos-latest]
+        operating-system: [windows-latest, ubuntu-latest, macos-latest]
         lazarus-versions: [dist, stable, 2.2.0, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v4
-    - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3
-      with:
-        lazarus-version: ${{ matrix.lazarus-versions }}
-        include-packages: "Synapse 40.1"
-        with-cache: true
-    - name: Build the Main Application
-      if: ${{ matrix.operating-system != 'macos-latest' }}
-      run: lazbuild -B "src/lazaruswithgithubactions.lpi"
-    - name: Build the Main Application (macOS)
-      if: ${{ matrix.operating-system == 'macos-latest' }}
-      run: lazbuild -B --ws=cocoa "src/lazaruswithgithubactions.lpi"
-    - name: Build the Unit Tests Application
-      run: lazbuild -B "tests/testconsoleapplication.lpi"
-    - name: Run the Unit Tests Application
-      run: bin/testconsoleapplication "--all" "--format=plain"
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Install Lazarus
+        uses: gcarreno/setup-lazarus@v3
+        with:
+          lazarus-version: ${{ matrix.lazarus-versions }}
+          include-packages: "Synapse 40.1"
+          with-cache: true
+      - name: Build the Main Application
+        if: ${{ matrix.operating-system != 'macos-latest' }}
+        run: lazbuild -B "src/lazaruswithgithubactions.lpi"
+      - name: Build the Main Application (macOS)
+        if: ${{ matrix.operating-system == 'macos-latest' }}
+        run: lazbuild -B --ws=cocoa "src/lazaruswithgithubactions.lpi"
+      - name: Build the Unit Tests Application
+        run: lazbuild -B "tests/testconsoleapplication.lpi"
+      - name: Run the Unit Tests Application
+        run: bin/testconsoleapplication "--all" "--format=plain"
 ```
