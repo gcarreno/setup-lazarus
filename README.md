@@ -6,84 +6,75 @@
 
 Set up your GitHub Actions workflow with a specific version of Lazarus
 
-## VERY IMPORTANT NOTICE
+> [!IMPORTANT]
+> When building with the `Qt5` widgetset, using the combination of `stable` or
+> `v3.0` with `ubuntu-latest` or `ubuntu-22.04` may fail. This issue is due to an
+> outdated `libqt5pas` library that doesn't support Lazarus 3.0 updates. A
+> solution is to download a newer version of `libqt5pas` from the link below:
+> <https://github.com/davidbannon/libqt5pas/releases>.
 
-> When build for the `Qt5` widgetset, the combination of `stable`/`v3.0` and `ubuntu-latest`/`ubuntu-22.04` is going to fail.
->
-> This is due to the fact that `libqt5pas` is outdated and does not support the new code delivered by Lazarus 3.0.
->
-> This is a problem related to the Ubuntu distribution's repositories and the version of `libqt5pas` they carry, used by the GitHub runners.
->
-> According to the maintainer of said `libqt5pas`, in [this answer](https://forum.lazarus.freepascal.org/index.php/topic,65619.msg500216.html#msg500216), one solution is to have the workflow script download and install a newer version.
->
-> The newer version can be obtained here: <https://github.com/davidbannon/libqt5pas/releases>
->
-> Thank you for your patience, continued support and please accept my deepest apologies for this inconvenience.
+We apologize for the inconvenience and appreciate your patience.
 
 ## Inputs
 
-### lazarus-version
-
-**REQUIRED** Lazarus version.
-
-**DEFAULT** dist.
+### lazarus-version (required, default: 'dist')
 
 Possible values:
 
-- `dist` - Lazarus package that comes with the Ubuntu dist you chose on `runs-on` and for Windows the latest stable
-- `stable` - Installs the latest stable version: 3.6
-- `3.6` - comes with `FPC v3.2.2`
-- `3.2` - comes with `FPC v3.2.2`
-- `3.4` - comes with `FPC v3.2.2`
-- `3.0` - comes with `FPC v3.2.2`
-- `2.2.6` - comes with `FPC v3.2.2`
-- `2.2.4` - comes with `FPC v3.2.2`
-- `2.2.2` - comes with `FPC v3.2.2`
-- `2.2.0` - comes with `FPC v3.2.2`
-- `2.0.12` - comes with `FPC v3.2.0`
-- `2.0.10` - comes with `FPC v3.2.0`
-- `2.0.8` - comes with `FPC v3.0.4`
-- `2.0.6` - comes with `FPC v3.0.4`
-- `2.0.4` - comes with `FPC v3.0.4`
-- `2.0.2` - comes with `FPC v3.0.4`
-- `2.0.0` - comes with `FPC v3.0.4`
-- `1.8.4` - comes with `FPC v3.0.4`
-- `1.8.2` - comes with `FPC v3.0.4`
-- `1.8.0` - comes with `FPC v3.0.4`
-- `1.6.4` - comes with `FPC v3.0.2`
-- `1.6.2` - comes with `FPC v3.0.0`
-- `1.6` - comes with `FPC v3.0.0`
-- `1.4.4` - comes with `FPC v2.6.4`
-- `1.4.2` - comes with `FPC v2.6.4`
-- `1.4` - comes with `FPC v2.6.4`
-- `1.2.6` - comes with `FPC v2.6.4`
-- `1.2.4` - comes with `FPC v2.6.4`
-- `1.2.2` - comes with `FPC v2.6.4`
-- `1.2` - comes with `FPC v2.6.2`
-- `1.2` - comes with `FPC v2.6.2`
-- `1.0.14` - comes with `FPC v2.6.2`
-- `1.0.12` - comes with `FPC v2.6.2`
+| Lazarus Version | FPC Version | Description   |
+| --------------- | ----------- | ------------- |
+| dist            |             | Latest stable |
+| stable          |             | Lazarus 3.6   |
+| 3.6             | 3.2.2       |               |
+| 3.2             | 3.2.2       |               |
+| 3.4             | 3.2.2       |               |
+| 3.0             | 3.2.2       |               |
+| 2.2.6           | 3.2.2       |               |
+| 2.2.4           | 3.2.2       |               |
+| 2.2.2           | 3.2.2       |               |
+| 2.2.0           | 3.2.2       |               |
+| 2.0.12          | 3.2.0       |               |
+| 2.0.10          | 3.2.0       |               |
+| 2.0.8           | 3.0.4       |               |
+| 2.0.6           | 3.0.4       |               |
+| 2.0.4           | 3.0.4       |               |
+| 2.0.2           | 3.0.4       |               |
+| 2.0.0           | 3.0.4       |               |
+| 1.8.4           | 3.0.4       |               |
+| 1.8.2           | 3.0.4       |               |
+| 1.8.0           | 3.0.4       |               |
+| 1.6.4           | 3.0.2       |               |
+| 1.6.2           | 3.0.0       |               |
+| 1.6             | 3.0.0       |               |
+| 1.4.4           | 2.6.4       |               |
+| 1.4.2           | 2.6.4       |               |
+| 1.4             | 2.6.4       |               |
+| 1.2.6           | 2.6.4       |               |
+| 1.2.4           | 2.6.4       |               |
+| 1.2.2           | 2.6.4       |               |
+| 1.2             | 2.6.2       |               |
+| 1.2             | 2.6.2       |               |
+| 1.0.14          | 2.6.2       |               |
+| 1.0.12          | 2.6.2       |               |
+
+> [!NOTE]
+> 'dist' is the Lazarus package that comes with the Ubuntu dist you
+> chose on `runs-on`, while for Windows it's the latest stable (3.6).
 
 ### include-packages
 
-**OPTIONAL** List of packages to install.
+List of packages to install. You can ask the action to fetch packages and
+install them after Lazarus is installed. Format is a string with the packages
+separated by comma: "Package 1, Package 2, Package 3". The list of packages can
+be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
 
-You can ask the action to fetch packages and install them after Lazarus is installed.
+### with-cache (default: false)
 
-Format is a string with the packages separated by comma: "Package 1, Package 2, Package 3".
-
-The list of packages can be searched at the [Lazarus IDE repository](https://packages.lazarus-ide.org).
-
-### with-cache
-
-**OPTIONAL** Use cached installer files.
-
-**DEFAULT** true.
+Use cached installer files.
 
 This is a boolean input and will use cache if set to `true`.
 
-**NOTE**
-
+> [!NOTE]
 > At this moment, there's an issue with the retrieved install executables for Windows.
 > I'm trying to get to the bottom of why, but it's going to take some time.
 > Caching is now off by default for Windows until I can solve this issue!
@@ -92,9 +83,9 @@ This is a boolean input and will use cache if set to `true`.
 
 At the moment this action only supports:
 
-- Windows (platform=win32, arch=x64)
-- Linux (platform=linux, arch=x64)
-- macOS (platform=darwin, arch=x64)
+- Windows (win32-x64)
+- Linux (linux-x64)
+- macOS (darwin-x64)
 
 ### IMPORTANT
 
