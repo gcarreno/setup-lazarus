@@ -1,26 +1,25 @@
-name: 'Setup Lazarus environment'
+name: "Setup Lazarus environment"
 
-description: 'Setup a Lazarus environment adding it to the PATH'
+description: "Setup a Lazarus environment adding it to the PATH"
 
 branding:
-  icon: 'chevrons-right'
-  color: 'blue'
+  icon: "chevrons-right"
+  color: "blue"
 
 inputs:
   lazarus-version:
-    description: 'Version of Lazarus'
+    description: "Lazarus version"
     required: true
-    default: 'dist'
+    default: "dist"
   include-packages:
-    description: 'Include packages that the project needs'
+    description: "Include packages that the project needs"
     required: false
   with-cache:
-    description: 'Use cache for installer files'
+    description: "Use cache for installer files"
     required: false
     default: "false"
 
 runs:
-  using: 'node20'
-  main: 'dist/main/index.js'
-  post: 'dist/post/index.js'
-
+  using: "node20"
+  main: "dist/main/index.js"
+  post: "dist/post/index.js"
