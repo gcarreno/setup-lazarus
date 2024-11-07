@@ -27,10 +27,15 @@
   },
   "dependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0"
 =======
     "@actions/core": "^1.11.1"
 >>>>>>> 67d4a29 (build: add @actions/core dep)
+=======
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0"
+>>>>>>> ed9c274 (build: add @actions/github dep)
   }
 }
