@@ -101,13 +101,20 @@ export class Packages {
     for (const pkg of pkgsToInstall) {
       try {
         const pkgFile = await this.download(pkg.repositoryFileName);
+        core.debug(`pkgFile: ${pkgFile}`);
+        const tempDirectory = this.getTempDirectory();
+        core.debug(`tempDirectory: ${tempDirectory}`);
+        core.debug(`repoHash: ${pkg.repositoryFileHash}`);
         const pkgFolder = await this.extract(
           pkgFile,
-          path.join(this.getTempDirectory(), pkg.repositoryFileHash)
+          path.join(tempDirectory, pkg.repositoryFileHash)
         );
         core.info(`Unzipped to: "${pkgFolder}/${pkg.baseDir}"`);
+        core.debug(`Executing: rm -rf ${pkgFile}`);
         await exec(`rm -rf ${pkgFile}`);
+        core.debug(`Clearing directory ${pkgFolder}`);
         await this.clearDirectory(pkgFolder);
+        core.debug(`Installing lpk files: ${pkgFolder}`);
         await this.installLpkFiles(pkgFolder, pkg);
       } catch (error) {
         core.setFailed(`Installation failed: ${(error as Error).message}`);
