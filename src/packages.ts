@@ -5,6 +5,7 @@ import { exec } from "@actions/exec/lib/exec";
 import * as os from "os";
 import * as path from "path";
 import { ok } from "assert";
+import { promises as fs } from "fs";
 
 export class Packages {
   private platform: string = os.platform();
@@ -69,21 +70,25 @@ export class Packages {
     }
   }
 
-  private async getDependencies(pkg: PackageData): Promise<PackageData[]> {
-    const dependencies: PackageData[] = [];
+  private async getDependencies(
+    pkg: PackageData,
+    seenPkgs: Set<string> = new Set()
+  ): Promise<PackageData[]> {
+    if (seenPkgs.has(pkg.name)) return [];
+    seenPkgs.add(pkg.name);
 
+    const dependencies: PackageData[] = [];
     for (const file of pkg.packages) {
       const depNames = file.dependenciesStr.split(",").map((dep) => dep.trim());
-
       for (const depName of depNames) {
         const foundPkgs = this.packageData.filter(
           (p) => p.containsPackage(depName) && p.name !== pkg.name
         );
-
         for (const foundPkg of foundPkgs) {
-          const nestedDeps = await this.getDependencies(foundPkg);
-          dependencies.push(...nestedDeps);
-          dependencies.push(foundPkg);
+          dependencies.push(
+            foundPkg,
+            ...(await this.getDependencies(foundPkg, seenPkgs))
+          );
         }
       }
     }
@@ -101,7 +106,8 @@ export class Packages {
           path.join(this.getTempDirectory(), pkg.repositoryFileHash)
         );
         core.info(`Unzipped to: "${pkgFolder}/${pkg.baseDir}"`);
-        await exec(`rm ${pkgFile}`);
+        await exec(`rm -rf ${pkgFile}`);
+        await this.clearDirectory(pkgFolder);
         await this.installLpkFiles(pkgFolder, pkg);
       } catch (error) {
         core.setFailed(`Installation failed: ${(error as Error).message}`);
@@ -146,6 +152,22 @@ export class Packages {
     const downloadPath = path.join(this.getTempDirectory(), filename);
     core.info(`Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
     return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
+  }
+
+  private async clearDirectory(dirPath: string): Promise<void> {
+    if (
+      await fs
+        .access(dirPath)
+        .then(() => true)
+        .catch(() => false)
+    ) {
+      const files = await fs.readdir(dirPath);
+      await Promise.all(
+        files.map((file) => fs.unlink(path.join(dirPath, file)))
+      );
+    } else {
+      await fs.mkdir(dirPath);
+    }
   }
 
   private async getPackageList(repoURL: string): Promise<PackageData[]> {
