@@ -213,7 +213,7 @@ export class Packages {
   private getTempDirectory(): string {
     const tempDir = process.env["RUNNER_TEMP"] || "";
     ok(tempDir, "RUNNER_TEMP environment variable is not defined");
-    return tempDir;
+    return path.join(tempDir, `lazarus-${Date.now()}`);;
   }
 }
 
