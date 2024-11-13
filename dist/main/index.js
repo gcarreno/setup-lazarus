@@ -1120,9 +1120,11 @@ class Packages {
             if (key.startsWith("PackageData")) {
                 const pkgData = new PackageData();
                 Object.assign(pkgData, value);
+                pkgData.PackageBaseDir = pkgData.PackageBaseDir.replace(/\\/gi, "");
                 pkgData.packages = packageList[`PackageFiles${key.slice(11)}`].map((file) => {
                     const pkgFile = new PackageFile();
                     Object.assign(pkgFile, file);
+                    pkgFile.RelativeFilePath = pkgFile.RelativeFilePath.replace(/\\/gi, "");
                     return pkgFile;
                 });
                 result.push(pkgData);
