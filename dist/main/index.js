@@ -1006,58 +1006,58 @@ class Packages {
     }
     async installPackages(includePackages) {
         core.info(`Requested Lazarus packages: ${includePackages.join(", ")}`);
-        this.packageData = await this.getPackageList(`${this.baseUrl}/${this.jsonParam}`);
+        this.packageData = await this._getPackageList(`${this.baseUrl}/${this.jsonParam}`);
         core.info(`Fetched ${this.packageData.length} package items.`);
-        const pkgsToInstall = await this.resolveDependencies(includePackages);
+        const pkgsToInstall = await this._resolveDependencies(includePackages);
         core.info(`Installing packages: ${pkgsToInstall
-            .map((pkg) => pkg.displayName)
+            .map((pkg) => pkg.DisplayName)
             .join(", ")}`);
-        await this.installAllPackages(pkgsToInstall);
+        await this._installAllPackages(pkgsToInstall);
     }
-    async resolveDependencies(includePackages) {
+    async _resolveDependencies(includePackages) {
         const pkgsToInstall = [];
         const pkgsToInstallNames = new Set();
         for (const requestedPkg of includePackages) {
-            const matchedPackages = this.packageData.filter((pkg) => pkg.displayName === requestedPkg.trim());
+            const matchedPackages = this.packageData.filter((pkg) => pkg.DisplayName === requestedPkg.trim());
             for (const pkg of matchedPackages) {
-                const deps = await this.getDependencies(pkg);
-                deps.forEach((dep) => this.addPackageIfNeeded(dep, pkgsToInstall, pkgsToInstallNames));
-                this.addPackageIfNeeded(pkg, pkgsToInstall, pkgsToInstallNames);
+                const deps = await this._getDependencies(pkg);
+                deps.forEach((dep) => this._addPackageIfNeeded(dep, pkgsToInstall, pkgsToInstallNames));
+                this._addPackageIfNeeded(pkg, pkgsToInstall, pkgsToInstallNames);
             }
         }
         return pkgsToInstall;
     }
-    addPackageIfNeeded(pkg, pkgList, pkgNames) {
-        if (!pkgNames.has(pkg.displayName)) {
+    _addPackageIfNeeded(pkg, pkgList, pkgNames) {
+        if (!pkgNames.has(pkg.DisplayName)) {
             pkgList.push(pkg);
-            pkgNames.add(pkg.displayName);
+            pkgNames.add(pkg.DisplayName);
         }
     }
-    async getDependencies(pkg, seenPkgs = new Set()) {
-        if (seenPkgs.has(pkg.name))
+    async _getDependencies(pkg, seenPkgs = new Set()) {
+        if (seenPkgs.has(pkg.Name))
             return [];
-        seenPkgs.add(pkg.name);
+        seenPkgs.add(pkg.Name);
         const dependencies = [];
         for (const file of pkg.packages) {
-            const depNames = file.dependenciesStr.split(",").map((dep) => dep.trim());
+            const depNames = file.DependenciesAsString.split(",").map((dep) => dep.trim());
             for (const depName of depNames) {
-                const foundPkgs = this.packageData.filter((p) => p.containsPackage(depName) && p.name !== pkg.name);
+                const foundPkgs = this.packageData.filter((p) => p.containsPackage(depName) && p.Name !== pkg.Name);
                 for (const foundPkg of foundPkgs) {
-                    dependencies.push(foundPkg, ...(await this.getDependencies(foundPkg, seenPkgs)));
+                    dependencies.push(foundPkg, ...(await this._getDependencies(foundPkg, seenPkgs)));
                 }
             }
         }
         return dependencies;
     }
-    async installAllPackages(pkgsToInstall) {
+    async _installAllPackages(pkgsToInstall) {
         for (const pkg of pkgsToInstall) {
             try {
-                const pkgFile = await this.download(pkg.repositoryFileName);
-                const pkgFolder = await this.extract(pkgFile, path.join(this.getTempDirectory(), pkg.repositoryFileHash));
-                core.info(`Unzipped to: "${pkgFolder}/${pkg.baseDir}"`);
+                const pkgFile = await this._download(pkg.RepositoryFileName);
+                const pkgFolder = await this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
+                core.info(`Unzipped to: "${pkgFolder}/${pkg.PackageBaseDir}"`);
                 await (0, exec_1.exec)(`rm -rf ${pkgFile}`);
-                await this.clearDirectory(pkgFolder);
-                await this.installLpkFiles(pkgFolder, pkg);
+                await this._clearDirectory(pkgFolder);
+                await this._installLpkFiles(pkgFolder, pkg);
             }
             catch (error) {
                 core.setFailed(`Installation failed: ${error.message}`);
@@ -1065,28 +1065,28 @@ class Packages {
             }
         }
     }
-    async installLpkFiles(pkgFolder, pkg) {
+    async _installLpkFiles(pkgFolder, pkg) {
         for (const pkgFile of pkg.packages) {
-            const pkgPath = path.join(pkgFolder, pkg.baseDir, pkgFile.relativeFilePath, pkgFile.file);
-            const buildCommand = `lazbuild ${this.getPlatformFlags()} "${pkgPath}"`;
+            const pkgPath = path.join(pkgFolder, pkg.PackageBaseDir, pkgFile.RelativeFilePath, pkgFile.Name);
+            const buildCommand = `lazbuild ${this._getPlatformFlags()} "${pkgPath}"`;
             core.info(`Adding and compiling package: ${pkgPath}`);
             await (0, exec_1.exec)(buildCommand.replace("--add-package", "--add-package-link"), [], { ignoreReturnCode: true });
             await (0, exec_1.exec)(buildCommand);
         }
     }
-    getPlatformFlags() {
+    _getPlatformFlags() {
         return this.platform === "darwin" ? "--ws=cocoa" : "";
     }
-    async extract(file, dest) {
+    async _extract(file, dest) {
         core.info(`Extracting ${file} to ${dest}`);
         return tc.extractZip(file, dest);
     }
-    async download(filename) {
-        const downloadPath = path.join(this.getTempDirectory(), filename);
+    async _download(filename) {
+        const downloadPath = path.join(this._getTempDirectory(), filename);
         core.info(`Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
         return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
     }
-    async clearDirectory(dirPath) {
+    async _clearDirectory(dirPath) {
         if (await fs_1.promises
             .access(dirPath)
             .then(() => true)
@@ -1098,25 +1098,25 @@ class Packages {
             await fs_1.promises.mkdir(dirPath);
         }
     }
-    async getPackageList(repoURL) {
-        core.info(`Fetching package list from ${repoURL}`);
+    async _getPackageList(repoURL) {
+        core.info(`_getPackageList: Fetching package list from ${repoURL}`);
         try {
             const httpClient = new http.HttpClient();
             const response = await httpClient.get(repoURL);
             const responseBody = await response.readBody();
-            return this.parsePackageList(JSON.parse(responseBody));
+            return this._parsePackageList(JSON.parse(responseBody));
         }
         catch (error) {
             throw new Error(`Failed to get package list: ${error.message}`);
         }
     }
-    parsePackageList(packageList) {
+    _parsePackageList(packageList) {
         const result = [];
         Object.entries(packageList).forEach(([key, value]) => {
             if (key.startsWith("PackageData")) {
                 const pkgData = new PackageData();
                 Object.assign(pkgData, value);
-                pkgData.packages = packageList[`PackageFiles${key.slice(-1)}`].map((file) => {
+                pkgData.packages = packageList[`PackageFiles${key.slice(11)}`].map((file) => {
                     const pkgFile = new PackageFile();
                     Object.assign(pkgFile, file);
                     return pkgFile;
@@ -1126,7 +1126,7 @@ class Packages {
         });
         return result;
     }
-    getTempDirectory() {
+    _getTempDirectory() {
         const tempDir = process.env["RUNNER_TEMP"] || "";
         (0, assert_1.ok)(tempDir, "RUNNER_TEMP environment variable is not defined");
         return tempDir;
@@ -1135,38 +1135,40 @@ class Packages {
 exports.Packages = Packages;
 class PackageData {
     constructor() {
-        this.name = "";
-        this.displayName = "";
-        this.repositoryFileName = "";
-        this.repositoryFileHash = "";
-        this.pkgBaseDir = "";
+        this.Name = "";
+        this.DisplayName = "";
+        this.Category = "";
+        this.CommunityDescription = "";
+        this.ExternalDependecies = "";
+        this.OrphanedPackage = 0;
+        this.RepositoryFileName = "";
+        this.RepositoryFileSize = 0;
+        this.RepositoryFileHash = "";
+        this.RepositoryDate = 0.0;
+        this.PackageBaseDir = "";
+        this.HomePageURL = "";
+        this.DownloadURL = "";
+        this.SVNURL = "";
         this.packages = [];
-    }
-    get baseDir() {
-        return this.pkgBaseDir;
-    }
-    set baseDir(value) {
-        this.pkgBaseDir = value.replace(/\\/gi, "");
     }
     containsPackage(needle) {
         const [name] = needle.includes("(") ? needle.split("(") : [needle];
-        return this.packages.some((pkg) => pkg.file === `${name.trim()}.lpk`);
+        return this.packages.some((pkg) => pkg.Name === `${name.trim()}.lpk`);
     }
 }
 class PackageFile {
     constructor() {
-        this.file = "";
-        this._relativeFilePath = "";
-        this.lazarusCompatibility = [];
-        this.freePascalCompatibility = [];
-        this.dependenciesStr = "";
-        this.type = -1;
-    }
-    get relativeFilePath() {
-        return this._relativeFilePath;
-    }
-    set relativeFilePath(value) {
-        this._relativeFilePath = value.replace(/\\/gi, "");
+        this.Name = "";
+        this.Description = "";
+        this.Author = "";
+        this.License = "";
+        this.RelativeFilePath = "";
+        this.VersionAsString = "";
+        this.LazCompatibility = "";
+        this.FPCCompatibility = "";
+        this.SupportedWidgetSet = "";
+        this.PackageType = -1;
+        this.DependenciesAsString = "";
     }
 }
 
