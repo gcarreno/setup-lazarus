@@ -1078,15 +1078,16 @@ class Packages {
         return this.platform === "darwin" ? "--ws=cocoa" : "";
     }
     async _extract(file, dest) {
-        core.info(`Extracting ${file} to ${dest}`);
+        core.info(`_extract: Extracting ${file} to ${dest}`);
         return tc.extractZip(file, dest);
     }
     async _download(filename) {
         const downloadPath = path.join(this._getTempDirectory(), filename);
-        core.info(`Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
+        core.info(`_download: Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
         return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
     }
     async _clearDirectory(dirPath) {
+        core.info(`_clearDirectory: Clearing ${dirPath}`);
         if (await fs_1.promises
             .access(dirPath)
             .then(() => true)
