@@ -144,17 +144,18 @@ export class Packages {
   }
 
   private async _extract(file: string, dest: string): Promise<string> {
-    core.info(`Extracting ${file} to ${dest}`);
+    core.info(`_extract: Extracting ${file} to ${dest}`);
     return tc.extractZip(file, dest);
   }
 
   private async _download(filename: string): Promise<string> {
     const downloadPath = path.join(this._getTempDirectory(), filename);
-    core.info(`Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
+    core.info(`_download: Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
     return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
   }
 
   private async _clearDirectory(dirPath: string): Promise<void> {
+    core.info(`_clearDirectory: Clearing ${dirPath}`);
     if (
       await fs
         .access(dirPath)
