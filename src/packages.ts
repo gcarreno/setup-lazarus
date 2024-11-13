@@ -5,7 +5,7 @@ import { exec } from "@actions/exec/lib/exec";
 import * as os from "os";
 import * as path from "path";
 import { ok } from "assert";
-import { promises as fs } from "fs";
+// import { promises as fs } from "fs";
 
 export class Packages {
   private platform: string = os.platform();
@@ -106,8 +106,8 @@ export class Packages {
           path.join(this._getTempDirectory(), pkg.RepositoryFileHash)
         );
         core.info(`Unzipped to: "${pkgFolder}/${pkg.PackageBaseDir}"`);
-        await exec(`rm -rf ${pkgFile}`);
-        await this._clearDirectory(pkgFolder);
+        //await exec(`rm -rf ${pkgFile}`);
+        //await this._clearDirectory(pkgFolder);
         await this._installLpkFiles(pkgFolder, pkg);
       } catch (error) {
         core.setFailed(`Installation failed: ${(error as Error).message}`);
@@ -154,22 +154,22 @@ export class Packages {
     return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
   }
 
-  private async _clearDirectory(dirPath: string): Promise<void> {
-    core.info(`_clearDirectory: Clearing ${dirPath}`);
-    if (
-      await fs
-        .access(dirPath)
-        .then(() => true)
-        .catch(() => false)
-    ) {
-      const files = await fs.readdir(dirPath);
-      await Promise.all(
-        files.map((file) => fs.unlink(path.join(dirPath, file)))
-      );
-    } else {
-      await fs.mkdir(dirPath);
-    }
-  }
+  // private async _clearDirectory(dirPath: string): Promise<void> {
+  //   core.info(`_clearDirectory: Clearing ${dirPath}`);
+  //   if (
+  //     await fs
+  //       .access(dirPath)
+  //       .then(() => true)
+  //       .catch(() => false)
+  //   ) {
+  //     const files = await fs.readdir(dirPath);
+  //     await Promise.all(
+  //       files.map((file) => fs.unlink(path.join(dirPath, file)))
+  //     );
+  //   } else {
+  //     await fs.mkdir(dirPath);
+  //   }
+  // }
 
   private async _getPackageList(repoURL: string): Promise<PackageData[]> {
     core.info(`_getPackageList: Fetching package list from ${repoURL}`);

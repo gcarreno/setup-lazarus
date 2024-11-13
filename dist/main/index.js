@@ -996,7 +996,7 @@ const exec_1 = __nccwpck_require__(5236);
 const os = __importStar(__nccwpck_require__(857));
 const path = __importStar(__nccwpck_require__(6928));
 const assert_1 = __nccwpck_require__(2613);
-const fs_1 = __nccwpck_require__(9896);
+// import { promises as fs } from "fs";
 class Packages {
     constructor(_lazarusVersion, baseUrl, jsonParam) {
         this.platform = os.platform();
@@ -1055,8 +1055,8 @@ class Packages {
                 const pkgFile = await this._download(pkg.RepositoryFileName);
                 const pkgFolder = await this._extract(pkgFile, path.join(this._getTempDirectory(), pkg.RepositoryFileHash));
                 core.info(`Unzipped to: "${pkgFolder}/${pkg.PackageBaseDir}"`);
-                await (0, exec_1.exec)(`rm -rf ${pkgFile}`);
-                await this._clearDirectory(pkgFolder);
+                //await exec(`rm -rf ${pkgFile}`);
+                //await this._clearDirectory(pkgFolder);
                 await this._installLpkFiles(pkgFolder, pkg);
             }
             catch (error) {
@@ -1086,19 +1086,22 @@ class Packages {
         core.info(`_download: Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
         return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
     }
-    async _clearDirectory(dirPath) {
-        core.info(`_clearDirectory: Clearing ${dirPath}`);
-        if (await fs_1.promises
-            .access(dirPath)
-            .then(() => true)
-            .catch(() => false)) {
-            const files = await fs_1.promises.readdir(dirPath);
-            await Promise.all(files.map((file) => fs_1.promises.unlink(path.join(dirPath, file))));
-        }
-        else {
-            await fs_1.promises.mkdir(dirPath);
-        }
-    }
+    // private async _clearDirectory(dirPath: string): Promise<void> {
+    //   core.info(`_clearDirectory: Clearing ${dirPath}`);
+    //   if (
+    //     await fs
+    //       .access(dirPath)
+    //       .then(() => true)
+    //       .catch(() => false)
+    //   ) {
+    //     const files = await fs.readdir(dirPath);
+    //     await Promise.all(
+    //       files.map((file) => fs.unlink(path.join(dirPath, file)))
+    //     );
+    //   } else {
+    //     await fs.mkdir(dirPath);
+    //   }
+    // }
     async _getPackageList(repoURL) {
         core.info(`_getPackageList: Fetching package list from ${repoURL}`);
         try {
