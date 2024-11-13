@@ -20,12 +20,12 @@ export class Packages {
 
   async installPackages(includePackages: string[]): Promise<void> {
     core.info(`Requested Lazarus packages: ${includePackages.join(", ")}`);
-    this.packageData = await this.getPackageList(
+    this.packageData = await this._getPackageList(
       `${this.baseUrl}/${this.jsonParam}`
     );
     core.info(`Fetched ${this.packageData.length} package items.`);
 
-    const pkgsToInstall: PackageData[] = await this.resolveDependencies(
+    const pkgsToInstall: PackageData[] = await this._resolveDependencies(
       includePackages
     );
 
@@ -34,10 +34,10 @@ export class Packages {
         .map((pkg) => pkg.displayName)
         .join(", ")}`
     );
-    await this.installAllPackages(pkgsToInstall);
+    await this._installAllPackages(pkgsToInstall);
   }
 
-  private async resolveDependencies(
+  private async _resolveDependencies(
     includePackages: string[]
   ): Promise<PackageData[]> {
     const pkgsToInstall: PackageData[] = [];
@@ -49,17 +49,17 @@ export class Packages {
       );
 
       for (const pkg of matchedPackages) {
-        const deps = await this.getDependencies(pkg);
+        const deps = await this._getDependencies(pkg);
         deps.forEach((dep) =>
-          this.addPackageIfNeeded(dep, pkgsToInstall, pkgsToInstallNames)
+          this._addPackageIfNeeded(dep, pkgsToInstall, pkgsToInstallNames)
         );
-        this.addPackageIfNeeded(pkg, pkgsToInstall, pkgsToInstallNames);
+        this._addPackageIfNeeded(pkg, pkgsToInstall, pkgsToInstallNames);
       }
     }
     return pkgsToInstall;
   }
 
-  private addPackageIfNeeded(
+  private _addPackageIfNeeded(
     pkg: PackageData,
     pkgList: PackageData[],
     pkgNames: Set<string>
@@ -70,7 +70,7 @@ export class Packages {
     }
   }
 
-  private async getDependencies(
+  private async _getDependencies(
     pkg: PackageData,
     seenPkgs: Set<string> = new Set()
   ): Promise<PackageData[]> {
@@ -87,7 +87,7 @@ export class Packages {
         for (const foundPkg of foundPkgs) {
           dependencies.push(
             foundPkg,
-            ...(await this.getDependencies(foundPkg, seenPkgs))
+            ...(await this._getDependencies(foundPkg, seenPkgs))
           );
         }
       }
@@ -95,20 +95,20 @@ export class Packages {
     return dependencies;
   }
 
-  private async installAllPackages(
+  private async _installAllPackages(
     pkgsToInstall: PackageData[]
   ): Promise<void> {
     for (const pkg of pkgsToInstall) {
       try {
-        const pkgFile = await this.download(pkg.repositoryFileName);
-        const pkgFolder = await this.extract(
+        const pkgFile = await this._download(pkg.repositoryFileName);
+        const pkgFolder = await this._extract(
           pkgFile,
-          path.join(this.getTempDirectory(), pkg.repositoryFileHash)
+          path.join(this._getTempDirectory(), pkg.repositoryFileHash)
         );
         core.info(`Unzipped to: "${pkgFolder}/${pkg.baseDir}"`);
         await exec(`rm -rf ${pkgFile}`);
-        await this.clearDirectory(pkgFolder);
-        await this.installLpkFiles(pkgFolder, pkg);
+        await this._clearDirectory(pkgFolder);
+        await this._installLpkFiles(pkgFolder, pkg);
       } catch (error) {
         core.setFailed(`Installation failed: ${(error as Error).message}`);
         throw error;
@@ -116,7 +116,7 @@ export class Packages {
     }
   }
 
-  private async installLpkFiles(
+  private async _installLpkFiles(
     pkgFolder: string,
     pkg: PackageData
   ): Promise<void> {
@@ -127,7 +127,7 @@ export class Packages {
         pkgFile.relativeFilePath,
         pkgFile.file
       );
-      const buildCommand = `lazbuild ${this.getPlatformFlags()} "${pkgPath}"`;
+      const buildCommand = `lazbuild ${this._getPlatformFlags()} "${pkgPath}"`;
 
       core.info(`Adding and compiling package: ${pkgPath}`);
       await exec(
@@ -139,22 +139,22 @@ export class Packages {
     }
   }
 
-  private getPlatformFlags(): string {
+  private _getPlatformFlags(): string {
     return this.platform === "darwin" ? "--ws=cocoa" : "";
   }
 
-  private async extract(file: string, dest: string): Promise<string> {
+  private async _extract(file: string, dest: string): Promise<string> {
     core.info(`Extracting ${file} to ${dest}`);
     return tc.extractZip(file, dest);
   }
 
-  private async download(filename: string): Promise<string> {
-    const downloadPath = path.join(this.getTempDirectory(), filename);
+  private async _download(filename: string): Promise<string> {
+    const downloadPath = path.join(this._getTempDirectory(), filename);
     core.info(`Downloading ${this.baseUrl}/${filename} to ${downloadPath}`);
     return tc.downloadTool(`${this.baseUrl}/${filename}`, downloadPath);
   }
 
-  private async clearDirectory(dirPath: string): Promise<void> {
+  private async _clearDirectory(dirPath: string): Promise<void> {
     if (
       await fs
         .access(dirPath)
@@ -170,13 +170,13 @@ export class Packages {
     }
   }
 
-  private async getPackageList(repoURL: string): Promise<PackageData[]> {
-    core.info(`Fetching package list from ${repoURL}`);
+  private async _getPackageList(repoURL: string): Promise<PackageData[]> {
+    core.info(`_getPackageList: Fetching package list from ${repoURL}`);
     try {
       const httpClient = new http.HttpClient();
       const response = await httpClient.get(repoURL);
       const responseBody = await response.readBody();
-      return this.parsePackageList(JSON.parse(responseBody));
+      return this._parsePackageList(JSON.parse(responseBody));
     } catch (error) {
       throw new Error(
         `Failed to get package list: ${(error as Error).message}`
@@ -184,13 +184,13 @@ export class Packages {
     }
   }
 
-  private parsePackageList(packageList: any): PackageData[] {
+  private _parsePackageList(packageList: any): PackageData[] {
     const result: PackageData[] = [];
     Object.entries(packageList).forEach(([key, value]) => {
       if (key.startsWith("PackageData")) {
         const pkgData = new PackageData();
         Object.assign(pkgData, value);
-        pkgData.packages = packageList[`PackageFiles${key.slice(-1)}`].map(
+        pkgData.packages = packageList[`PackageFiles${key.slice(10)}`].map(
           (file: any) => {
             const pkgFile = new PackageFile();
             Object.assign(pkgFile, file);
@@ -203,7 +203,7 @@ export class Packages {
     return result;
   }
 
-  private getTempDirectory(): string {
+  private _getTempDirectory(): string {
     const tempDir = process.env["RUNNER_TEMP"] || "";
     ok(tempDir, "RUNNER_TEMP environment variable is not defined");
     return tempDir;
