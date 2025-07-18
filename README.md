@@ -7,6 +7,13 @@
 Set up your GitHub Actions workflow with a specific version of Lazarus
 
 > [!IMPORTANT]
+> I'm no longer [able, or willing](https://forum.lazarus.freepascal.org/index.php/topic,59533.msg560789.html#msg560789) to continue updating this action.
+> I've asked on of the most prominent users of this action if he could take over, and [his reply](https://forum.lazarus.freepascal.org/index.php/topic,59533.msg561085.html#msg561085) was that he also does not have the time for it.
+> I'm now extending the [ask for help](https://forum.lazarus.freepascal.org/index.php/topic,59533.msg561088.html#msg561088) to anyone that's willing to continue maintaining this action.
+>
+> I'll be eternally grateful to the person that does so!!
+
+> [!IMPORTANT]
 > When building with the `Qt5` widgetset, using the combination of `stable` or
 > `v3.0` with `ubuntu-latest` or `ubuntu-22.04` may fail. This issue is due to an
 > outdated `libqt5pas` library that doesn't support Lazarus 3.0 updates. A
