@@ -257,19 +257,19 @@ const pkgs: object = {
   },
   darwin: {
     v4_4: {
-      laz: "lazarus-4.4-fpc-3.2.2-macosx.zip",
+      laz: "lazarus-darwin-x86_64-4.4.zip",
       fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
     },
     v4_2: {
-      laz: "lazarus-4.2-fpc-3.2.2-macosx.zip",
+      laz: "lazarus-darwin-x86_64-4.2.zip",
       fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
     },
     v4_0: {
-      laz: "lazarus-4.0-fpc-3.2.2-macosx.zip",
+      laz: "lazarus-darwin-x86_64-4.0.zip",
       fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
     },
     v3_8: {
-      laz: "lazarus-3.8-fpc-3.2.2-macosx.zip",
+      laz: "lazarus-darwin-x86_64-3.8.zip",
       fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
     },
     v3_6: {
