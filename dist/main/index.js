@@ -457,22 +457,18 @@ const pkgs = {
         v4_4: {
             laz: "lazarus-4.4-fpc-3.2.2-macosx.zip",
             fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
-            fpcsrc: "fpc-src-3.2.2-20210709-macosx.dmg",
         },
         v4_2: {
             laz: "lazarus-4.2-fpc-3.2.2-macosx.zip",
             fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
-            fpcsrc: "fpc-src-3.2.2-20210709-macosx.dmg",
         },
         v4_0: {
             laz: "lazarus-4.0-fpc-3.2.2-macosx.zip",
             fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
-            fpcsrc: "fpc-src-3.2.2-20210709-macosx.dmg",
         },
         v3_8: {
             laz: "lazarus-3.8-fpc-3.2.2-macosx.zip",
             fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
-            fpcsrc: "fpc-src-3.2.2-20210709-macosx.dmg",
         },
         v3_6: {
             laz: "Lazarus-3.6-macosx-x86_64.pkg",
@@ -756,50 +752,57 @@ class Lazarus {
                 break;
             case "darwin":
                 let downloadPath_DAR;
-                // Get the URL for Free Pascal Source
-                let downloadFPCSRCURLDAR = this._getPackageURL("fpcsrc");
-                core.info(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
-                try {
-                    // Decide what the local download filename should be
-                    var downloadName = downloadFPCSRCURLDAR.endsWith(".dmg")
-                        ? "fpcsrc.dmg"
-                        : "fpcsrc.pkg";
-                    if (cacheRestored) {
-                        // Use cached version
-                        downloadPath_DAR = path.join(this._getTempDirectory(), downloadName);
-                        core.info(`_downloadLazarus - Using cache restored into ${downloadPath_DAR}`);
-                    }
-                    else {
-                        // Perform the download
-                        downloadPath_DAR = await tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), downloadName));
-                        core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
-                    }
-                    // Download could be a pkg or dmg, handle either case
-                    if (downloadName == "fpcsrc.dmg") {
-                        // Mount DMG and intall package
-                        await (0, exec_1.exec)(`sudo hdiutil attach ${downloadPath_DAR}`);
-                        // There MUST be a better way to do this
-                        var fpcsrc = fs
-                            .readdirSync("/Volumes")
-                            .filter((fn) => fn.startsWith("fpcsrc"));
-                        var loc = fs
-                            .readdirSync("/Volumes/" + fpcsrc[0])
-                            .filter((fn) => fn.endsWith(".pkg"));
-                        if (loc === undefined || loc[0] === undefined) {
-                            loc = fs
-                                .readdirSync("/Volumes/" + fpcsrc[0])
-                                .filter((fn) => fn.endsWith(".mpkg"));
+                // Starting from Lazarus 3.8, FPC source is included in the Lazarus IDE ZIP file,
+                // so we skip the separate FPC source download for versions 3.8+
+                if (!this._isVersion38OrHigher()) {
+                    // Get the URL for Free Pascal Source
+                    let downloadFPCSRCURLDAR = this._getPackageURL("fpcsrc");
+                    core.info(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
+                    try {
+                        // Decide what the local download filename should be
+                        var downloadName = downloadFPCSRCURLDAR.endsWith(".dmg")
+                            ? "fpcsrc.dmg"
+                            : "fpcsrc.pkg";
+                        if (cacheRestored) {
+                            // Use cached version
+                            downloadPath_DAR = path.join(this._getTempDirectory(), downloadName);
+                            core.info(`_downloadLazarus - Using cache restored into ${downloadPath_DAR}`);
                         }
-                        var full_path = "/Volumes/" + fpcsrc[0] + "/" + loc[0];
-                        await (0, exec_1.exec)(`sudo installer -package ${full_path} -target /`);
+                        else {
+                            // Perform the download
+                            downloadPath_DAR = await tc.downloadTool(downloadFPCSRCURLDAR, path.join(this._getTempDirectory(), downloadName));
+                            core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
+                        }
+                        // Download could be a pkg or dmg, handle either case
+                        if (downloadName == "fpcsrc.dmg") {
+                            // Mount DMG and intall package
+                            await (0, exec_1.exec)(`sudo hdiutil attach ${downloadPath_DAR}`);
+                            // There MUST be a better way to do this
+                            var fpcsrc = fs
+                                .readdirSync("/Volumes")
+                                .filter((fn) => fn.startsWith("fpcsrc"));
+                            var loc = fs
+                                .readdirSync("/Volumes/" + fpcsrc[0])
+                                .filter((fn) => fn.endsWith(".pkg"));
+                            if (loc === undefined || loc[0] === undefined) {
+                                loc = fs
+                                    .readdirSync("/Volumes/" + fpcsrc[0])
+                                    .filter((fn) => fn.endsWith(".mpkg"));
+                            }
+                            var full_path = "/Volumes/" + fpcsrc[0] + "/" + loc[0];
+                            await (0, exec_1.exec)(`sudo installer -package ${full_path} -target /`);
+                        }
+                        else {
+                            // Install the package
+                            await (0, exec_1.exec)(`sudo installer -package ${downloadPath_DAR} -target /`);
+                        }
                     }
-                    else {
-                        // Install the package
-                        await (0, exec_1.exec)(`sudo installer -package ${downloadPath_DAR} -target /`);
+                    catch (error) {
+                        throw error;
                     }
                 }
-                catch (error) {
-                    throw error;
+                else {
+                    core.info(`_downloadLazarus - Skipping FPC source download for Lazarus ${this._LazarusVersion} (FPC source is included in the Lazarus IDE ZIP)`);
                 }
                 // Get the URL for Free Pascal's compiler
                 let downloadFPCURLDAR = this._getPackageURL("fpc");
@@ -1006,6 +1009,18 @@ class Lazarus {
             default:
                 return "";
         }
+    }
+    /**
+     * Check if the Lazarus version is 3.8 or higher.
+     */
+    _isVersion38OrHigher() {
+        const versionParts = this._LazarusVersion.split(".").map(Number);
+        if (versionParts.length < 2) {
+            return false;
+        }
+        const major = versionParts[0];
+        const minor = versionParts[1];
+        return major > 3 || (major === 3 && minor >= 8);
     }
 }
 exports.Lazarus = Lazarus;
