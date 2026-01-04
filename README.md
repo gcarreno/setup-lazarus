@@ -31,7 +31,11 @@ Possible values:
 | Lazarus Version | FPC Version | Description   |
 | --------------- | ----------- | ------------- |
 | dist            |             | Latest stable |
-| stable          |             | Lazarus 3.6   |
+| stable          |             | Lazarus 4.4   |
+| 4.4             | 3.2.2       |               |
+| 4.2             | 3.2.2       |               |
+| 4.0             | 3.2.2       |               |
+| 3.8             | 3.2.2       |               |
 | 3.6             | 3.2.2       |               |
 | 3.4             | 3.2.2       |               |
 | 3.2             | 3.2.2       |               |
@@ -66,7 +70,7 @@ Possible values:
 
 > [!NOTE]
 > 'dist' is the Lazarus package that comes with the Ubuntu dist you
-> chose on `runs-on`, while for Windows it's the latest stable (3.6).
+> chose on `runs-on`, while for Windows it's the latest stable (4.4).
 
 ### include-packages
 

@@ -8,10 +8,14 @@ import * as fs from "fs";
 
 import { Cache } from "./cache";
 
-const StableVersion = "3.6";
+const StableVersion = "4.4";
 
 const pkgs: object = {
   win32: {
+    v4_4: "lazarus-4.4-fpc-3.2.2-win32.exe",
+    v4_2: "lazarus-4.2-fpc-3.2.2-win32.exe",
+    v4_0: "lazarus-4.0-fpc-3.2.2-win32.exe",
+    v3_8: "lazarus-3.8-fpc-3.2.2-win32.exe",
     v3_6: "lazarus-3.6-fpc-3.2.2-win32.exe",
     v3_4: "lazarus-3.4-fpc-3.2.2-win32.exe",
     v3_2: "lazarus-3.2-fpc-3.2.2-win32.exe",
@@ -44,6 +48,10 @@ const pkgs: object = {
     v1_0_12: "lazarus-1.0.12-fpc-2.6.2-win32.exe",
   },
   win64: {
+    v4_4: "lazarus-4.4-fpc-3.2.2-win64.exe",
+    v4_2: "lazarus-4.2-fpc-3.2.2-win64.exe",
+    v4_0: "lazarus-4.0-fpc-3.2.2-win64.exe",
+    v3_8: "lazarus-3.8-fpc-3.2.2-win64.exe",
     v3_6: "lazarus-3.6-fpc-3.2.2-win64.exe",
     v3_4: "lazarus-3.4-fpc-3.2.2-win64.exe",
     v3_2: "lazarus-3.2-fpc-3.2.2-win64.exe",
@@ -76,6 +84,26 @@ const pkgs: object = {
     v1_0_12: "lazarus-1.0.12-fpc-2.6.2-win64.exe",
   },
   linux: {
+    v4_4: {
+      laz: "lazarus-project_4.4.0-0_amd64.deb",
+      fpc: "fpc-laz_3.2.2-210709_amd64.deb",
+      fpcsrc: "fpc-src_3.2.2-210709_amd64.deb",
+    },
+    v4_2: {
+      laz: "lazarus-project_4.2.0-0_amd64.deb",
+      fpc: "fpc-laz_3.2.2-210709_amd64.deb",
+      fpcsrc: "fpc-src_3.2.2-210709_amd64.deb",
+    },
+    v4_0: {
+      laz: "lazarus-project_4.0.0-0_amd64.deb",
+      fpc: "fpc-laz_3.2.2-210709_amd64.deb",
+      fpcsrc: "fpc-src_3.2.2-210709_amd64.deb",
+    },
+    v3_8: {
+      laz: "lazarus-project_3.8.0-0_amd64.deb",
+      fpc: "fpc-laz_3.2.2-210709_amd64.deb",
+      fpcsrc: "fpc-src_3.2.2-210709_amd64.deb",
+    },
     v3_6: {
       laz: "lazarus-project_3.6.0-0_amd64.deb",
       fpc: "fpc-laz_3.2.2-210709_amd64.deb",
@@ -228,6 +256,22 @@ const pkgs: object = {
     },
   },
   darwin: {
+    v4_4: {
+      laz: "lazarus-darwin-x86_64-4.4.zip",
+      fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
+    },
+    v4_2: {
+      laz: "lazarus-darwin-x86_64-4.2.zip",
+      fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
+    },
+    v4_0: {
+      laz: "lazarus-darwin-x86_64-4.0.zip",
+      fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
+    },
+    v3_8: {
+      laz: "lazarus-darwin-x86_64-3.8.zip",
+      fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
+    },
     v3_6: {
       laz: "Lazarus-3.6-macosx-x86_64.pkg",
       fpc: "fpc-3.2.2.intelarm64-macosx.dmg",
@@ -366,6 +410,10 @@ export class Lazarus {
           this._LazarusVersion + "-" + this._Arch + "-" + this._Platform;
         await this._downloadLazarus();
         break;
+      case "4.4":
+      case "4.2":
+      case "4.0":
+      case "3.8":
       case "3.6":
       case "3.4":
       case "3.2":
@@ -567,58 +615,66 @@ export class Lazarus {
       case "darwin":
         let downloadPath_DAR: string;
 
-        // Get the URL for Free Pascal Source
-        let downloadFPCSRCURLDAR: string = this._getPackageURL("fpcsrc");
-        core.info(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
-        try {
-          // Decide what the local download filename should be
-          var downloadName = downloadFPCSRCURLDAR.endsWith(".dmg")
-            ? "fpcsrc.dmg"
-            : "fpcsrc.pkg";
+        // Starting from Lazarus 3.8, FPC source is included in the Lazarus IDE ZIP file,
+        // so we skip the separate FPC source download for versions 3.8+
+        if (!this._isVersion38OrHigher()) {
+          // Get the URL for Free Pascal Source
+          let downloadFPCSRCURLDAR: string = this._getPackageURL("fpcsrc");
+          core.info(`_downloadLazarus - Downloading ${downloadFPCSRCURLDAR}`);
+          try {
+            // Decide what the local download filename should be
+            var downloadName = downloadFPCSRCURLDAR.endsWith(".dmg")
+              ? "fpcsrc.dmg"
+              : "fpcsrc.pkg";
 
-          if (cacheRestored) {
-            // Use cached version
-            downloadPath_DAR = path.join(
-              this._getTempDirectory(),
-              downloadName
-            );
-            core.info(
-              `_downloadLazarus - Using cache restored into ${downloadPath_DAR}`
-            );
-          } else {
-            // Perform the download
-            downloadPath_DAR = await tc.downloadTool(
-              downloadFPCSRCURLDAR,
-              path.join(this._getTempDirectory(), downloadName)
-            );
-            core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
-          }
-
-          // Download could be a pkg or dmg, handle either case
-          if (downloadName == "fpcsrc.dmg") {
-            // Mount DMG and intall package
-            await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
-
-            // There MUST be a better way to do this
-            var fpcsrc = fs
-              .readdirSync("/Volumes")
-              .filter((fn) => fn.startsWith("fpcsrc"));
-            var loc = fs
-              .readdirSync("/Volumes/" + fpcsrc[0])
-              .filter((fn) => fn.endsWith(".pkg"));
-            if (loc === undefined || loc[0] === undefined) {
-              loc = fs
-                .readdirSync("/Volumes/" + fpcsrc[0])
-                .filter((fn) => fn.endsWith(".mpkg"));
+            if (cacheRestored) {
+              // Use cached version
+              downloadPath_DAR = path.join(
+                this._getTempDirectory(),
+                downloadName
+              );
+              core.info(
+                `_downloadLazarus - Using cache restored into ${downloadPath_DAR}`
+              );
+            } else {
+              // Perform the download
+              downloadPath_DAR = await tc.downloadTool(
+                downloadFPCSRCURLDAR,
+                path.join(this._getTempDirectory(), downloadName)
+              );
+              core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
             }
-            var full_path = "/Volumes/" + fpcsrc[0] + "/" + loc[0];
-            await exec(`sudo installer -package ${full_path} -target /`);
-          } else {
-            // Install the package
-            await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
+
+            // Download could be a pkg or dmg, handle either case
+            if (downloadName == "fpcsrc.dmg") {
+              // Mount DMG and intall package
+              await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
+
+              // There MUST be a better way to do this
+              var fpcsrc = fs
+                .readdirSync("/Volumes")
+                .filter((fn) => fn.startsWith("fpcsrc"));
+              var loc = fs
+                .readdirSync("/Volumes/" + fpcsrc[0])
+                .filter((fn) => fn.endsWith(".pkg"));
+              if (loc === undefined || loc[0] === undefined) {
+                loc = fs
+                  .readdirSync("/Volumes/" + fpcsrc[0])
+                  .filter((fn) => fn.endsWith(".mpkg"));
+              }
+              var full_path = "/Volumes/" + fpcsrc[0] + "/" + loc[0];
+              await exec(`sudo installer -package ${full_path} -target /`);
+            } else {
+              // Install the package
+              await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
+            }
+          } catch (error) {
+            throw error as Error;
           }
-        } catch (error) {
-          throw error as Error;
+        } else {
+          core.info(
+            `_downloadLazarus - Skipping FPC source download for Lazarus ${this._LazarusVersion} (FPC source is included in the Lazarus IDE ZIP)`
+          );
         }
 
         // Get the URL for Free Pascal's compiler
@@ -680,9 +736,14 @@ export class Lazarus {
         core.info(`_downloadLazarus - Downloading ${downloadLazURLDAR}`);
         try {
           // Decide what the local download filename should be
-          var downloadName = downloadLazURLDAR.endsWith(".dmg")
-            ? "lazarus.dmg"
-            : "lazarus.pkg";
+          var downloadName: string;
+          if (downloadLazURLDAR.endsWith(".dmg")) {
+            downloadName = "lazarus.dmg";
+          } else if (downloadLazURLDAR.endsWith(".zip")) {
+            downloadName = "lazarus.zip";
+          } else {
+            downloadName = "lazarus.pkg";
+          }
 
           if (cacheRestored) {
             // Use the cached version
@@ -702,7 +763,7 @@ export class Lazarus {
             core.info(`_downloadLazarus - Downloaded into ${downloadPath_DAR}`);
           }
 
-          // Download could be a pkg or dmg, handle either case
+          // Download could be a pkg, dmg, or zip, handle each case
           if (downloadName == "lazarus.dmg") {
             // Mount DMG and intall package
             await exec(`sudo hdiutil attach ${downloadPath_DAR}`);
@@ -721,6 +782,47 @@ export class Lazarus {
             }
             var full_path = "/Volumes/" + laz[0] + "/" + loc[0];
             await exec(`sudo installer -package ${full_path} -target /`);
+          } else if (downloadName == "lazarus.zip") {
+            // Handle .zip file installation (for versions 3.8+)
+            // Remove quarantine attribute
+            await exec(`xattr -cr "${downloadPath_DAR}"`);
+            
+            // Extract to RUNNER_TEMP
+            const tempDir = process.env["RUNNER_TEMP"] || "";
+            ok(tempDir, "Expected RUNNER_TEMP to be defined");
+            await exec(`unzip -q "${downloadPath_DAR}" -d ${tempDir}`);
+
+            // Update lazarus directory in config
+            const installedLocation = this._getInstalledLocation();
+            const configFile = path.join(
+              installedLocation,
+              "config/environmentoptions.xml"
+            );
+            
+            if (fs.existsSync(configFile)) {
+              const configContent = fs.readFileSync(configFile, {
+                encoding: "utf8",
+                flag: "r",
+              });
+              fs.writeFileSync(
+                configFile,
+                configContent.replace('"/Developer/lazarus/"', `"${installedLocation}"`),
+                { encoding: "utf8", flag: "w" }
+              );
+              core.info(
+                `_downloadLazarus - Updated config file at ${configFile}`
+              );
+            } else {
+              core.warning(
+                `_downloadLazarus - Config file not found at ${configFile}, skipping update`
+              );
+            }
+
+            // Add installation location to PATH
+            core.addPath(installedLocation);
+            core.info(
+              `_downloadLazarus - Adding '${installedLocation}' to PATH`
+            );
           } else {
             // Install the package
             await exec(`sudo installer -package ${downloadPath_DAR} -target /`);
@@ -731,9 +833,12 @@ export class Lazarus {
 
         // For 2.0.10 and older, lazbuild symlink is /Library/Lazarus/lazbuild
         // For 2.0.12, lazbuild symlink is /Applications/Lazarus/lazbuild
+        // For .zip installations (3.8+), lazbuild is in the installed location
         // Update the symlink to lazbuild
         const lazLibPath = "/Library/Lazarus/lazbuild";
         const lazAppPath = "/Applications/Lazarus/lazbuild";
+        const installedLocation = this._getInstalledLocation();
+        const lazZipPath = path.join(installedLocation, "lazbuild");
         try {
           if (fs.existsSync(`${lazLibPath}`)) {
             core.info(
@@ -747,6 +852,15 @@ export class Lazarus {
             await exec(`rm -rf /usr/local/bin/lazbuild`);
             // Add good symlink
             await exec(`ln -s ${lazAppPath} /usr/local/bin/lazbuild`);
+          } else if (fs.existsSync(`${lazZipPath}`)) {
+            // For .zip installations, create symlink from installed location
+            core.info(
+              `_downloadLazarus - Updating lazbuild symlink to ${lazZipPath}`
+            );
+            // Remove bad symlink
+            await exec(`rm -rf /usr/local/bin/lazbuild`);
+            // Add good symlink
+            await exec(`ln -s ${lazZipPath} /usr/local/bin/lazbuild`);
           } else {
             throw new Error(
               `Could not find lazbuild in ${lazLibPath} or ${lazAppPath}`
@@ -800,5 +914,29 @@ export class Lazarus {
     ok(tempDirectory, "Expected RUNNER_TEMP to be defined");
     tempDirectory = path.join(tempDirectory, "installers");
     return tempDirectory;
+  }
+
+  private _getInstalledLocation(): string {
+    switch (this._Platform) {
+      case "darwin":
+        let tempDirectory = process.env["RUNNER_TEMP"] || "";
+        ok(tempDirectory, "Expected RUNNER_TEMP to be defined");
+        return path.join(tempDirectory, "lazarus");
+      default:
+        return "";
+    }
+  }
+
+  /**
+   * Check if the Lazarus version is 3.8 or higher.
+   */
+  private _isVersion38OrHigher(): boolean {
+    const versionParts = this._LazarusVersion.split(".").map(Number);
+    if (versionParts.length < 2) {
+      return false;
+    }
+    const major = versionParts[0];
+    const minor = versionParts[1];
+    return major > 3 || (major === 3 && minor >= 8);
   }
 }
