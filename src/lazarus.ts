@@ -8,7 +8,7 @@ import * as fs from "fs";
 
 import { Cache } from "./cache";
 
-const StableVersion = "4.4";
+export const StableVersion = "4.4";
 
 const pkgs: object = {
   win32: {
