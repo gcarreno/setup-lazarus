@@ -198,7 +198,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Lazarus = void 0;
+exports.Lazarus = exports.StableVersion = void 0;
 const core = __importStar(__nccwpck_require__(7484));
 const tc = __importStar(__nccwpck_require__(3472));
 const exec_1 = __nccwpck_require__(5236);
@@ -207,7 +207,7 @@ const path = __importStar(__nccwpck_require__(6928));
 const assert_1 = __nccwpck_require__(2613);
 const fs = __importStar(__nccwpck_require__(9896));
 const cache_1 = __nccwpck_require__(5914);
-const StableVersion = "4.4";
+exports.StableVersion = "4.4";
 const pkgs = {
     win32: {
         v4_4: "lazarus-4.4-fpc-3.2.2-win32.exe",
@@ -580,7 +580,7 @@ class Lazarus {
                         }
                         break;
                     case "win32":
-                        this._LazarusVersion = StableVersion;
+                        this._LazarusVersion = exports.StableVersion;
                         this._Cache.key =
                             this._LazarusVersion + "-" + this._Arch + "-" + this._Platform;
                         await this._downloadLazarus();
@@ -591,7 +591,7 @@ class Lazarus {
                 break;
             // Special case named version that installs the latest stable version
             case "stable":
-                this._LazarusVersion = StableVersion;
+                this._LazarusVersion = exports.StableVersion;
                 this._Cache.key =
                     this._LazarusVersion + "-" + this._Arch + "-" + this._Platform;
                 await this._downloadLazarus();
@@ -1117,6 +1117,7 @@ const exec_1 = __nccwpck_require__(5236);
 const os = __importStar(__nccwpck_require__(857));
 const path = __importStar(__nccwpck_require__(6928));
 const assert_1 = __nccwpck_require__(2613);
+const lazarus_1 = __nccwpck_require__(5144);
 // import { promises as fs } from "fs";
 class Packages {
     constructor(_lazarusVersion, baseUrl, jsonParam) {
@@ -1124,6 +1125,7 @@ class Packages {
         this.packageData = [];
         this.baseUrl = baseUrl;
         this.jsonParam = jsonParam;
+        this.lazarusVersion = _lazarusVersion;
     }
     async installPackages(includePackages) {
         core.info(`Requested Lazarus packages: ${includePackages.join(", ")}`);
@@ -1187,7 +1189,8 @@ class Packages {
         }
     }
     async _installLpkFiles(pkgFolder, pkg) {
-        for (const pkgFile of pkg.packages) {
+        const filesToInstall = this._filterCompatiblePackageFiles(pkg.packages);
+        for (const pkgFile of filesToInstall) {
             const pkgPath = path.join(pkgFolder, pkg.PackageBaseDir, pkgFile.RelativeFilePath, pkgFile.Name);
             const buildCommand = `lazbuild ${this._getPlatformFlags()} "${pkgPath}"`;
             core.info(`Adding and compiling package: ${pkgPath}`);
@@ -1257,6 +1260,83 @@ class Packages {
         const tempDir = process.env["RUNNER_TEMP"] || "";
         (0, assert_1.ok)(tempDir, "RUNNER_TEMP environment variable is not defined");
         return tempDir;
+    }
+    /**
+     * Filter package files based on LazCompatibility against the configured Lazarus version.
+     * If the Lazarus version cannot be parsed (e.g. "stable", "dist") or no compatible
+     * files are found, this falls back to returning the original list.
+     */
+    _filterCompatiblePackageFiles(files) {
+        const lazVer = this._getLazarusMajorMinor();
+        if (!lazVer) {
+            core.info("_filterCompatiblePackageFiles: Lazarus version is not numeric, skipping LazCompatibility filtering.");
+            return files;
+        }
+        const compatible = files.filter((file) => this._isPackageFileCompatible(file, lazVer.major, lazVer.minor));
+        if (compatible.length === 0) {
+            core.warning(`_filterCompatiblePackageFiles: No LazCompatibility match for Lazarus ${this.lazarusVersion}; installing all package files instead.`);
+            return files;
+        }
+        return compatible;
+    }
+    /**
+     * Parse the Lazarus version (e.g. "4.4", "2.2.6") into major/minor components.
+     * Resolves "stable" and "dist" to the current stable version for OPM compatibility filtering.
+     * Returns null if the version cannot be parsed.
+     */
+    _getLazarusMajorMinor() {
+        const version = this.lazarusVersion === "stable" || this.lazarusVersion === "dist"
+            ? lazarus_1.StableVersion
+            : this.lazarusVersion;
+        const match = version.match(/^(\d+)\.(\d+)(?:\.\d+)?$/);
+        if (!match) {
+            return null;
+        }
+        const major = Number(match[1]);
+        const minor = Number(match[2]);
+        if (Number.isNaN(major) || Number.isNaN(minor)) {
+            return null;
+        }
+        return { major, minor };
+    }
+    /**
+     * Determine whether a single package file is compatible with the given Lazarus
+     * major/minor version based on its LazCompatibility string.
+     *
+     * LazCompatibility examples:
+     *   "Trunk, 4.4.0, 4.2.0, 4.0.0, 3.8.0"
+     *   "2.2.x"
+     */
+    _isPackageFileCompatible(file, lazMajor, lazMinor) {
+        const compat = (file.LazCompatibility || "").trim();
+        if (!compat) {
+            // No compatibility information; assume compatible to preserve previous behaviour.
+            return true;
+        }
+        const tokens = compat
+            .split(",")
+            .map((t) => t.trim())
+            .filter((t) => t.length > 0);
+        for (const token of tokens) {
+            // Skip trunk-only indicators as this action does not currently support trunk builds.
+            if (/^trunk$/i.test(token)) {
+                continue;
+            }
+            // Match patterns like "4.4.0", "4.4", "2.2.x"
+            const m = token.match(/^(\d+)\.(\d+)(?:\.(\d+|x))?$/i);
+            if (!m) {
+                continue;
+            }
+            const tMajor = Number(m[1]);
+            const tMinor = Number(m[2]);
+            if (Number.isNaN(tMajor) || Number.isNaN(tMinor)) {
+                continue;
+            }
+            if (tMajor === lazMajor && tMinor === lazMinor) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 exports.Packages = Packages;
