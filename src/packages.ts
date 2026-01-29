@@ -5,6 +5,7 @@ import { exec } from "@actions/exec/lib/exec";
 import * as os from "os";
 import * as path from "path";
 import { ok } from "assert";
+import { StableVersion } from "./lazarus";
 // import { promises as fs } from "fs";
 
 export class Packages {
@@ -12,10 +13,12 @@ export class Packages {
   private baseUrl: string;
   private jsonParam: string;
   private packageData: PackageData[] = [];
+  private lazarusVersion: string;
 
   constructor(_lazarusVersion: string, baseUrl: string, jsonParam: string) {
     this.baseUrl = baseUrl;
     this.jsonParam = jsonParam;
+    this.lazarusVersion = _lazarusVersion;
   }
 
   async installPackages(includePackages: string[]): Promise<void> {
@@ -120,7 +123,9 @@ export class Packages {
     pkgFolder: string,
     pkg: PackageData
   ): Promise<void> {
-    for (const pkgFile of pkg.packages) {
+    const filesToInstall = this._filterCompatiblePackageFiles(pkg.packages);
+
+    for (const pkgFile of filesToInstall) {
       const pkgPath = path.join(
         pkgFolder,
         pkg.PackageBaseDir,
@@ -210,6 +215,114 @@ export class Packages {
     const tempDir = process.env["RUNNER_TEMP"] || "";
     ok(tempDir, "RUNNER_TEMP environment variable is not defined");
     return tempDir;
+  }
+
+  /**
+   * Filter package files based on LazCompatibility against the configured Lazarus version.
+   * If the Lazarus version cannot be parsed (e.g. "stable", "dist") or no compatible
+   * files are found, this falls back to returning the original list.
+   */
+  private _filterCompatiblePackageFiles(
+    files: PackageFile[]
+  ): PackageFile[] {
+    const lazVer = this._getLazarusMajorMinor();
+    if (!lazVer) {
+      core.info(
+        "_filterCompatiblePackageFiles: Lazarus version is not numeric, skipping LazCompatibility filtering."
+      );
+      return files;
+    }
+
+    const compatible = files.filter((file) =>
+      this._isPackageFileCompatible(file, lazVer.major, lazVer.minor)
+    );
+
+    if (compatible.length === 0) {
+      core.warning(
+        `_filterCompatiblePackageFiles: No LazCompatibility match for Lazarus ${this.lazarusVersion}; installing all package files instead.`
+      );
+      return files;
+    }
+
+    return compatible;
+  }
+
+  /**
+   * Parse the Lazarus version (e.g. "4.4", "2.2.6") into major/minor components.
+   * Resolves "stable" and "dist" to the current stable version for OPM compatibility filtering.
+   * Returns null if the version cannot be parsed.
+   */
+  private _getLazarusMajorMinor():
+    | { major: number; minor: number }
+    | null {
+    const version =
+      this.lazarusVersion === "stable" || this.lazarusVersion === "dist"
+        ? StableVersion
+        : this.lazarusVersion;
+    const match = version.match(/^(\d+)\.(\d+)(?:\.\d+)?$/);
+    if (!match) {
+      return null;
+    }
+
+    const major = Number(match[1]);
+    const minor = Number(match[2]);
+
+    if (Number.isNaN(major) || Number.isNaN(minor)) {
+      return null;
+    }
+
+    return { major, minor };
+  }
+
+  /**
+   * Determine whether a single package file is compatible with the given Lazarus
+   * major/minor version based on its LazCompatibility string.
+   *
+   * LazCompatibility examples:
+   *   "Trunk, 4.4.0, 4.2.0, 4.0.0, 3.8.0"
+   *   "2.2.x"
+   */
+  private _isPackageFileCompatible(
+    file: PackageFile,
+    lazMajor: number,
+    lazMinor: number
+  ): boolean {
+    const compat = (file.LazCompatibility || "").trim();
+    if (!compat) {
+      // No compatibility information; assume compatible to preserve previous behaviour.
+      return true;
+    }
+
+    const tokens = compat
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+
+    for (const token of tokens) {
+      // Skip trunk-only indicators as this action does not currently support trunk builds.
+      if (/^trunk$/i.test(token)) {
+        continue;
+      }
+
+      // Match patterns like "4.4.0", "4.4", "2.2.x"
+      const m = token.match(/^(\d+)\.(\d+)(?:\.(\d+|x))?$/i);
+      if (!m) {
+        continue;
+      }
+
+      const tMajor = Number(m[1]);
+      const tMinor = Number(m[2]);
+
+      if (Number.isNaN(tMajor) || Number.isNaN(tMinor)) {
+        continue;
+      }
+
+      if (tMajor === lazMajor && tMinor === lazMinor) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 
